@@ -1,0 +1,59 @@
+[
+  {
+    "config_name": "test_benchmark",
+    "implementation": "chemi_accel",
+    "backend": "fast",
+    "descriptor": "test_descriptor",
+    "dataset_size": 5,
+    "execution_times": [
+      0.0010804000776261091,
+      0.0014787999680265784,
+      0.001519200042821467
+    ],
+    "memory_usage_mb": 0.0,
+    "status": "completed",
+    "error_message": null,
+    "metadata": {},
+    "mean_time": 0.0013594666961580515,
+    "std_time": 0.00024252149326399428,
+    "throughput": 3677.9128272361154
+  },
+  {
+    "config_name": "test_benchmark",
+    "implementation": "chemi_accel",
+    "backend": "slow",
+    "descriptor": "test_descriptor",
+    "dataset_size": 5,
+    "execution_times": [
+      0.010478200041688979,
+      0.01041890005581081,
+      0.010251799947582185
+    ],
+    "memory_usage_mb": 0.0,
+    "status": "completed",
+    "error_message": null,
+    "metadata": {},
+    "mean_time": 0.010382966681693992,
+    "std_time": 0.00011739955785460027,
+    "throughput": 481.557935538347
+  },
+  {
+    "config_name": "test_benchmark",
+    "implementation": "slow",
+    "backend": "cpu",
+    "descriptor": "test_descriptor",
+    "dataset_size": 5,
+    "execution_times": [
+      0.010463600046932697,
+      0.010185299906879663,
+      0.010508500039577484
+    ],
+    "memory_usage_mb": 0.0,
+    "status": "completed",
+    "error_message": null,
+    "metadata": {},
+    "mean_time": 0.010385799997796616,
+    "std_time": 0.00017508345775131025,
+    "throughput": 481.426563294187
+  }
+]

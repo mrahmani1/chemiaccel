@@ -1,0 +1,78 @@
+# ChemiAccel - Full Installation Requirements
+# Install these for complete functionality including all optional features
+
+# Core Requirements
+-r requirements.txt
+
+# GPU Acceleration (CUDA)
+cupy-cuda11x>=10.0.0
+cudf-cu11>=22.04.0
+cuml-cu11>=22.04.0
+cugraph-cu11>=22.04.0
+cuspatial-cu11>=22.04.0
+numba>=0.56.0
+rmm-cu11>=22.04.0
+
+# JAX/TPU Support
+jax[cuda11_pip]>=0.4.0
+jaxlib>=0.4.0
+optax>=0.1.4
+flax>=0.6.0
+dm-haiku>=0.0.9
+chex>=0.1.0
+
+# Cloud Platforms
+boto3>=1.20.0
+sagemaker>=2.100.0
+google-cloud-aiplatform>=1.15.0
+azure-ai-ml>=1.5.0
+
+# Distributed Computing
+dask[complete]>=2022.0.0
+ray[default]>=2.0.0
+mpi4py>=3.1.0
+
+# Advanced Chemistry
+pyscf>=2.1.0
+openmm>=7.7.0
+mdtraj>=1.9.0
+
+# Materials Science
+pymatgen>=2022.0.0
+ase>=3.22.0
+spglib>=1.16.0
+phonopy>=2.17.0
+
+# Database Integration
+sqlalchemy>=1.4.0
+psycopg2-binary>=2.9.0
+pymongo>=4.0.0
+redis>=4.3.0
+
+# Web Framework
+fastapi>=0.95.0
+uvicorn[standard]>=0.20.0
+streamlit>=1.20.0
+plotly>=5.14.0
+dash>=2.10.0
+
+# Performance Monitoring
+nvidia-ml-py>=11.495.46
+nvtx>=0.2.0
+pynvml>=11.4.1
+
+# Additional ML Libraries
+tensorflow>=2.12.0
+pytorch>=2.0.0
+xgboost>=1.7.0
+lightgbm>=3.3.0
+
+# Molecular Visualization
+py3dmol>=2.0.0
+nglview>=3.0.0
+
+# Additional Utilities
+openpyxl>=3.1.0
+xlsxwriter>=3.1.0
+h5py>=3.8.0
+zarr>=2.14.0

@@ -1,0 +1,26 @@
+[
+  {
+    "chemi_accel_implementation": "chemi_accel",
+    "chemi_accel_backend": "fast",
+    "reference_implementation": "slow",
+    "descriptor": "test_descriptor",
+    "dataset_size": 5,
+    "speedup_factor": 7.639613406600998,
+    "memory_ratio": 1.0,
+    "statistical_significance": 8.019877523618377e-07,
+    "is_significant_improvement": true,
+    "performance_improvement_percent": 663.9613406600998
+  },
+  {
+    "chemi_accel_implementation": "chemi_accel",
+    "chemi_accel_backend": "slow",
+    "reference_implementation": "slow",
+    "descriptor": "test_descriptor",
+    "dataset_size": 5,
+    "speedup_factor": 1.0002728811706214,
+    "memory_ratio": 1.0,
+    "statistical_significance": 0.982541933542763,
+    "is_significant_improvement": false,
+    "performance_improvement_percent": 0.02728811706214085
+  }
+]

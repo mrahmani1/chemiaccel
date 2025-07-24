@@ -1,0 +1,127 @@
+# ChemiAccel - High-Performance GPU-Accelerated Molecular Descriptor Calculations
+# Requirements file for Python dependencies
+
+# Core Dependencies
+numpy>=1.20.0
+pandas>=1.3.0
+scipy>=1.7.0
+rdkit>=2022.03.1
+tqdm>=4.60.0
+
+# Data Processing
+scikit-learn>=1.0.0
+matplotlib>=3.5.0
+seaborn>=0.11.0
+
+# Configuration and Utilities
+pyyaml>=6.0
+jsonschema>=4.0.0
+click>=8.0.0
+pathlib2>=2.3.0; python_version < "3.4"
+
+# Logging and Monitoring
+structlog>=22.0.0
+colorlog>=6.6.0
+
+# Testing Framework
+pytest>=7.0.0
+pytest-cov>=3.0.0
+pytest-xdist>=2.5.0
+pytest-benchmark>=3.4.0
+hypothesis>=6.40.0
+mock>=4.0.0
+
+# Code Quality
+black>=22.0.0
+isort>=5.10.0
+mypy>=0.950
+ruff>=0.0.260
+pre-commit>=2.17.0
+
+# Documentation
+sphinx>=4.0.0
+sphinx-rtd-theme>=1.0.0
+myst-parser>=0.17.0
+
+# Jupyter Integration
+jupyter>=1.0.0
+ipywidgets>=7.6.0
+notebook>=6.4.0
+
+# Performance Profiling
+memory-profiler>=0.60.0
+line-profiler>=3.5.0
+py-spy>=0.3.0
+
+# Optional Dependencies - CUDA Backend (GPU Acceleration)
+# Uncomment for maximum performance with NVIDIA GPUs
+# cupy-cuda11x>=10.0.0
+# cudf-cu11>=22.04.0
+# cuml-cu11>=22.04.0
+# cugraph-cu11>=22.04.0
+# numba>=0.56.0
+# rmm-cu11>=22.04.0
+
+# Optional Dependencies - JAX Backend (TPU Support)
+# Uncomment for TPU and advanced ML workflows
+# jax[cuda11_pip]>=0.4.0
+# jaxlib>=0.4.0
+# optax>=0.1.4
+# flax>=0.6.0
+# dm-haiku>=0.0.9
+
+# Optional Dependencies - Cloud Platforms
+# Uncomment for cloud ML platform integration
+# boto3>=1.20.0
+# google-cloud-aiplatform>=1.15.0
+# azure-ai-ml>=1.5.0
+# sagemaker>=2.100.0
+
+# Optional Dependencies - Distributed Computing
+# Uncomment for large-scale distributed processing
+# dask[complete]>=2022.0.0
+# ray[default]>=2.0.0
+# mpi4py>=3.1.0
+
+# Optional Dependencies - Advanced Chemistry
+# Uncomment for quantum chemistry integration
+# pyscf>=2.1.0
+# openmm>=7.7.0
+# mdtraj>=1.9.0
+# pymol-open-source>=2.5.0
+
+# Optional Dependencies - Materials Science
+# Uncomment for materials science workflows
+# pymatgen>=2022.0.0
+# ase>=3.22.0
+# spglib>=1.16.0
+# phonopy>=2.17.0
+
+# Optional Dependencies - Database Integration
+# Uncomment for database connectivity
+# sqlalchemy>=1.4.0
+# psycopg2-binary>=2.9.0
+# pymongo>=4.0.0
+# redis>=4.3.0
+
+# Optional Dependencies - Web Framework
+# Uncomment for web API and dashboard
+# fastapi>=0.95.0
+# uvicorn[standard]>=0.20.0
+# streamlit>=1.20.0
+# plotly>=5.14.0
+# dash>=2.10.0
+
+# Development Dependencies
+setuptools>=65.0.0
+wheel>=0.38.0
+twine>=4.0.0
+build>=0.10.0
+
+# Platform-specific dependencies
+pywin32>=227; sys_platform == "win32"
+psutil>=5.9.0
+
+# Version constraints for stability
+urllib3<2.0.0  # Compatibility with some cloud SDKs
+protobuf<4.0.0  # Compatibility with TensorFlow/JAX

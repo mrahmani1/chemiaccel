@@ -1,0 +1,216 @@
+# Docker Compose configuration for ChemiAccel Inference Server
+# Supports both GPU and CPU deployments with monitoring
+
+version: '3.8'
+
+services:
+  # GPU-enabled inference server
+  chemi-accel-gpu:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.inference
+      target: production
+    image: chemi-accel/inference:gpu-latest
+    container_name: chemi-accel-inference-gpu
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - CHEMI_ACCEL_ENV=production
+      - CHEMI_ACCEL_LOG_LEVEL=INFO
+      - CUDA_VISIBLE_DEVICES=0
+      - CHEMI_ACCEL_MAX_BATCH_SIZE=1000
+      - CHEMI_ACCEL_PRELOAD_MODELS=true
+    volumes:
+      - inference_logs:/app/logs
+      - inference_data:/app/data
+      - inference_models:/app/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+        limits:
+          memory: 8G
+          cpus: '4.0'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - chemi-accel-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.chemi-accel.rule=Host(`api.chemi-accel.local`)"
+      - "traefik.http.services.chemi-accel.loadbalancer.server.port=8000"
+
+  # CPU-only inference server (fallback)
+  chemi-accel-cpu:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.inference
+      target: cpu-only
+    image: chemi-accel/inference:cpu-latest
+    container_name: chemi-accel-inference-cpu
+    restart: unless-stopped
+    ports:
+      - "8001:8000"
+    environment:
+      - CHEMI_ACCEL_ENV=production
+      - CHEMI_ACCEL_LOG_LEVEL=INFO
+      - CHEMI_ACCEL_MAX_BATCH_SIZE=500
+      - CHEMI_ACCEL_PRELOAD_MODELS=true
+      - CHEMI_ACCEL_USE_GPU=false
+    volumes:
+      - inference_logs_cpu:/app/logs
+      - inference_data:/app/data
+      - inference_models:/app/models
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - chemi-accel-network
+    profiles:
+      - cpu-only
+
+  # Load balancer (Traefik)
+  traefik:
+    image: traefik:v3.0
+    container_name: chemi-accel-traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"  # Traefik dashboard
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=admin@chemi-accel.com"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--metrics.prometheus=true"
+      - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_letsencrypt:/letsencrypt
+    networks:
+      - chemi-accel-network
+    profiles:
+      - load-balancer
+
+  # Prometheus monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: chemi-accel-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=168h'
+      - '--web.enable-lifecycle'
+    networks:
+      - chemi-accel-network
+    profiles:
+      - monitoring
+
+  # Grafana dashboard
+  grafana:
+    image: grafana/grafana:latest
+    container_name: chemi-accel-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    networks:
+      - chemi-accel-network
+    profiles:
+      - monitoring
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: chemi-accel-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 1gb --maxmemory-policy allkeys-lru
+    networks:
+      - chemi-accel-network
+    profiles:
+      - caching
+
+  # NGINX reverse proxy (alternative to Traefik)
+  nginx:
+    image: nginx:alpine
+    container_name: chemi-accel-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - nginx_logs:/var/log/nginx
+    networks:
+      - chemi-accel-network
+    profiles:
+      - nginx-proxy
+
+volumes:
+  inference_logs:
+    driver: local
+  inference_logs_cpu:
+    driver: local
+  inference_data:
+    driver: local
+  inference_models:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  redis_data:
+    driver: local
+  traefik_letsencrypt:
+    driver: local
+  nginx_logs:
+    driver: local
+
+networks:
+  chemi-accel-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

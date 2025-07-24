@@ -1,0 +1,22 @@
+{
+  "name": "test_benchmark",
+  "description": "Test benchmark for framework validation",
+  "dataset_sizes": [
+    5
+  ],
+  "iterations": 3,
+  "warmup_iterations": 1,
+  "timeout_seconds": 300,
+  "backends_to_test": [
+    "fast",
+    "slow"
+  ],
+  "descriptors_to_test": [
+    "test_descriptor"
+  ],
+  "reference_implementations": [
+    "slow"
+  ],
+  "statistical_significance_level": 0.05,
+  "min_speedup_threshold": 2.0
+}

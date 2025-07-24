@@ -1,0 +1,154 @@
+# ChemiAccel Pre-commit Configuration
+# Ensures code quality, formatting, and QA hygiene standards
+
+repos:
+  # Code formatting
+  - repo: https://github.com/psf/black
+    rev: 23.12.1
+    hooks:
+      - id: black
+        language_version: python3
+        args: [--line-length=88]
+        exclude: ^(docs/|examples/legacy/)
+
+  # Import sorting
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: [--profile=black, --line-length=88]
+        exclude: ^(docs/|examples/legacy/)
+
+  # Linting with ruff (faster than flake8)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.9
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        exclude: ^(docs/|examples/legacy/|tests/fixtures/)
+
+  # Type checking with mypy
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        additional_dependencies: 
+          - types-requests
+          - types-PyYAML
+          - numpy
+          - pandas-stubs
+        args: [--ignore-missing-imports, --strict-optional]
+        exclude: ^(docs/|examples/|tests/fixtures/|benchmarks/legacy/)
+
+  # Security checks
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.5
+    hooks:
+      - id: bandit
+        args: [-r, -x, tests/]
+        exclude: ^(tests/|examples/test_)
+
+  # Jupyter notebook cleanup
+  - repo: https://github.com/nbQA-dev/nbQA
+    rev: 1.7.1
+    hooks:
+      - id: nbqa-black
+        additional_dependencies: [black==23.12.1]
+        args: [--line-length=88]
+      - id: nbqa-isort
+        additional_dependencies: [isort==5.13.2]
+        args: [--profile=black]
+      - id: nbqa-ruff
+        additional_dependencies: [ruff==0.1.9]
+
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: ^(.*\.md|docs/)
+      - id: end-of-file-fixer
+        exclude: ^(docs/|.*\.(png|jpg|jpeg|gif|ico)$)
+      - id: check-yaml
+        exclude: ^(docs/|conda-recipe/)
+      - id: check-json
+        exclude: ^(docs/|\.vscode/)
+      - id: check-toml
+      - id: check-xml
+      - id: check-added-large-files
+        args: [--maxkb=10000]  # Allow files up to 10MB (for model files)
+      - id: check-merge-conflict
+      - id: debug-statements
+        exclude: ^(tests/|examples/debug_)
+      - id: check-docstring-first
+        exclude: ^(tests/|examples/|benchmarks/)
+
+  # YAML formatting
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        types: [yaml]
+        exclude: ^(conda-recipe/|\.github/workflows/)
+
+  # Shell script linting
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.9.0.6
+    hooks:
+      - id: shellcheck
+        exclude: ^(conda-recipe/)
+
+  # Dockerfile linting
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+      - id: hadolint
+        exclude: ^(docs/|examples/)
+
+  # ChemiAccel specific checks
+  - repo: local
+    hooks:
+      - id: chemi-accel-imports
+        name: Check ChemiAccel import structure
+        entry: python scripts/check_imports.py
+        language: python
+        files: ^src/chemi_accel/
+        pass_filenames: false
+
+      - id: test-coverage-check
+        name: Ensure test files exist for new modules
+        entry: python scripts/check_test_coverage.py
+        language: python  
+        files: ^src/chemi_accel/.*\.py$
+        pass_filenames: true
+
+      - id: gpu-kernel-validation
+        name: Validate CUDA/ROCm kernel syntax
+        entry: python scripts/validate_gpu_kernels.py
+        language: python
+        files: \.(cu|hip)$
+        pass_filenames: true
+
+      - id: autonomous-task-validation
+        name: Validate autonomous task implementations
+        entry: python scripts/validate_autonomous_tasks.py
+        language: python
+        files: ^src/chemi_accel/autonomous/
+        pass_filenames: false
+
+# Global configuration
+default_install_hook_types: [pre-commit, pre-push]
+default_stages: [commit]
+
+# CI configuration
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit hooks
+
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: [mypy, bandit]  # Skip expensive checks in CI
+  submodules: false

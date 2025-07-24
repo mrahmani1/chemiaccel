@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"extensions": {
+		"recommendations": [
+			"anthropic.claude-code",
+			"kodu-ai.claude-dev-experimental"
+		]
+	}
+}

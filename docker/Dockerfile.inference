@@ -1,0 +1,202 @@
+# High-Performance ChemiAccel Inference Server Dockerfile
+# Optimized for GPU acceleration with CUDA support
+
+# Use NVIDIA CUDA base image for GPU support
+FROM nvidia/cuda:11.8-devel-ubuntu22.04 as base
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV CUDA_VISIBLE_DEVICES=0
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    python3.10 \
+    python3.10-dev \
+    python3-pip \
+    python3.10-venv \
+    build-essential \
+    cmake \
+    git \
+    wget \
+    curl \
+    libboost-all-dev \
+    libeigen3-dev \
+    libcairo2-dev \
+    libfreetype6-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user for security
+RUN useradd -m -u 1001 -s /bin/bash chemiuser
+
+# Set working directory
+WORKDIR /app
+
+# Create Python virtual environment
+RUN python3.10 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Upgrade pip and install base Python packages
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+
+# Install PyTorch with CUDA support first (for better dependency resolution)
+RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+# Copy requirements files
+COPY requirements/inference.txt /app/requirements/
+COPY requirements/base.txt /app/requirements/
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements/inference.txt
+
+# Copy source code
+COPY src/ /app/src/
+COPY setup.py /app/
+COPY pyproject.toml /app/
+COPY README.md /app/
+
+# Install ChemiAccel in development mode
+RUN pip install -e .
+
+# Create directories for logs and data
+RUN mkdir -p /app/logs /app/data /app/models && \
+    chown -R chemiuser:chemiuser /app
+
+# Switch to non-root user
+USER chemiuser
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Default command
+CMD ["python", "-m", "chemi_accel.inference.server", "--host", "0.0.0.0", "--port", "8000"]
+
+# Multi-stage build for production
+FROM base as production
+
+# Copy only necessary files for production
+COPY --from=base /opt/venv /opt/venv
+COPY --from=base /app/src /app/src
+COPY --from=base /app/logs /app/logs
+COPY --from=base /app/data /app/data
+COPY --from=base /app/models /app/models
+
+# Set production environment variables
+ENV PYTHONPATH=/app/src
+ENV CHEMI_ACCEL_ENV=production
+ENV CHEMI_ACCEL_LOG_LEVEL=INFO
+
+# Production command with optimized settings
+CMD ["python", "-m", "chemi_accel.inference.server", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--workers", "1", \
+     "--log-level", "INFO", \
+     "--max-batch-size", "1000"]
+
+# Development stage
+FROM base as development
+
+# Install additional development dependencies
+RUN pip install --no-cache-dir \
+    jupyter \
+    pytest \
+    pytest-cov \
+    pytest-asyncio \
+    black \
+    isort \
+    mypy \
+    pre-commit
+
+# Set development environment variables
+ENV CHEMI_ACCEL_ENV=development
+ENV CHEMI_ACCEL_LOG_LEVEL=DEBUG
+
+# Development command with debug settings
+CMD ["python", "-m", "chemi_accel.inference.server", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--log-level", "DEBUG", \
+     "--max-batch-size", "100"]
+
+# CPU-only variant for environments without GPU
+FROM ubuntu:22.04 as cpu-only
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Install system dependencies (CPU-only)
+RUN apt-get update && apt-get install -y \
+    python3.10 \
+    python3.10-dev \
+    python3-pip \
+    python3.10-venv \
+    build-essential \
+    cmake \
+    git \
+    wget \
+    curl \
+    libboost-all-dev \
+    libeigen3-dev \
+    libcairo2-dev \
+    libfreetype6-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN useradd -m -u 1001 -s /bin/bash chemiuser
+
+# Set working directory
+WORKDIR /app
+
+# Create Python virtual environment
+RUN python3.10 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Install Python dependencies (CPU-only versions)
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+
+# Copy requirements files
+COPY requirements/inference-cpu.txt /app/requirements/
+COPY requirements/base.txt /app/requirements/
+
+# Install CPU-only dependencies
+RUN pip install --no-cache-dir -r requirements/inference-cpu.txt
+
+# Copy source code
+COPY src/ /app/src/
+COPY setup.py /app/
+COPY pyproject.toml /app/
+COPY README.md /app/
+
+# Install ChemiAccel in development mode
+RUN pip install -e .
+
+# Create directories
+RUN mkdir -p /app/logs /app/data /app/models && \
+    chown -R chemiuser:chemiuser /app
+
+# Switch to non-root user
+USER chemiuser
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# CPU-only command
+CMD ["python", "-m", "chemi_accel.inference.server", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--workers", "1", \
+     "--log-level", "INFO"]
