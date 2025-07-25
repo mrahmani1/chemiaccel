@@ -9,85 +9,81 @@ This module provides advanced AI capabilities for molecular discovery including:
 - Multi-objective optimization frameworks
 """
 
-from .active_learning import ActiveLearningLoop
-from .uncertainty_quantification import UncertaintyQuantification
 from .acquisition_functions import (
-    UncertaintyAcquisition,
-    ExpectedImprovement,
-    UpperConfidenceBound,
+    BatchAcquisition,
     DiversityAcquisition,
+    ExpectedImprovement,
     GreedyAcquisition,
     MultiObjectiveAcquisition,
-    BatchAcquisition
+    UncertaintyAcquisition,
+    UpperConfidenceBound,
 )
+from .active_learning import ActiveLearningLoop
 from .inverse_design import (
+    ConstraintConfig,
+    ConstraintHandler,
     InverseDesign,
+    MolecularLatentSpace,
     MultiObjectiveOptimizer,
     OptimizationResult,
-    ConstraintConfig,
-    MolecularLatentSpace,
-    SimpleLatentSpace,
     PropertyPredictor,
-    ConstraintHandler,
+    SimpleLatentSpace,
     create_drug_like_constraints,
+    create_fragment_like_constraints,
     create_lead_like_constraints,
-    create_fragment_like_constraints
 )
 from .multi_objective_optimization import (
-    MPOptimizer,
-    ObjectiveConfig,
-    ParetoFrontResult,
-    MultiObjectiveResult,
-    NonDominatedSorting,
     CrowdingDistance,
     HypervolumeCalculator,
-    ScalarizationFunctions,
     InteractiveVisualization,
+    MPOptimizer,
+    MultiObjectiveResult,
+    NonDominatedSorting,
+    ObjectiveConfig,
+    ParetoFrontResult,
+    ScalarizationFunctions,
     create_drug_discovery_objectives,
     create_polymer_objectives,
-    run_multi_objective_optimization
+    run_multi_objective_optimization,
 )
+from .uncertainty_quantification import UncertaintyQuantification
 
 __all__ = [
     # Active Learning
-    'ActiveLearningLoop',
-    
+    "ActiveLearningLoop",
     # Uncertainty Quantification
-    'UncertaintyQuantification',
-    
+    "UncertaintyQuantification",
     # Acquisition Functions
-    'UncertaintyAcquisition',
-    'ExpectedImprovement', 
-    'UpperConfidenceBound',
-    'DiversityAcquisition',
-    'GreedyAcquisition',
-    'MultiObjectiveAcquisition',
-    'BatchAcquisition',
-    
+    "UncertaintyAcquisition",
+    "ExpectedImprovement",
+    "UpperConfidenceBound",
+    "DiversityAcquisition",
+    "GreedyAcquisition",
+    "MultiObjectiveAcquisition",
+    "BatchAcquisition",
     # Inverse Design
-    'InverseDesign',
-    'MultiObjectiveOptimizer',
-    'OptimizationResult',
-    'ConstraintConfig',
-    'MolecularLatentSpace',
-    'SimpleLatentSpace',
-    'PropertyPredictor',
-    'ConstraintHandler',
-    'create_drug_like_constraints',
-    'create_lead_like_constraints',
-    'create_fragment_like_constraints',
-    
+    "InverseDesign",
+    "MultiObjectiveOptimizer",
+    "OptimizationResult",
+    "ConstraintConfig",
+    "MolecularLatentSpace",
+    "SimpleLatentSpace",
+    "PropertyPredictor",
+    "ConstraintHandler",
+    "create_drug_like_constraints",
+    "create_lead_like_constraints",
+    "create_fragment_like_constraints",
     # Multi-Objective Optimization
-    'MPOptimizer',
-    'ObjectiveConfig',
-    'ParetoFrontResult',
-    'MultiObjectiveResult',
-    'NonDominatedSorting',
-    'CrowdingDistance',
-    'HypervolumeCalculator',
-    'ScalarizationFunctions',
-    'InteractiveVisualization',
-    'create_drug_discovery_objectives',
-    'create_polymer_objectives',
-    'run_multi_objective_optimization'
+    "MPOptimizer",
+    "ObjectiveConfig",
+    "ParetoFrontResult",
+    "MultiObjectiveResult",
+    "NonDominatedSorting",
+    "CrowdingDistance",
+    "HypervolumeCalculator",
+    "ScalarizationFunctions",
+    "InteractiveVisualization",
+    "create_drug_discovery_objectives",
+    "create_polymer_objectives",
+    "run_multi_objective_optimization",
 ]

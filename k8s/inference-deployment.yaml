@@ -1,6 +1,6 @@
 # Kubernetes deployment configuration for ChemiAccel Inference Server
 # Supports GPU acceleration, horizontal scaling, and load balancing
-
+---
 apiVersion: v1
 kind: Namespace
 metadata:

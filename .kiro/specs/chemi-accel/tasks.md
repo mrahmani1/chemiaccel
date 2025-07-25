@@ -461,24 +461,24 @@
     - Ensure full traceability of how each molecule was selected, synthesized, and tested, and how the results influenced subsequent AI decisions.
     - _Requirements: 32.5_
 
-- [ ] 23. High-Throughput Quantum Machine Learning (QML)
-  - [ ] 23.1 GPU-Accelerated QML Model Integration
+- [x] 23. High-Throughput Quantum Machine Learning (QML)
+  - [x] 23.1 GPU-Accelerated QML Model Integration
     - Integrate leading GPU-accelerated QML models (e.g., pre-trained ANI models, fast GFN2-xTB surrogates) into the ChemiAccel framework.
     - Develop a standardized API for calling QML models and extracting quantum-derived properties.
     - _Requirements: 33.1_
-  - [ ] 23.2 On-the-Fly QML Feature/Property Prediction
+  - [x] 23.2 On-the-Fly QML Feature/Property Prediction
     - Implement rapid, on-the-fly prediction of quantum properties (e.g., HOMO-LUMO gap, partial charges, dipole moments) for batches of molecules directly on the GPU.
     - Ensure efficient handling of 3D molecular geometries and conformer ensembles as input for QML models.
     - _Requirements: 33.1, 33.2_
-  - [ ] 23.3 QML-Guided Inverse Design and Optimization
+  - [x] 23.3 QML-Guided Inverse Design and Optimization
     - Extend the Inverse Design module to allow optimization towards target QML properties.
     - Implement gradient computation through the integrated QML models to enable efficient gradient-based design in QML property space.
     - _Requirements: 33.3_
-  - [ ] 23.4 Scalable QML Inference and Distributed Execution
+  - [x] 23.4 Scalable QML Inference and Distributed Execution
     - Develop strategies for massively parallel QML inference across multiple GPUs or TPUs (e.g., using Dask/Ray for distributed QML inference).
     - Optimize batching and data transfer for QML calculations to maximize throughput for large datasets.
     - _Requirements: 33.4_
-  - [ ] 23.5 Uncertainty Quantification for QML Predictions
+  - [x] 23.5 Uncertainty Quantification for QML Predictions
     - Integrate uncertainty estimates provided by QML models (e.g., ensemble variance, epistemic uncertainty) into the standard ChemiAccel UQ framework.
     - Provide tools to visualize and analyze the reliability of QML property predictions.
     - _Requirements: 33.5_

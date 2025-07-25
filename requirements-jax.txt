@@ -1,4 +1,4 @@
-# ChemiAccel - JAX/TPU Requirements  
+# ChemiAccel - JAX/TPU Requirements
 # Install these for TPU acceleration and advanced ML workflows
 
 # Include base requirements

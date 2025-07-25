@@ -39,18 +39,18 @@ log_error() {
 # Function to check prerequisites
 check_prerequisites() {
     log_info "Checking prerequisites..."
-    
+
     # Check Docker
     if ! command -v docker &> /dev/null; then
         log_error "Docker is not installed"
         exit 1
     fi
-    
+
     # Check Docker Compose
     if ! command -v docker-compose &> /dev/null; then
         log_warning "Docker Compose not found, using 'docker compose'"
     fi
-    
+
     # Check NVIDIA Docker runtime (for GPU support)
     if docker info 2>/dev/null | grep -q nvidia; then
         log_success "NVIDIA Docker runtime detected"
@@ -59,31 +59,31 @@ check_prerequisites() {
         log_warning "NVIDIA Docker runtime not available, using CPU-only mode"
         GPU_AVAILABLE=false
     fi
-    
+
     # Check Kubernetes (if k8s deployment)
     if [ "$DEPLOYMENT_TYPE" = "k8s" ]; then
         if ! command -v kubectl &> /dev/null; then
             log_error "kubectl is not installed"
             exit 1
         fi
-        
+
         if ! kubectl cluster-info &> /dev/null; then
             log_error "Cannot connect to Kubernetes cluster"
             exit 1
         fi
-        
+
         log_success "Kubernetes cluster connection verified"
     fi
-    
+
     log_success "Prerequisites check completed"
 }
 
 # Function to build Docker images
 build_images() {
     log_info "Building Docker images..."
-    
+
     cd "$PROJECT_ROOT"
-    
+
     # Build GPU image
     if [ "$GPU_AVAILABLE" = true ]; then
         log_info "Building GPU-enabled image..."
@@ -92,12 +92,12 @@ build_images() {
             --target production \
             -t "${DOCKER_REGISTRY}/chemi-accel/inference:gpu-${IMAGE_TAG}" \
             .
-        
+
         if [ "$DOCKER_REGISTRY" != "localhost:5000" ]; then
             docker push "${DOCKER_REGISTRY}/chemi-accel/inference:gpu-${IMAGE_TAG}"
         fi
     fi
-    
+
     # Build CPU image
     log_info "Building CPU-only image..."
     docker build \
@@ -105,52 +105,52 @@ build_images() {
         --target cpu-only \
         -t "${DOCKER_REGISTRY}/chemi-accel/inference:cpu-${IMAGE_TAG}" \
         .
-    
+
     if [ "$DOCKER_REGISTRY" != "localhost:5000" ]; then
         docker push "${DOCKER_REGISTRY}/chemi-accel/inference:cpu-${IMAGE_TAG}"
     fi
-    
+
     log_success "Docker images built successfully"
 }
 
 # Function to deploy with Docker Compose
 deploy_docker() {
     log_info "Deploying with Docker Compose..."
-    
+
     cd "$PROJECT_ROOT"
-    
+
     # Determine which profiles to use
     PROFILES=""
-    
+
     if [ "$GPU_AVAILABLE" = true ]; then
         log_info "GPU available, deploying GPU-enabled service"
     else
         log_info "No GPU available, deploying CPU-only service"
         PROFILES="--profile cpu-only"
     fi
-    
+
     # Add monitoring if requested
     if [ "${ENABLE_MONITORING:-false}" = "true" ]; then
         PROFILES="$PROFILES --profile monitoring"
         log_info "Enabling monitoring stack"
     fi
-    
+
     # Add load balancer if requested
     if [ "${ENABLE_LOAD_BALANCER:-false}" = "true" ]; then
         PROFILES="$PROFILES --profile load-balancer"
         log_info "Enabling load balancer"
     fi
-    
+
     # Stop existing services
     docker-compose -f docker/docker-compose.inference.yml down || true
-    
+
     # Start services
     docker-compose -f docker/docker-compose.inference.yml up -d $PROFILES
-    
+
     # Wait for services to be ready
     log_info "Waiting for services to be ready..."
     sleep 30
-    
+
     # Check health
     if check_service_health "localhost:8000"; then
         log_success "Docker deployment completed successfully"
@@ -163,20 +163,20 @@ deploy_docker() {
 # Function to deploy to Kubernetes
 deploy_kubernetes() {
     log_info "Deploying to Kubernetes..."
-    
+
     cd "$PROJECT_ROOT"
-    
+
     # Apply namespace and configurations
     kubectl apply -f k8s/inference-deployment.yaml
-    
+
     # Wait for deployments to be ready
     log_info "Waiting for deployments to be ready..."
     kubectl wait --for=condition=available --timeout=300s deployment/chemi-accel-inference-gpu -n chemi-accel || true
     kubectl wait --for=condition=available --timeout=300s deployment/chemi-accel-inference-cpu -n chemi-accel || true
-    
+
     # Get service endpoint
     SERVICE_IP=$(kubectl get service chemi-accel-inference-service -n chemi-accel -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null || echo "pending")
-    
+
     if [ "$SERVICE_IP" = "pending" ] || [ -z "$SERVICE_IP" ]; then
         log_info "Load balancer IP pending, using port-forward for testing"
         kubectl port-forward -n chemi-accel service/chemi-accel-inference-service 8000:80 &
@@ -187,7 +187,7 @@ deploy_kubernetes() {
         SERVICE_URL="$SERVICE_IP"
         log_info "Service available at: $SERVICE_URL"
     fi
-    
+
     # Check health
     if check_service_health "$SERVICE_URL"; then
         log_success "Kubernetes deployment completed successfully"
@@ -195,7 +195,7 @@ deploy_kubernetes() {
         log_error "Service health check failed"
         return 1
     fi
-    
+
     # Clean up port-forward if used
     if [ -n "$PORT_FORWARD_PID" ]; then
         kill $PORT_FORWARD_PID 2>/dev/null || true
@@ -205,25 +205,25 @@ deploy_kubernetes() {
 # Function to deploy locally (development)
 deploy_local() {
     log_info "Starting local development server..."
-    
+
     cd "$PROJECT_ROOT"
-    
+
     # Check if virtual environment exists
     if [ ! -d "venv" ]; then
         log_info "Creating virtual environment..."
         python -m venv venv
     fi
-    
+
     # Activate virtual environment
     source venv/bin/activate
-    
+
     # Install dependencies
     pip install -e .[inference]
-    
+
     # Set environment variables
     export CHEMI_ACCEL_ENV=development
     export CHEMI_ACCEL_LOG_LEVEL=DEBUG
-    
+
     # Start server
     log_info "Starting inference server on localhost:8000"
     python -m chemi_accel.inference.server \
@@ -231,12 +231,12 @@ deploy_local() {
         --port 8000 \
         --log-level DEBUG \
         --max-batch-size 100 &
-    
+
     SERVER_PID=$!
-    
+
     # Wait for server to start
     sleep 10
-    
+
     # Check health
     if check_service_health "localhost:8000"; then
         log_success "Local development server started successfully (PID: $SERVER_PID)"
@@ -255,20 +255,20 @@ check_service_health() {
     local service_url="$1"
     local max_attempts=10
     local attempt=1
-    
+
     log_info "Checking service health at $service_url..."
-    
+
     while [ $attempt -le $max_attempts ]; do
         if curl -s -f "http://$service_url/health" > /dev/null 2>&1; then
             log_success "Service is healthy"
             return 0
         fi
-        
+
         log_info "Attempt $attempt/$max_attempts failed, retrying in 5 seconds..."
         sleep 5
         attempt=$((attempt + 1))
     done
-    
+
     log_error "Service health check failed after $max_attempts attempts"
     return 1
 }
@@ -276,24 +276,24 @@ check_service_health() {
 # Function to run load test
 run_load_test() {
     local service_url="${1:-localhost:8000}"
-    
+
     log_info "Running load test against $service_url..."
-    
+
     cd "$PROJECT_ROOT"
-    
+
     python -m pytest tests/load/test_inference_performance.py \
         --server "$service_url" \
         --users 5 \
         --duration 60 \
         -v
-    
+
     log_success "Load test completed"
 }
 
 # Function to show status
 show_status() {
     log_info "Checking deployment status..."
-    
+
     case "$DEPLOYMENT_TYPE" in
         "docker")
             docker-compose -f docker/docker-compose.inference.yml ps
@@ -311,7 +311,7 @@ show_status() {
 # Function to clean up deployment
 cleanup() {
     log_info "Cleaning up deployment..."
-    
+
     case "$DEPLOYMENT_TYPE" in
         "docker")
             docker-compose -f docker/docker-compose.inference.yml down -v
@@ -324,7 +324,7 @@ cleanup() {
             pkill -f "chemi_accel.inference.server" || true
             ;;
     esac
-    
+
     log_success "Cleanup completed"
 }
 
@@ -441,7 +441,7 @@ case "$COMMAND" in
     "deploy")
         check_prerequisites
         build_images
-        
+
         case "$DEPLOYMENT_TYPE" in
             "docker")
                 deploy_docker
@@ -458,28 +458,28 @@ case "$COMMAND" in
                 ;;
         esac
         ;;
-    
+
     "build")
         check_prerequisites
         build_images
         ;;
-    
+
     "test")
         run_load_test
         ;;
-    
+
     "status")
         show_status
         ;;
-    
+
     "cleanup")
         cleanup
         ;;
-    
+
     "help")
         show_usage
         ;;
-    
+
     *)
         log_error "Unknown command: $COMMAND"
         show_usage

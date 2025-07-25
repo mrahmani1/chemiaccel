@@ -14,22 +14,20 @@ real-world usage patterns for production deployment.
 """
 
 import asyncio
-import time
 import json
 import logging
-from pathlib import Path
-from typing import List, Dict, Any, Optional
 import random
+import time
+from typing import Any, Dict, List
 
 try:
     import aiohttp
     import requests
+
     REQUESTS_AVAILABLE = True
 except ImportError:
     REQUESTS_AVAILABLE = False
 
-import pandas as pd
-import numpy as np
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -38,16 +36,16 @@ logger = logging.getLogger(__name__)
 
 class InferenceServerDemo:
     """Comprehensive demo of the inference server capabilities."""
-    
+
     def __init__(self, server_url: str = "http://localhost:8000"):
         """Initialize demo with server URL.
-        
+
         Args:
             server_url: URL of the inference server
         """
         self.server_url = server_url
         self.session = None
-        
+
         # Sample molecules for testing
         self.sample_molecules = [
             "CCO",  # Ethanol
@@ -72,44 +70,46 @@ class InferenceServerDemo:
             "CN1C=NC2=C1C(=O)N(C(=O)N2C)C",  # Caffeine
             "CC(C)Cc1ccc(cc1)[C@@H](C)C(=O)O",  # Ibuprofen
         ]
-        
+
         logger.info(f"Initialized demo for server: {server_url}")
-    
-    def create_sample_dataset(self, size: int, include_errors: bool = False) -> List[str]:
+
+    def create_sample_dataset(
+        self, size: int, include_errors: bool = False
+    ) -> List[str]:
         """Create a sample dataset for testing.
-        
+
         Args:
             size: Number of molecules to generate
             include_errors: Include some invalid SMILES for error testing
-            
+
         Returns:
             List of SMILES strings
         """
         dataset = []
-        
+
         # Fill with random samples from our molecule pool
         for i in range(size):
             mol = random.choice(self.sample_molecules)
-            
+
             # Add some variations
             if i % 5 == 0 and "c1ccccc1" in mol:
                 # Add substituents to benzene rings
                 substituents = ["C", "O", "N", "Cl", "F"]
                 sub = random.choice(substituents)
                 mol = mol.replace("c1ccccc1", f"c1ccc(cc1){sub}")
-            
+
             dataset.append(mol)
-        
+
         # Add some errors if requested
         if include_errors:
             error_count = int(size * 0.05)  # 5% errors
             error_smiles = ["invalid_smiles", "", "C" * 100, "[Pt][Au]"]
             for _ in range(error_count):
                 dataset.append(random.choice(error_smiles))
-        
+
         random.shuffle(dataset)
         return dataset
-    
+
     def check_server_health(self) -> Dict[str, Any]:
         """Check server health and readiness."""
         try:
@@ -126,32 +126,30 @@ class InferenceServerDemo:
         except Exception as e:
             logger.error(f"Failed to connect to server: {e}")
             return {}
-    
+
     def demo_single_prediction(self):
         """Demonstrate single molecule prediction."""
         logger.info("=== Single Molecule Prediction Demo ===")
-        
+
         # Test a simple molecule
         test_molecule = "CCO"  # Ethanol
-        
+
         payload = {
             "smiles": test_molecule,
             "descriptors": ["molecular_weight", "logp", "tpsa"],
-            "include_properties": True
+            "include_properties": True,
         }
-        
+
         logger.info(f"Predicting descriptors for: {test_molecule}")
         start_time = time.time()
-        
+
         try:
             response = requests.post(
-                f"{self.server_url}/predict/single",
-                json=payload,
-                timeout=30
+                f"{self.server_url}/predict/single", json=payload, timeout=30
             )
-            
+
             processing_time = time.time() - start_time
-            
+
             if response.status_code == 200:
                 result = response.json()
                 logger.info(f"Prediction successful in {processing_time:.3f}s")
@@ -160,287 +158,301 @@ class InferenceServerDemo:
                 logger.info(f"Results: {json.dumps(result['results'], indent=2)}")
                 return result
             else:
-                logger.error(f"Prediction failed: {response.status_code} - {response.text}")
+                logger.error(
+                    f"Prediction failed: {response.status_code} - {response.text}"
+                )
                 return None
-                
+
         except Exception as e:
             logger.error(f"Request failed: {e}")
             return None
-    
+
     def demo_batch_prediction(self, batch_size: int = 10):
         """Demonstrate batch prediction.
-        
+
         Args:
             batch_size: Number of molecules in the batch
         """
         logger.info(f"=== Batch Prediction Demo (size={batch_size}) ===")
-        
+
         # Create test batch
         test_molecules = self.create_sample_dataset(batch_size)
-        
+
         payload = {
             "smiles": test_molecules,
             "descriptors": ["molecular_weight", "logp", "tpsa"],
             "include_properties": True,
-            "batch_size": batch_size
+            "batch_size": batch_size,
         }
-        
+
         logger.info(f"Predicting descriptors for {len(test_molecules)} molecules")
         start_time = time.time()
-        
+
         try:
             response = requests.post(
-                f"{self.server_url}/predict/batch",
-                json=payload,
-                timeout=60
+                f"{self.server_url}/predict/batch", json=payload, timeout=60
             )
-            
+
             processing_time = time.time() - start_time
-            
+
             if response.status_code == 200:
                 result = response.json()
                 logger.info(f"Batch prediction successful in {processing_time:.3f}s")
                 logger.info(f"Request ID: {result['request_id']}")
                 logger.info(f"Server processing time: {result['processing_time']:.3f}s")
-                logger.info(f"Molecules processed: {result['metadata']['molecule_count']}")
-                
+                logger.info(
+                    f"Molecules processed: {result['metadata']['molecule_count']}"
+                )
+
                 # Calculate throughput
                 throughput = batch_size / processing_time
                 logger.info(f"Throughput: {throughput:.1f} molecules/second")
-                
+
                 # Show first few results
-                results = result['results']
-                if 'descriptors' in results:
-                    logger.info(f"Sample results (first 3):")
-                    for i, desc in enumerate(results['descriptors'][:3]):
+                results = result["results"]
+                if "descriptors" in results:
+                    logger.info("Sample results (first 3):")
+                    for i, desc in enumerate(results["descriptors"][:3]):
                         logger.info(f"  {test_molecules[i]} -> {desc}")
-                
+
                 return result
             else:
-                logger.error(f"Batch prediction failed: {response.status_code} - {response.text}")
+                logger.error(
+                    f"Batch prediction failed: {response.status_code} - {response.text}"
+                )
                 return None
-                
+
         except Exception as e:
             logger.error(f"Batch request failed: {e}")
             return None
-    
+
     async def demo_streaming_prediction(self, batch_size: int = 100):
         """Demonstrate streaming prediction for large batches.
-        
+
         Args:
             batch_size: Number of molecules to process
         """
         logger.info(f"=== Streaming Prediction Demo (size={batch_size}) ===")
-        
+
         if not REQUESTS_AVAILABLE:
             logger.error("aiohttp is required for streaming demo")
             return None
-        
+
         # Create large test batch
         test_molecules = self.create_sample_dataset(batch_size)
-        
+
         payload = {
             "smiles": test_molecules,
             "descriptors": ["molecular_weight", "logp", "tpsa"],
-            "include_properties": True
+            "include_properties": True,
         }
-        
-        logger.info(f"Starting streaming prediction for {len(test_molecules)} molecules")
+
+        logger.info(
+            f"Starting streaming prediction for {len(test_molecules)} molecules"
+        )
         start_time = time.time()
-        
+
         try:
             timeout = aiohttp.ClientTimeout(total=300)
             async with aiohttp.ClientSession(timeout=timeout) as session:
                 async with session.post(
-                    f"{self.server_url}/predict/stream",
-                    json=payload
+                    f"{self.server_url}/predict/stream", json=payload
                 ) as response:
-                    
                     if response.status != 200:
                         logger.error(f"Streaming failed: {response.status}")
                         return None
-                    
+
                     total_processed = 0
                     chunk_count = 0
-                    
+
                     async for line in response.content:
-                        line_text = line.decode('utf-8').strip()
-                        
-                        if line_text.startswith('data: '):
+                        line_text = line.decode("utf-8").strip()
+
+                        if line_text.startswith("data: "):
                             data_json = line_text[6:]  # Remove 'data: ' prefix
                             try:
                                 data = json.loads(data_json)
-                                
-                                if data['type'] == 'start':
-                                    logger.info(f"Stream started for {data['total']} molecules")
-                                
-                                elif data['type'] == 'chunk':
+
+                                if data["type"] == "start":
+                                    logger.info(
+                                        f"Stream started for {data['total']} molecules"
+                                    )
+
+                                elif data["type"] == "chunk":
                                     chunk_count += 1
-                                    processed = data['processed']
-                                    total = data['total']
+                                    processed = data["processed"]
+                                    total = data["total"]
                                     progress = (processed / total) * 100
-                                    
-                                    logger.info(f"Chunk {chunk_count}: {processed}/{total} molecules ({progress:.1f}%)")
+
+                                    logger.info(
+                                        f"Chunk {chunk_count}: {processed}/{total} molecules ({progress:.1f}%)"
+                                    )
                                     total_processed = processed
-                                
-                                elif data['type'] == 'complete':
+
+                                elif data["type"] == "complete":
                                     processing_time = time.time() - start_time
-                                    logger.info(f"Streaming complete!")
-                                    logger.info(f"Total processed: {data['total_processed']}")
+                                    logger.info("Streaming complete!")
+                                    logger.info(
+                                        f"Total processed: {data['total_processed']}"
+                                    )
                                     logger.info(f"Total time: {processing_time:.3f}s")
-                                    logger.info(f"Throughput: {data['total_processed'] / processing_time:.1f} mol/s")
+                                    logger.info(
+                                        f"Throughput: {data['total_processed'] / processing_time:.1f} mol/s"
+                                    )
                                     return data
-                                
-                                elif data['type'] == 'error':
+
+                                elif data["type"] == "error":
                                     logger.error(f"Stream error: {data['error']}")
                                     return None
-                                    
+
                             except json.JSONDecodeError:
-                                logger.warning(f"Failed to parse stream data: {data_json}")
-            
+                                logger.warning(
+                                    f"Failed to parse stream data: {data_json}"
+                                )
+
         except Exception as e:
             logger.error(f"Streaming request failed: {e}")
             return None
-    
+
     def demo_concurrent_requests(self, num_requests: int = 5, batch_size: int = 10):
         """Demonstrate concurrent request handling.
-        
+
         Args:
             num_requests: Number of concurrent requests
             batch_size: Size of each batch
         """
         logger.info(f"=== Concurrent Requests Demo ({num_requests} requests) ===")
-        
-        import threading
+
         from concurrent.futures import ThreadPoolExecutor, as_completed
-        
+
         def make_request(request_id: int) -> Dict[str, Any]:
             """Make a single batch request."""
             test_molecules = self.create_sample_dataset(batch_size)
-            
+
             payload = {
                 "smiles": test_molecules,
                 "descriptors": ["molecular_weight", "logp"],
-                "include_properties": True
+                "include_properties": True,
             }
-            
+
             start_time = time.time()
-            
+
             try:
                 response = requests.post(
-                    f"{self.server_url}/predict/batch",
-                    json=payload,
-                    timeout=60
+                    f"{self.server_url}/predict/batch", json=payload, timeout=60
                 )
-                
+
                 processing_time = time.time() - start_time
-                
+
                 if response.status_code == 200:
                     result = response.json()
                     return {
-                        'request_id': request_id,
-                        'success': True,
-                        'processing_time': processing_time,
-                        'server_time': result['processing_time'],
-                        'molecule_count': batch_size
+                        "request_id": request_id,
+                        "success": True,
+                        "processing_time": processing_time,
+                        "server_time": result["processing_time"],
+                        "molecule_count": batch_size,
                     }
                 else:
                     return {
-                        'request_id': request_id,
-                        'success': False,
-                        'error': f"HTTP {response.status_code}",
-                        'processing_time': processing_time
+                        "request_id": request_id,
+                        "success": False,
+                        "error": f"HTTP {response.status_code}",
+                        "processing_time": processing_time,
                     }
-                    
+
             except Exception as e:
                 processing_time = time.time() - start_time
                 return {
-                    'request_id': request_id,
-                    'success': False,
-                    'error': str(e),
-                    'processing_time': processing_time
+                    "request_id": request_id,
+                    "success": False,
+                    "error": str(e),
+                    "processing_time": processing_time,
                 }
-        
+
         # Execute concurrent requests
         start_time = time.time()
         results = []
-        
+
         with ThreadPoolExecutor(max_workers=num_requests) as executor:
             futures = [executor.submit(make_request, i) for i in range(num_requests)]
-            
+
             for future in as_completed(futures):
                 result = future.result()
                 results.append(result)
-                
-                if result['success']:
-                    logger.info(f"Request {result['request_id']}: {result['processing_time']:.3f}s")
+
+                if result["success"]:
+                    logger.info(
+                        f"Request {result['request_id']}: {result['processing_time']:.3f}s"
+                    )
                 else:
-                    logger.error(f"Request {result['request_id']} failed: {result['error']}")
-        
+                    logger.error(
+                        f"Request {result['request_id']} failed: {result['error']}"
+                    )
+
         total_time = time.time() - start_time
-        
+
         # Analyze results
-        successful = [r for r in results if r['success']]
+        successful = [r for r in results if r["success"]]
         success_rate = len(successful) / len(results) * 100
-        
+
         if successful:
-            avg_latency = sum(r['processing_time'] for r in successful) / len(successful)
-            total_molecules = sum(r.get('molecule_count', 0) for r in successful)
+            avg_latency = sum(r["processing_time"] for r in successful) / len(
+                successful
+            )
+            total_molecules = sum(r.get("molecule_count", 0) for r in successful)
             throughput = total_molecules / total_time
-            
-            logger.info(f"Concurrent test results:")
+
+            logger.info("Concurrent test results:")
             logger.info(f"  Success rate: {success_rate:.1f}%")
             logger.info(f"  Average latency: {avg_latency:.3f}s")
             logger.info(f"  Total throughput: {throughput:.1f} molecules/second")
             logger.info(f"  Total time: {total_time:.3f}s")
-        
+
         return results
-    
+
     def demo_error_handling(self):
         """Demonstrate error handling capabilities."""
         logger.info("=== Error Handling Demo ===")
-        
+
         # Test invalid SMILES
         invalid_molecules = [
             "invalid_smiles",
             "",
             "C" * 200,  # Very long
             "[Pt][Au][Ag]",  # Unusual
-            None  # This will cause a validation error
+            None,  # This will cause a validation error
         ]
-        
+
         for i, invalid_smiles in enumerate(invalid_molecules):
             logger.info(f"Testing invalid molecule {i+1}: {repr(invalid_smiles)}")
-            
+
             try:
                 if invalid_smiles is None:
                     # This should cause a validation error
                     payload = {"invalid_field": "test"}
                 else:
-                    payload = {
-                        "smiles": invalid_smiles,
-                        "include_properties": True
-                    }
-                
+                    payload = {"smiles": invalid_smiles, "include_properties": True}
+
                 response = requests.post(
-                    f"{self.server_url}/predict/single",
-                    json=payload,
-                    timeout=30
+                    f"{self.server_url}/predict/single", json=payload, timeout=30
                 )
-                
+
                 if response.status_code == 200:
                     result = response.json()
                     logger.warning(f"  Unexpected success: {result}")
                 else:
-                    logger.info(f"  Expected error: {response.status_code} - {response.text[:100]}")
-                    
+                    logger.info(
+                        f"  Expected error: {response.status_code} - {response.text[:100]}"
+                    )
+
             except Exception as e:
                 logger.info(f"  Expected exception: {e}")
-    
+
     def demo_performance_monitoring(self):
         """Demonstrate performance monitoring endpoints."""
         logger.info("=== Performance Monitoring Demo ===")
-        
+
         # Get current metrics
         try:
             response = requests.get(f"{self.server_url}/metrics", timeout=10)
@@ -451,28 +463,28 @@ class InferenceServerDemo:
                 logger.info(f"  Active requests: {metrics['active_requests']}")
                 logger.info(f"  Average latency: {metrics['average_latency']:.3f}s")
                 logger.info(f"  GPU utilization: {metrics['gpu_utilization']:.1f}%")
-                
-                memory_usage = metrics['memory_usage']
-                logger.info(f"  Memory usage:")
+
+                memory_usage = metrics["memory_usage"]
+                logger.info("  Memory usage:")
                 for key, value in memory_usage.items():
-                    if 'mb' in key.lower():
+                    if "mb" in key.lower():
                         logger.info(f"    {key}: {value:.1f} MB")
                     else:
                         logger.info(f"    {key}: {value:.1f}")
-                
+
                 return metrics
             else:
                 logger.error(f"Failed to get metrics: {response.status_code}")
                 return None
-                
+
         except Exception as e:
             logger.error(f"Metrics request failed: {e}")
             return None
-    
+
     def demo_descriptors_list(self):
         """Demonstrate available descriptors endpoint."""
         logger.info("=== Available Descriptors Demo ===")
-        
+
         try:
             response = requests.get(f"{self.server_url}/descriptors", timeout=10)
             if response.status_code == 200:
@@ -485,134 +497,136 @@ class InferenceServerDemo:
             else:
                 logger.error(f"Failed to get descriptors: {response.status_code}")
                 return None
-                
+
         except Exception as e:
             logger.error(f"Descriptors request failed: {e}")
             return None
-    
+
     def demo_performance_comparison(self):
         """Demonstrate performance comparison between request types."""
         logger.info("=== Performance Comparison Demo ===")
-        
+
         # Test different batch sizes
         batch_sizes = [1, 10, 50, 100]
         results = {}
-        
+
         for batch_size in batch_sizes:
             logger.info(f"Testing batch size: {batch_size}")
-            
+
             # Create test data
             test_molecules = self.create_sample_dataset(batch_size)
-            
+
             payload = {
                 "smiles": test_molecules,
                 "descriptors": ["molecular_weight", "logp", "tpsa"],
-                "include_properties": True
+                "include_properties": True,
             }
-            
+
             # Time the request
             start_time = time.time()
-            
+
             try:
                 if batch_size == 1:
                     # Use single endpoint for size 1
                     payload_single = {
                         "smiles": test_molecules[0],
                         "descriptors": ["molecular_weight", "logp", "tpsa"],
-                        "include_properties": True
+                        "include_properties": True,
                     }
                     response = requests.post(
                         f"{self.server_url}/predict/single",
                         json=payload_single,
-                        timeout=30
+                        timeout=30,
                     )
                 else:
                     # Use batch endpoint
                     response = requests.post(
-                        f"{self.server_url}/predict/batch",
-                        json=payload,
-                        timeout=60
+                        f"{self.server_url}/predict/batch", json=payload, timeout=60
                     )
-                
+
                 total_time = time.time() - start_time
-                
+
                 if response.status_code == 200:
                     result = response.json()
-                    server_time = result['processing_time']
-                    
+                    server_time = result["processing_time"]
+
                     throughput = batch_size / total_time
                     server_throughput = batch_size / server_time
-                    
+
                     results[batch_size] = {
-                        'total_time': total_time,
-                        'server_time': server_time,
-                        'throughput': throughput,
-                        'server_throughput': server_throughput,
-                        'overhead': total_time - server_time
+                        "total_time": total_time,
+                        "server_time": server_time,
+                        "throughput": throughput,
+                        "server_throughput": server_throughput,
+                        "overhead": total_time - server_time,
                     }
-                    
+
                     logger.info(f"  Total time: {total_time:.3f}s")
                     logger.info(f"  Server time: {server_time:.3f}s")
                     logger.info(f"  Throughput: {throughput:.1f} mol/s")
                     logger.info(f"  Server throughput: {server_throughput:.1f} mol/s")
-                    
+
                 else:
                     logger.error(f"  Failed: {response.status_code}")
-                    
+
             except Exception as e:
                 logger.error(f"  Error: {e}")
-        
+
         # Summary
         if results:
             logger.info("\nPerformance Summary:")
-            logger.info("Batch Size | Total Time | Server Time | Throughput | Server Throughput")
+            logger.info(
+                "Batch Size | Total Time | Server Time | Throughput | Server Throughput"
+            )
             logger.info("-" * 70)
             for batch_size, data in results.items():
-                logger.info(f"{batch_size:9d} | {data['total_time']:9.3f}s | {data['server_time']:10.3f}s | {data['throughput']:9.1f} | {data['server_throughput']:14.1f}")
-        
+                logger.info(
+                    f"{batch_size:9d} | {data['total_time']:9.3f}s | {data['server_time']:10.3f}s | {data['throughput']:9.1f} | {data['server_throughput']:14.1f}"
+                )
+
         return results
-    
+
     def run_comprehensive_demo(self):
         """Run all demo scenarios."""
         logger.info("Starting ChemiAccel Inference Server Comprehensive Demo")
         logger.info("=" * 70)
-        
+
         # Check server health
         health = self.check_server_health()
-        if not health or health.get('status') != 'healthy':
+        if not health or health.get("status") != "healthy":
             logger.error("Server is not healthy. Aborting demo.")
             return
-        
+
         try:
             # Basic functionality demos
             self.demo_single_prediction()
             print()
-            
+
             self.demo_batch_prediction(batch_size=10)
             print()
-            
+
             # Advanced features
             asyncio.run(self.demo_streaming_prediction(batch_size=50))
             print()
-            
+
             self.demo_concurrent_requests(num_requests=3, batch_size=5)
             print()
-            
+
             # Error handling
             self.demo_error_handling()
             print()
-            
+
             # Monitoring and introspection
             self.demo_descriptors_list()
             print()
-            
+
             self.demo_performance_monitoring()
             print()
-            
+
             # Performance comparison
             self.demo_performance_comparison()
             print()
-            
+
             logger.info("=" * 70)
             logger.info("Demo completed successfully!")
             logger.info("All inference server features demonstrated:")
@@ -624,7 +638,7 @@ class InferenceServerDemo:
             logger.info("  ✓ Performance monitoring and metrics")
             logger.info("  ✓ Descriptor introspection")
             logger.info("  ✓ Performance optimization")
-            
+
         except KeyboardInterrupt:
             logger.info("Demo interrupted by user")
         except Exception as e:
@@ -635,25 +649,42 @@ class InferenceServerDemo:
 def main():
     """Main function to run the demo."""
     import argparse
-    
+
     parser = argparse.ArgumentParser(description="ChemiAccel Inference Server Demo")
-    parser.add_argument("--server", default="http://localhost:8000", 
-                       help="Server URL (default: http://localhost:8000)")
-    parser.add_argument("--single", action="store_true", 
-                       help="Run only single prediction demo")
-    parser.add_argument("--batch", type=int, metavar="SIZE",
-                       help="Run only batch prediction demo with specified size")
-    parser.add_argument("--stream", type=int, metavar="SIZE",
-                       help="Run only streaming prediction demo with specified size")
-    parser.add_argument("--concurrent", type=int, metavar="NUM",
-                       help="Run only concurrent requests demo with specified number")
-    parser.add_argument("--health", action="store_true",
-                       help="Check server health only")
-    
+    parser.add_argument(
+        "--server",
+        default="http://localhost:8000",
+        help="Server URL (default: http://localhost:8000)",
+    )
+    parser.add_argument(
+        "--single", action="store_true", help="Run only single prediction demo"
+    )
+    parser.add_argument(
+        "--batch",
+        type=int,
+        metavar="SIZE",
+        help="Run only batch prediction demo with specified size",
+    )
+    parser.add_argument(
+        "--stream",
+        type=int,
+        metavar="SIZE",
+        help="Run only streaming prediction demo with specified size",
+    )
+    parser.add_argument(
+        "--concurrent",
+        type=int,
+        metavar="NUM",
+        help="Run only concurrent requests demo with specified number",
+    )
+    parser.add_argument(
+        "--health", action="store_true", help="Check server health only"
+    )
+
     args = parser.parse_args()
-    
+
     demo = InferenceServerDemo(args.server)
-    
+
     if args.health:
         demo.check_server_health()
     elif args.single:

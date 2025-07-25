@@ -5,83 +5,61 @@ This module provides CUDA-accelerated implementations for molecular
 descriptor calculations using custom CUDA kernels and RAPIDS integration.
 """
 
+from .graph_kernels import (
+    GraphDescriptorCalculator,
+    GraphKernelManager,
+    get_graph_kernel_manager,
+)
+from .kernels import BasicDescriptorCalculator, CUDAKernelManager, get_kernel_manager
 from .memory import (
+    BatchSizeOptimizer,
     CUDAMemoryManager,
     CUDAMemoryPool,
-    BatchSizeOptimizer,
     MemoryInfo,
+    cuda_memory_context,
     get_memory_manager,
-    cuda_memory_context
 )
-
-from .streaming import (
-    StreamingConfig,
-    CUDAStream,
-    DataStreamer,
-    StreamingProcessor
-)
-
-from .kernels import (
-    CUDAKernelManager,
-    BasicDescriptorCalculator,
-    get_kernel_manager
-)
-
-from .graph_kernels import (
-    GraphKernelManager,
-    GraphDescriptorCalculator,
-    get_graph_kernel_manager
-)
-
-from .optimized_kernels import (
-    OptimizedCUDAKernelManager,
-    KernelProfiler as OptimizedKernelProfiler,
-    get_optimized_kernel_manager
-)
-
 from .optimization_utils import (
+    KernelPerformanceMetrics,
+    KernelProfiler,
     MemoryAccessAnalyzer,
     OccupancyOptimizer,
-    KernelProfiler,
-    PerformanceRegressionTester,
-    KernelPerformanceMetrics,
     OptimizationResult,
-    get_kernel_profiler
+    PerformanceRegressionTester,
+    get_kernel_profiler,
 )
+from .optimized_kernels import KernelProfiler as OptimizedKernelProfiler
+from .optimized_kernels import OptimizedCUDAKernelManager, get_optimized_kernel_manager
+from .streaming import CUDAStream, DataStreamer, StreamingConfig, StreamingProcessor
 
 __all__ = [
     # Memory management
     "CUDAMemoryManager",
-    "CUDAMemoryPool", 
+    "CUDAMemoryPool",
     "BatchSizeOptimizer",
     "MemoryInfo",
     "get_memory_manager",
     "cuda_memory_context",
-    
     # Streaming
     "StreamingConfig",
     "CUDAStream",
-    "DataStreamer", 
+    "DataStreamer",
     "StreamingProcessor",
-    
     # Kernels
     "CUDAKernelManager",
     "BasicDescriptorCalculator",
     "get_kernel_manager",
-    
     # Graph Kernels
     "GraphKernelManager",
     "GraphDescriptorCalculator",
     "get_graph_kernel_manager",
-    
     # Optimized Kernels
     "OptimizedCUDAKernelManager",
     "OptimizedKernelProfiler",
     "get_optimized_kernel_manager",
-    
     # Optimization Utils
     "MemoryAccessAnalyzer",
-    "OccupancyOptimizer", 
+    "OccupancyOptimizer",
     "KernelProfiler",
     "PerformanceRegressionTester",
     "KernelPerformanceMetrics",

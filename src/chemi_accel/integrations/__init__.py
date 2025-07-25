@@ -6,18 +6,21 @@ and machine learning libraries including scikit-learn, Dask, and
 Jupyter notebooks.
 """
 
-from .sklearn_integration import ChemiAccelTransformer, ChemiAccelEstimator
+from .dask_integration import (
+    DaskChemiAccelCalculator,
+    distributed_calculate_descriptors,
+)
 from .jupyter_integration import MolecularDisplayMixin, enable_rich_display
-from .dask_integration import DaskChemiAccelCalculator, distributed_calculate_descriptors
+from .sklearn_integration import ChemiAccelEstimator, ChemiAccelTransformer
 
 __all__ = [
     # scikit-learn integration
     "ChemiAccelTransformer",
-    "ChemiAccelEstimator", 
+    "ChemiAccelEstimator",
     # Jupyter integration
     "MolecularDisplayMixin",
     "enable_rich_display",
     # Dask integration
     "DaskChemiAccelCalculator",
-    "distributed_calculate_descriptors"
+    "distributed_calculate_descriptors",
 ]

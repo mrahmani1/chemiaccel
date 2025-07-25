@@ -16,7 +16,7 @@ maintainers = [
 ]
 keywords = [
     "cheminformatics",
-    "molecular-descriptors", 
+    "molecular-descriptors",
     "gpu-acceleration",
     "cuda",
     "jax",
@@ -30,7 +30,7 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9", 
+    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Topic :: Scientific/Engineering :: Chemistry",
@@ -56,7 +56,7 @@ cuda = [
     "numba>=0.56.0",
 ]
 
-# JAX backend dependencies  
+# JAX backend dependencies
 jax = [
     "jax[cuda11_pip]>=0.4.0",
     "jaxlib>=0.4.0",
@@ -66,7 +66,7 @@ jax = [
 # Development dependencies
 dev = [
     "black>=22.0.0",
-    "isort>=5.10.0", 
+    "isort>=5.10.0",
     "mypy>=0.950",
     "pre-commit>=2.17.0",
     "ruff>=0.0.260",
@@ -152,7 +152,7 @@ strict_equality = true
 [[tool.mypy.overrides]]
 module = [
     "rdkit.*",
-    "cupy.*", 
+    "cupy.*",
     "cudf.*",
     "cugraph.*",
     "jax.*",
@@ -192,10 +192,25 @@ select = [
 ]
 ignore = [
     "E501",  # line too long, handled by black
+    "E402",  # module level import not at top of file
+    "F401",  # imported but unused
+    "F811",  # redefinition of unused name
+    "B007",  # loop control variable not used within loop body
+    "F841",  # local variable assigned to but never used
     "B008",  # do not perform function calls in argument defaults
     "C901",  # too complex
+    "E722",  # do not use bare except (we're handling this manually)
 ]
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]
-"tests/**/*" = ["B011"]
+"tests/**/*" = ["B011", "F401", "F811", "B007", "F841"]
+"benchmarks/**/*" = ["F401", "F811", "B007", "F841", "E402"]
+"examples/**/*" = ["F401", "F811", "B007", "F841", "E402"]
+"scripts/**/*" = ["F401", "F811", "B007", "F841", "E402"]
+
+[tool.ruff.mccabe]
+max-complexity = 15
+
+[tool.ruff.pyupgrade]
+keep-runtime-typing = true

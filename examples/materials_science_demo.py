@@ -7,18 +7,21 @@ capabilities of ChemiAccel, including CIF/POSCAR parsing, descriptor calculation
 and validation against known crystal structures.
 """
 
-import numpy as np
-import pandas as pd
-from pathlib import Path
-import tempfile
-
 # Import ChemiAccel materials science modules
 import sys
+import tempfile
 from pathlib import Path
+
+import numpy as np
+
 sys.path.append(str(Path(__file__).parent.parent / "src"))
 
+from chemi_accel.materials.crystal_parser import (
+    CIFParser,
+    CrystalStructure,
+    POSCARParser,
+)
 from chemi_accel.materials.materials_calculator import MaterialsCalculator
-from chemi_accel.materials.crystal_parser import CrystalStructure, CIFParser, POSCARParser
 from chemi_accel.materials.validation import MaterialsValidator
 
 
@@ -26,38 +29,44 @@ def create_example_diamond_structure():
     """Create an example diamond crystal structure."""
     # Diamond lattice parameters
     lattice_param = 3.567  # Angstrom
-    
-    diamond_lattice = np.array([
-        [lattice_param, 0.0, 0.0],
-        [0.0, lattice_param, 0.0],
-        [0.0, 0.0, lattice_param]
-    ])
-    
+
+    diamond_lattice = np.array(
+        [
+            [lattice_param, 0.0, 0.0],
+            [0.0, lattice_param, 0.0],
+            [0.0, 0.0, lattice_param],
+        ]
+    )
+
     # Diamond has 8 carbon atoms in the conventional unit cell
-    fractional_coords = np.array([
-        [0.0, 0.0, 0.0],
-        [0.25, 0.25, 0.25],
-        [0.5, 0.5, 0.0],
-        [0.75, 0.75, 0.25],
-        [0.5, 0.0, 0.5],
-        [0.75, 0.25, 0.75],
-        [0.0, 0.5, 0.5],
-        [0.25, 0.75, 0.75]
-    ])
-    
+    fractional_coords = np.array(
+        [
+            [0.0, 0.0, 0.0],
+            [0.25, 0.25, 0.25],
+            [0.5, 0.5, 0.0],
+            [0.75, 0.75, 0.25],
+            [0.5, 0.0, 0.5],
+            [0.75, 0.25, 0.75],
+            [0.0, 0.5, 0.5],
+            [0.25, 0.75, 0.75],
+        ]
+    )
+
     cartesian_coords = np.dot(fractional_coords, diamond_lattice)
-    
+
     return CrystalStructure(
         lattice_vectors=diamond_lattice,
-        lattice_parameters=np.array([lattice_param, lattice_param, lattice_param, 90.0, 90.0, 90.0]),
+        lattice_parameters=np.array(
+            [lattice_param, lattice_param, lattice_param, 90.0, 90.0, 90.0]
+        ),
         atomic_numbers=np.array([6] * 8),  # Carbon
-        atomic_symbols=['C'] * 8,
+        atomic_symbols=["C"] * 8,
         fractional_coords=fractional_coords,
         cartesian_coords=cartesian_coords,
-        formula='C8',
+        formula="C8",
         density=3.515,  # g/cm³
-        space_group='Fd-3m',
-        space_group_number=227
+        space_group="Fd-3m",
+        space_group_number=227,
     )
 
 
@@ -105,10 +114,10 @@ def demo_crystal_structure_creation():
     print("=" * 60)
     print("CRYSTAL STRUCTURE CREATION DEMO")
     print("=" * 60)
-    
+
     # Create diamond structure
     diamond = create_example_diamond_structure()
-    
+
     print(f"Formula: {diamond.formula}")
     print(f"Space Group: {diamond.space_group}")
     print(f"Density: {diamond.density:.3f} g/cm³")
@@ -124,31 +133,31 @@ def demo_cif_parsing():
     print("=" * 60)
     print("CIF FILE PARSING DEMO")
     print("=" * 60)
-    
+
     # Create temporary CIF file
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.cif', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".cif", delete=False) as f:
         f.write(create_example_cif_file())
         cif_path = f.name
-    
+
     try:
         # Parse CIF file
         parser = CIFParser(use_pymatgen=False)  # Use basic parser for demo
         structures = parser.parse_file(cif_path)
-        
+
         print(f"Successfully parsed {len(structures)} structure(s) from CIF file")
-        
+
         for i, structure in enumerate(structures):
             print(f"\nStructure {i+1}:")
             print(f"  Formula: {structure.formula}")
             print(f"  Volume: {structure.volume:.3f} Ų")
             print(f"  Number of atoms: {len(structure.atomic_numbers)}")
-            
+
     except Exception as e:
         print(f"CIF parsing failed: {e}")
     finally:
         # Clean up
         Path(cif_path).unlink(missing_ok=True)
-    
+
     print()
 
 
@@ -157,29 +166,29 @@ def demo_poscar_parsing():
     print("=" * 60)
     print("POSCAR FILE PARSING DEMO")
     print("=" * 60)
-    
+
     # Create temporary POSCAR file
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.vasp', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".vasp", delete=False) as f:
         f.write(create_example_poscar_file())
         poscar_path = f.name
-    
+
     try:
         # Parse POSCAR file
         parser = POSCARParser(use_pymatgen=False)  # Use basic parser for demo
         structure = parser.parse_file(poscar_path)
-        
+
         print("Successfully parsed POSCAR file")
         print(f"Formula: {structure.formula}")
         print(f"Volume: {structure.volume:.3f} Ų")
         print(f"Number of atoms: {len(structure.atomic_numbers)}")
         print(f"Lattice parameters: {structure.lattice_parameters[:3]}")
-        
+
     except Exception as e:
         print(f"POSCAR parsing failed: {e}")
     finally:
         # Clean up
         Path(poscar_path).unlink(missing_ok=True)
-    
+
     print()
 
 
@@ -188,57 +197,59 @@ def demo_descriptor_calculation():
     print("=" * 60)
     print("DESCRIPTOR CALCULATION DEMO")
     print("=" * 60)
-    
+
     # Create materials calculator
     calculator = MaterialsCalculator(use_gpu=False)  # Use CPU for demo
-    
+
     # Create test structure
     diamond = create_example_diamond_structure()
-    
+
     try:
         # Calculate descriptors
         print("Calculating descriptors for diamond structure...")
         df = calculator.calculate_descriptors(
             [diamond],
             supercell_size=(1, 1, 1),  # Small supercell for demo
-            grid_resolution=1.0,       # Coarse grid for speed
+            grid_resolution=1.0,  # Coarse grid for speed
             include_crystal_descriptors=True,
-            include_periodic_descriptors=True
+            include_periodic_descriptors=True,
         )
-        
+
         print(f"Successfully calculated {len(df.columns)} descriptors")
-        
+
         # Display key descriptors
         row = df.iloc[0]
         print("\nKey Crystal Descriptors:")
         print(f"  Volume: {row.get('volume', 'N/A'):.3f} Ų")
         print(f"  Density: {row.get('density', 'N/A'):.3f} g/cm³")
-        
-        if 'crystal_void_fraction' in row:
+
+        if "crystal_void_fraction" in row:
             print(f"  Void Fraction: {row['crystal_void_fraction']:.3f}")
-        
-        if 'crystal_packing_efficiency' in row:
+
+        if "crystal_packing_efficiency" in row:
             print(f"  Packing Efficiency: {row['crystal_packing_efficiency']:.3f}")
-        
-        if 'crystal_surface_area_accessible' in row:
-            print(f"  Accessible Surface Area: {row['crystal_surface_area_accessible']:.3f} Ų")
-        
-        if 'crystal_average_coordination' in row:
+
+        if "crystal_surface_area_accessible" in row:
+            print(
+                f"  Accessible Surface Area: {row['crystal_surface_area_accessible']:.3f} Ų"
+            )
+
+        if "crystal_average_coordination" in row:
             print(f"  Average Coordination: {row['crystal_average_coordination']:.1f}")
-        
+
         print("\nPeriodic Descriptors:")
-        periodic_cols = [col for col in df.columns if col.startswith('periodic_')]
+        periodic_cols = [col for col in df.columns if col.startswith("periodic_")]
         print(f"  Number of periodic descriptors: {len(periodic_cols)}")
-        
-        if 'periodic_symmetry_index' in row:
+
+        if "periodic_symmetry_index" in row:
             print(f"  Symmetry Index: {row['periodic_symmetry_index']:.3f}")
-        
-        if 'periodic_connectivity_index' in row:
+
+        if "periodic_connectivity_index" in row:
             print(f"  Connectivity Index: {row['periodic_connectivity_index']:.3f}")
-        
+
     except Exception as e:
         print(f"Descriptor calculation failed: {e}")
-    
+
     print()
 
 
@@ -247,46 +258,48 @@ def demo_structure_validation():
     print("=" * 60)
     print("STRUCTURE VALIDATION DEMO")
     print("=" * 60)
-    
+
     # Create validator
     validator = MaterialsValidator()
-    
+
     # Create test structure
     diamond = create_example_diamond_structure()
-    
+
     try:
         # Validate structure
         print("Validating diamond structure against reference data...")
-        validation = validator.validate_structure(diamond, reference_name='diamond')
-        
+        validation = validator.validate_structure(diamond, reference_name="diamond")
+
         print(f"Structure Valid: {validation['structure_valid']}")
         print(f"Number of Warnings: {len(validation['warnings'])}")
         print(f"Number of Errors: {len(validation['errors'])}")
-        
-        if validation['warnings']:
+
+        if validation["warnings"]:
             print("\nWarnings:")
-            for warning in validation['warnings']:
+            for warning in validation["warnings"]:
                 print(f"  - {warning}")
-        
-        if validation['errors']:
+
+        if validation["errors"]:
             print("\nErrors:")
-            for error in validation['errors']:
+            for error in validation["errors"]:
                 print(f"  - {error}")
-        
+
         # Reference comparison
-        if 'reference_comparison' in validation:
-            ref_comp = validation['reference_comparison']
+        if "reference_comparison" in validation:
+            ref_comp = validation["reference_comparison"]
             print(f"\nReference Match: {ref_comp.get('overall_match', 'N/A')}")
-            
-            if 'deviations' in ref_comp:
+
+            if "deviations" in ref_comp:
                 print("Parameter Deviations:")
-                for param, dev_info in ref_comp['deviations'].items():
-                    if 'relative_error' in dev_info:
-                        print(f"  {param}: {dev_info['relative_error']:.3f} relative error")
-        
+                for param, dev_info in ref_comp["deviations"].items():
+                    if "relative_error" in dev_info:
+                        print(
+                            f"  {param}: {dev_info['relative_error']:.3f} relative error"
+                        )
+
     except Exception as e:
         print(f"Validation failed: {e}")
-    
+
     print()
 
 
@@ -295,49 +308,45 @@ def demo_batch_processing():
     print("=" * 60)
     print("BATCH PROCESSING DEMO")
     print("=" * 60)
-    
+
     # Create multiple test structures
     structures = []
-    
+
     # Diamond
     diamond = create_example_diamond_structure()
     structures.append(diamond)
-    
+
     # Simple cubic structure (for variety)
-    cubic_lattice = np.array([
-        [2.0, 0.0, 0.0],
-        [0.0, 2.0, 0.0],
-        [0.0, 0.0, 2.0]
-    ])
-    
+    cubic_lattice = np.array([[2.0, 0.0, 0.0], [0.0, 2.0, 0.0], [0.0, 0.0, 2.0]])
+
     cubic_structure = CrystalStructure(
         lattice_vectors=cubic_lattice,
         lattice_parameters=np.array([2.0, 2.0, 2.0, 90.0, 90.0, 90.0]),
         atomic_numbers=np.array([1]),  # Hydrogen
-        atomic_symbols=['H'],
+        atomic_symbols=["H"],
         fractional_coords=np.array([[0.0, 0.0, 0.0]]),
         cartesian_coords=np.array([[0.0, 0.0, 0.0]]),
-        formula='H',
-        density=0.1
+        formula="H",
+        density=0.1,
     )
     structures.append(cubic_structure)
-    
+
     try:
         # Batch calculate descriptors
         calculator = MaterialsCalculator(use_gpu=False)
         print(f"Processing {len(structures)} structures...")
-        
+
         df = calculator.calculate_descriptors(
             structures,
             supercell_size=(1, 1, 1),
             grid_resolution=1.0,
             include_crystal_descriptors=True,
-            include_periodic_descriptors=False  # Skip for speed
+            include_periodic_descriptors=False,  # Skip for speed
         )
-        
+
         print(f"Successfully processed {len(df)} structures")
         print(f"Calculated {len(df.columns)} descriptors per structure")
-        
+
         # Display summary
         print("\nStructure Summary:")
         for i, row in df.iterrows():
@@ -345,10 +354,10 @@ def demo_batch_processing():
             print(f"    Formula: {row.get('formula', 'N/A')}")
             print(f"    Volume: {row.get('volume', 'N/A'):.3f} Ų")
             print(f"    Density: {row.get('density', 'N/A'):.3f} g/cm³")
-        
+
     except Exception as e:
         print(f"Batch processing failed: {e}")
-    
+
     print()
 
 
@@ -357,14 +366,14 @@ def demo_supported_formats():
     print("=" * 60)
     print("SUPPORTED FORMATS DEMO")
     print("=" * 60)
-    
+
     calculator = MaterialsCalculator()
     formats = calculator.get_supported_formats()
-    
+
     print("Supported crystal structure formats:")
     for fmt in formats:
         print(f"  - {fmt}")
-    
+
     print()
 
 
@@ -373,7 +382,7 @@ def main():
     print("ChemiAccel Materials Science Demo")
     print("Demonstrating Crystalline and Periodic Materials Featurization")
     print()
-    
+
     # Run all demos
     demo_supported_formats()
     demo_crystal_structure_creation()
@@ -382,7 +391,7 @@ def main():
     demo_descriptor_calculation()
     demo_structure_validation()
     demo_batch_processing()
-    
+
     print("=" * 60)
     print("DEMO COMPLETED")
     print("=" * 60)
