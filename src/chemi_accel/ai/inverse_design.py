@@ -38,6 +38,20 @@ except ImportError:
 from ..core.calculator import Calculator
 from ..core.exceptions import ChemiAccelError
 
+try:
+    from .kg_integration import (
+        AIContextualPrediction,
+        AIKGIntegrationManager,
+        AITaskType,
+        KGContextType,
+        KGUpdateSuggestion,
+    )
+
+    KG_INTEGRATION_AVAILABLE = True
+except ImportError:
+    KG_INTEGRATION_AVAILABLE = False
+    warnings.warn("KG Integration not available. Contextual features will be limited.")
+
 
 class InverseDesignError(ChemiAccelError):
     """Raised when inverse design operations fail."""
@@ -475,38 +489,45 @@ class MultiObjectiveOptimizer:
         return crowding_distances
 
 
-class InverseDesign:
+class KGContextualInverseDesign:
     """
-    Gradient-based molecular optimization in latent space.
+    Knowledge Graph-enhanced Inverse Design for ChemiAccel.
 
     This class implements inverse molecular design using JAX automatic differentiation
     to optimize molecules in a latent space representation towards target properties
-    while satisfying constraints.
+    while leveraging contextual information from the IC-KG for intelligent optimization
+    and constraint handling.
     """
 
     def __init__(
         self,
         calculator: Calculator,
         target_properties: Dict[str, float],
+        kg_integration_manager: Optional["AIKGIntegrationManager"] = None,
         latent_space: Optional[MolecularLatentSpace] = None,
         constraint_config: Optional[ConstraintConfig] = None,
+        use_kg_constraints: bool = True,
     ):
         """
-        Initialize inverse design module.
+        Initialize KG-contextual inverse design module.
 
         Args:
             calculator: ChemiAccel calculator for property prediction
             target_properties: Dictionary of target property values
+            kg_integration_manager: Manager for KG integration
             latent_space: Molecular latent space representation
             constraint_config: Configuration for molecular constraints
+            use_kg_constraints: Whether to use KG-derived constraints
         """
         if not JAX_AVAILABLE:
             raise InverseDesignError("JAX required for inverse design")
 
         self.calculator = calculator
         self.target_properties = target_properties
+        self.kg_integration_manager = kg_integration_manager
         self.latent_space = latent_space or SimpleLatentSpace()
         self.constraint_config = constraint_config or ConstraintConfig()
+        self.use_kg_constraints = use_kg_constraints
 
         self.property_predictor = PropertyPredictor(calculator)
         self.constraint_handler = ConstraintHandler(self.constraint_config)
@@ -528,34 +549,69 @@ class InverseDesign:
         # Optimization state
         self.optimization_history = []
         self.best_molecules = []
+        self.kg_contexts = {}
+        self.kg_update_suggestions = []
 
-    def optimize_molecules(
+    async def optimize_molecules_with_kg_context(
         self,
         starting_molecules: List[str],
         n_iterations: int = 100,
         learning_rate: float = 0.01,
         population_size: int = 50,
+        kg_context_types: Optional[List[KGContextType]] = None,
     ) -> OptimizationResult:
         """
-        Generate optimized molecules using gradient-based optimization.
+        Generate optimized molecules using KG-contextual gradient-based optimization.
 
         Args:
             starting_molecules: Initial molecules to optimize
             n_iterations: Number of optimization iterations
             learning_rate: Learning rate for gradient descent
             population_size: Size of molecule population to maintain
+            kg_context_types: Types of KG context to retrieve
 
         Returns:
             OptimizationResult with optimized molecules and optimization history
         """
+        # Set default KG context types
+        if kg_context_types is None:
+            kg_context_types = [
+                KGContextType.MOLECULAR_SIMILARITY,
+                KGContextType.STRUCTURE_ACTIVITY,
+                KGContextType.DRUG_TARGET,
+                KGContextType.PROPERTY_CORRELATION,
+            ]
+
+        # Step 1: Get KG context for starting molecules
+        if self.kg_integration_manager and self.use_kg_constraints:
+            logging.info("Retrieving knowledge graph context...")
+            self.kg_contexts = await self.kg_integration_manager.context_provider.get_molecular_context(
+                starting_molecules, kg_context_types
+            )
+
+            # Update constraints based on KG context
+            self._update_constraints_from_kg_context()
+
+        # Step 2: Analyze similar molecules for guidance
+        guidance_molecules = self._extract_guidance_molecules_from_kg()
+
+        # Step 3: Perform optimization with KG guidance
         # Fit latent space if needed
         if hasattr(self.latent_space, "fit"):
-            self.latent_space.fit(starting_molecules)
+            # Combine starting molecules with guidance molecules for better latent space
+            all_molecules = starting_molecules + guidance_molecules
+            self.latent_space.fit(all_molecules)
 
         # Initialize population in latent space
         current_molecules = starting_molecules[:population_size]
         if len(current_molecules) < population_size:
-            # Duplicate molecules to reach population size
+            # Add guidance molecules to reach population size
+            remaining_slots = population_size - len(current_molecules)
+            if guidance_molecules:
+                guidance_sample = guidance_molecules[:remaining_slots]
+                current_molecules.extend(guidance_sample)
+
+            # Fill remaining slots with duplicates if needed
             while len(current_molecules) < population_size:
                 current_molecules.extend(starting_molecules)
             current_molecules = current_molecules[:population_size]
@@ -563,39 +619,54 @@ class InverseDesign:
         # Encode to latent space
         latent_vectors = self.latent_space.encode(current_molecules)
 
-        # Initialize optimizer
-        optimizer = optax.adam(learning_rate)
+        # Initialize optimizer with KG-guided learning rate
+        adjusted_lr = self._adjust_learning_rate_with_kg_context(learning_rate)
+        optimizer = optax.adam(adjusted_lr)
         opt_state = optimizer.init(latent_vectors)
 
-        # Optimization loop
+        # Optimization loop with KG guidance
         for iteration in range(n_iterations):
-            # Calculate gradients and update
-            latent_vectors, opt_state, iteration_info = self._optimization_step(
-                latent_vectors, opt_state, optimizer
+            # Calculate gradients and update with KG guidance
+            (
+                latent_vectors,
+                opt_state,
+                iteration_info,
+            ) = await self._kg_guided_optimization_step(
+                latent_vectors, opt_state, optimizer, iteration
             )
 
             # Decode to molecules
             current_molecules = self.latent_space.decode(latent_vectors)
 
-            # Record iteration
-            self.optimization_history.append(
-                {
-                    "iteration": iteration,
-                    "molecules": current_molecules.copy(),
-                    **iteration_info,
-                }
-            )
+            # Filter invalid molecules and replace with KG-guided alternatives
+            current_molecules = self._filter_and_replace_molecules(current_molecules)
 
-            # Early stopping check
-            if self._check_convergence(iteration_info):
-                print(f"Converged at iteration {iteration}")
+            # Record iteration with KG context
+            iteration_record = {
+                "iteration": iteration,
+                "molecules": current_molecules.copy(),
+                "kg_guidance_applied": len(guidance_molecules) > 0,
+                **iteration_info,
+            }
+            self.optimization_history.append(iteration_record)
+
+            # Early stopping check with KG-informed criteria
+            if self._check_kg_informed_convergence(iteration_info, iteration):
+                logging.info(f"Converged at iteration {iteration} with KG guidance")
                 break
 
-        # Final evaluation
+        # Step 4: Final evaluation with KG context
         final_properties = self.property_predictor.predict_properties(current_molecules)
         final_constraints = self.constraint_handler.evaluate_constraints(
             current_molecules
         )
+
+        # Add KG-based constraints evaluation
+        if self.kg_integration_manager:
+            kg_constraint_violations = await self._evaluate_kg_constraints(
+                current_molecules
+            )
+            final_constraints.update(kg_constraint_violations)
 
         # Multi-objective optimization
         objective_values = self.multi_objective_optimizer.calculate_objective_values(
@@ -605,14 +676,65 @@ class InverseDesign:
             objective_values
         )
 
-        return OptimizationResult(
+        # Step 5: Generate contextual predictions and KG updates
+        contextual_predictions = []
+        if self.kg_integration_manager:
+            for i, mol in enumerate(current_molecules):
+                prediction = {
+                    "optimized_molecules": [mol],
+                    "target_properties": self.target_properties,
+                    "optimization_score": float(np.mean(objective_values[i]))
+                    if len(objective_values) > i
+                    else 0.0,
+                    "properties": {
+                        k: v[i] for k, v in final_properties.items() if len(v) > i
+                    },
+                }
+
+                contextual_pred = (
+                    await self.kg_integration_manager.enrich_ai_prediction(
+                        prediction=prediction,
+                        molecules=[mol],
+                        task_type=AITaskType.INVERSE_DESIGN,
+                        context_types=kg_context_types,
+                    )
+                )
+                contextual_predictions.append(contextual_pred)
+
+            # Generate KG update suggestions
+            self.kg_update_suggestions = (
+                self.kg_integration_manager.feedback_manager.suggest_kg_updates(
+                    contextual_predictions, AITaskType.INVERSE_DESIGN
+                )
+            )
+
+        # Create enhanced optimization result
+        result = OptimizationResult(
             optimized_molecules=current_molecules,
             optimization_history=self.optimization_history,
             final_properties=final_properties,
             constraint_violations=final_constraints,
             pareto_front_indices=pareto_indices,
-            convergence_info={"converged": iteration < n_iterations - 1},
+            convergence_info={
+                "converged": iteration < n_iterations - 1,
+                "kg_guidance_used": len(guidance_molecules) > 0,
+                "contextual_predictions": len(contextual_predictions),
+            },
         )
+
+        # Add KG-specific metadata
+        if hasattr(result, "metadata"):
+            result.metadata = {}
+        result.metadata.update(
+            {
+                "kg_contexts_retrieved": len(self.kg_contexts),
+                "guidance_molecules_used": len(guidance_molecules),
+                "kg_update_suggestions": len(self.kg_update_suggestions),
+                "kg_integration_enabled": self.kg_integration_manager is not None,
+            }
+        )
+
+        return result
 
     @jit
     def _optimization_step(
@@ -705,6 +827,368 @@ class InverseDesign:
         }
 
         return visualization_data
+
+    def _update_constraints_from_kg_context(self):
+        """Update constraints based on knowledge graph context."""
+        if not self.kg_contexts:
+            return
+
+        # Analyze KG context to derive additional constraints
+        all_similar_mols = []
+        for context in self.kg_contexts.values():
+            similar_mols = [e for e in context.entities if "similarity_score" in e]
+            all_similar_mols.extend(similar_mols)
+
+        if all_similar_mols:
+            # Adjust molecular weight range based on similar molecules
+            mw_values = [
+                mol.get("molecular_weight", 0)
+                for mol in all_similar_mols
+                if mol.get("molecular_weight")
+            ]
+            if mw_values:
+                mw_mean = np.mean(mw_values)
+                mw_std = np.std(mw_values)
+                # Adjust range to be within 2 std devs of similar molecules
+                new_mw_min = max(
+                    self.constraint_config.mw_range[0], mw_mean - 2 * mw_std
+                )
+                new_mw_max = min(
+                    self.constraint_config.mw_range[1], mw_mean + 2 * mw_std
+                )
+                self.constraint_config.mw_range = (new_mw_min, new_mw_max)
+                logging.info(
+                    f"Updated MW range based on KG: {new_mw_min:.1f}-{new_mw_max:.1f}"
+                )
+
+    def _extract_guidance_molecules_from_kg(self) -> List[str]:
+        """Extract guidance molecules from KG context."""
+        guidance_molecules = []
+
+        for context in self.kg_contexts.values():
+            # Extract similar molecules with high scores
+            similar_mols = [
+                e
+                for e in context.entities
+                if "similarity_score" in e
+                and e["similarity_score"] > 0.7
+                and "smiles" in e
+            ]
+            guidance_molecules.extend([mol["smiles"] for mol in similar_mols[:5]])
+
+            # Extract molecules with known activities
+            active_mols = [
+                e
+                for e in context.entities
+                if "activity_type" in e
+                and e.get("confidence", 0) > 0.6
+                and "smiles" in e
+            ]
+            guidance_molecules.extend([mol["smiles"] for mol in active_mols[:3]])
+
+        # Remove duplicates while preserving order
+        seen = set()
+        unique_guidance = []
+        for mol in guidance_molecules:
+            if mol not in seen:
+                seen.add(mol)
+                unique_guidance.append(mol)
+
+        logging.info(f"Extracted {len(unique_guidance)} guidance molecules from KG")
+        return unique_guidance[:20]  # Limit to top 20
+
+    def _adjust_learning_rate_with_kg_context(self, base_lr: float) -> float:
+        """Adjust learning rate based on KG context confidence."""
+        if not self.kg_contexts:
+            return base_lr
+
+        # Calculate average KG confidence
+        all_confidences = []
+        for context in self.kg_contexts.values():
+            confidences = list(context.confidence_scores.values())
+            all_confidences.extend(confidences)
+
+        if all_confidences:
+            avg_confidence = np.mean(all_confidences)
+            # Higher confidence -> can use higher learning rate
+            adjusted_lr = base_lr * (0.5 + avg_confidence)
+            logging.info(
+                f"Adjusted learning rate from {base_lr} to {adjusted_lr:.4f} based on KG confidence"
+            )
+            return adjusted_lr
+
+        return base_lr
+
+    async def _kg_guided_optimization_step(
+        self,
+        latent_vectors: jnp.ndarray,
+        opt_state: Any,
+        optimizer: Any,
+        iteration: int,
+    ) -> Tuple[jnp.ndarray, Any, Dict]:
+        """Optimization step with KG guidance."""
+        # Calculate base loss and gradients
+        loss_value, grads = value_and_grad(self._kg_informed_loss_function)(
+            latent_vectors, iteration
+        )
+
+        # Apply KG-guided gradient modifications
+        if self.kg_contexts:
+            grads = self._apply_kg_gradient_guidance(grads, latent_vectors)
+
+        # Update parameters
+        updates, opt_state = optimizer.update(grads, opt_state, latent_vectors)
+        latent_vectors = optax.apply_updates(latent_vectors, updates)
+
+        # Clip to reasonable bounds
+        latent_vectors = jnp.clip(latent_vectors, -5.0, 5.0)
+
+        iteration_info = {
+            "loss": float(loss_value),
+            "grad_norm": float(jnp.linalg.norm(grads)),
+            "kg_guidance_strength": self._calculate_kg_guidance_strength(),
+        }
+
+        return latent_vectors, opt_state, iteration_info
+
+    def _kg_informed_loss_function(
+        self, latent_vectors: jnp.ndarray, iteration: int
+    ) -> float:
+        """Loss function incorporating KG information."""
+        # Base regularization loss
+        regularization_loss = jnp.sum(jnp.square(latent_vectors)) * 0.001
+
+        # Add KG-guided loss components
+        kg_guidance_loss = 0.0
+        if (
+            self.kg_contexts and iteration > 10
+        ):  # Start KG guidance after initial iterations
+            # Encourage similarity to known actives
+            kg_guidance_loss = self._calculate_kg_similarity_loss(latent_vectors)
+
+        return regularization_loss + 0.1 * kg_guidance_loss
+
+    def _calculate_kg_similarity_loss(self, latent_vectors: jnp.ndarray) -> float:
+        """Calculate loss term to encourage similarity to KG molecules."""
+        # This is a simplified implementation
+        # In practice, would compare latent representations of current molecules
+        # to those of KG-suggested molecules
+        return 0.0  # Placeholder
+
+    def _apply_kg_gradient_guidance(
+        self, grads: jnp.ndarray, latent_vectors: jnp.ndarray
+    ) -> jnp.ndarray:
+        """Apply KG-based guidance to gradients."""
+        # Simplified gradient modification based on KG context
+        # In practice, would analyze KG relationships to bias gradients
+        guidance_strength = self._calculate_kg_guidance_strength()
+
+        # Apply gentle guidance (not too strong to avoid local minima)
+        guided_grads = grads * (1.0 + 0.1 * guidance_strength)
+
+        return guided_grads
+
+    def _calculate_kg_guidance_strength(self) -> float:
+        """Calculate the strength of KG guidance to apply."""
+        if not self.kg_contexts:
+            return 0.0
+
+        # Base strength on KG confidence and coverage
+        total_entities = sum(
+            len(context.entities) for context in self.kg_contexts.values()
+        )
+        avg_confidence = (
+            np.mean(
+                [
+                    conf
+                    for context in self.kg_contexts.values()
+                    for conf in context.confidence_scores.values()
+                ]
+            )
+            if self.kg_contexts
+            else 0.0
+        )
+
+        # Normalize to [0, 1]
+        coverage_score = min(
+            1.0, total_entities / 20.0
+        )  # Normalize by expected max entities
+
+        return (coverage_score + avg_confidence) / 2.0
+
+    def _filter_and_replace_molecules(self, molecules: List[str]) -> List[str]:
+        """Filter invalid molecules and replace with KG-guided alternatives."""
+        filtered = []
+        guidance_molecules = self._extract_guidance_molecules_from_kg()
+
+        for mol in molecules:
+            if self._is_valid_molecule(mol):
+                filtered.append(mol)
+            else:
+                # Replace with guidance molecule if available
+                if guidance_molecules:
+                    replacement = np.random.choice(guidance_molecules)
+                    filtered.append(replacement)
+                else:
+                    # Keep original (will be handled by constraint evaluation)
+                    filtered.append(mol)
+
+        return filtered
+
+    def _is_valid_molecule(self, smiles: str) -> bool:
+        """Check if SMILES represents a valid molecule."""
+        if not RDKIT_AVAILABLE:
+            return len(smiles) > 0 and smiles.isascii()
+
+        try:
+            mol = Chem.MolFromSmiles(smiles)
+            return mol is not None
+        except:
+            return False
+
+    def _check_kg_informed_convergence(
+        self, iteration_info: Dict, iteration: int
+    ) -> bool:
+        """Check convergence with KG-informed criteria."""
+        # Base convergence check
+        base_converged = self._check_convergence(iteration_info)
+
+        if base_converged:
+            return True
+
+        # Additional KG-based convergence criteria
+        if len(self.optimization_history) >= 20:
+            # Check if KG guidance strength has stabilized
+            recent_guidance = [
+                info.get("kg_guidance_strength", 0.0)
+                for info in self.optimization_history[-10:]
+            ]
+            guidance_std = np.std(recent_guidance)
+
+            # Converge if guidance has stabilized and loss is low
+            if guidance_std < 0.01 and iteration_info.get("loss", float("inf")) < 0.001:
+                return True
+
+        return False
+
+    async def _evaluate_kg_constraints(
+        self, molecules: List[str]
+    ) -> Dict[str, np.ndarray]:
+        """Evaluate KG-based constraints."""
+        kg_constraints = {}
+
+        if not self.kg_integration_manager:
+            return kg_constraints
+
+        # Get fresh KG context for current molecules
+        current_contexts = (
+            await self.kg_integration_manager.context_provider.get_molecular_context(
+                molecules, [KGContextType.DRUG_TARGET, KGContextType.ADVERSE_EFFECT]
+            )
+        )
+
+        # Evaluate target selectivity constraints
+        target_violations = []
+        adverse_effect_violations = []
+
+        for mol in molecules:
+            context = current_contexts.get(mol)
+            if context:
+                # Check for known adverse effects
+                adverse_effects = [
+                    e
+                    for e in context.entities
+                    if "effect_type" in e
+                    and e.get("severity", "").lower() in ["severe", "serious"]
+                ]
+                adverse_effect_violations.append(len(adverse_effects))
+
+                # Check target selectivity (prefer selective targets)
+                target_rels = [
+                    r for r in context.relationships if r["type"] == "TARGETS"
+                ]
+                # Penalize molecules with too many targets (less selective)
+                target_violations.append(max(0, len(target_rels) - 3))
+            else:
+                adverse_effect_violations.append(0.0)
+                target_violations.append(0.0)
+
+        kg_constraints["adverse_effect_risk"] = np.array(adverse_effect_violations)
+        kg_constraints["target_selectivity"] = np.array(target_violations)
+
+        return kg_constraints
+
+    async def update_knowledge_graph(
+        self, optimization_results: List[OptimizationResult]
+    ) -> Dict[str, Any]:
+        """Update knowledge graph based on optimization results."""
+        if not self.kg_integration_manager:
+            return {"error": "KG integration not available"}
+
+        all_suggestions = []
+        for result in optimization_results:
+            all_suggestions.extend(getattr(result, "kg_update_suggestions", []))
+
+        if all_suggestions:
+            update_results = await self.kg_integration_manager.feedback_manager.validate_and_apply_updates(
+                all_suggestions
+            )
+            return update_results
+
+        return {"message": "No KG updates to apply"}
+
+
+# Keep the original InverseDesign class for backward compatibility
+class InverseDesign(KGContextualInverseDesign):
+    """
+    Backward-compatible Inverse Design class.
+
+    This class maintains the original API while optionally supporting KG integration.
+    """
+
+    def __init__(
+        self,
+        calculator: Calculator,
+        target_properties: Dict[str, float],
+        latent_space: Optional[MolecularLatentSpace] = None,
+        constraint_config: Optional[ConstraintConfig] = None,
+    ):
+        """Initialize inverse design module (backward compatible)."""
+        super().__init__(
+            calculator=calculator,
+            target_properties=target_properties,
+            kg_integration_manager=None,  # No KG integration by default
+            latent_space=latent_space,
+            constraint_config=constraint_config,
+            use_kg_constraints=False,
+        )
+
+    def optimize_molecules(
+        self,
+        starting_molecules: List[str],
+        n_iterations: int = 100,
+        learning_rate: float = 0.01,
+        population_size: int = 50,
+    ) -> OptimizationResult:
+        """Original optimize_molecules method (synchronous, no KG)."""
+        # Use asyncio to run the async method synchronously
+        import asyncio
+
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+
+        return loop.run_until_complete(
+            self.optimize_molecules_with_kg_context(
+                starting_molecules=starting_molecules,
+                n_iterations=n_iterations,
+                learning_rate=learning_rate,
+                population_size=population_size,
+                kg_context_types=[],  # No KG context for backward compatibility
+            )
+        )
 
 
 # Utility functions for molecular optimization

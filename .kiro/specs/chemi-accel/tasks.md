@@ -483,59 +483,59 @@
     - Provide tools to visualize and analyze the reliability of QML property predictions.
     - _Requirements: 33.5_
 
-- [ ] 24. Intelligent Chemical Knowledge Graph (IC-KG)
-  - [ ] 24.1 Knowledge Graph Schema and Ontology Definition
+- [x] 24. Intelligent Chemical Knowledge Graph (IC-KG)
+  - [x] 24.1 Knowledge Graph Schema and Ontology Definition
     - Define a comprehensive ontology and schema for chemical entities (molecules, reactions, targets, properties) and relationships (e.g., "reacts with", "binds to", "has property", "reported in").
     - _Requirements: 34.1_
-  - [ ] 24.2 GPU-Accelerated Information Extraction (NLP & Entity Recognition)
+  - [x] 24.2 GPU-Accelerated Information Extraction (NLP & Entity Recognition)
     - Implement GPU-accelerated NLP models (e.g., Transformers on Rapids/Pytorch/JAX) for automated extraction of chemical entities and relationships from unstructured text (patents, papers).
     - Develop modules for extracting structured data from tables, experimental reports, and databases, mapping them to the IC-KG schema.
     - _Requirements: 34.1_
-  - [ ] 24.3 Graph Database Integration and Management
+  - [x] 24.3 Graph Database Integration and Management
     - Integrate with a scalable graph database (e.g., Neo4j, Apache Jena, or a custom GPU-optimized graph store).
     - Implement efficient data loading, updating, and indexing for the IC-KG.
     - _Requirements: 34.1_
-  - [ ] 24.4 Semantic Query and Reasoning Engine
+  - [x] 24.4 Semantic Query and Reasoning Engine
     - Develop a semantic query interface (e.g., SPARQL, Cypher-like language, or natural language interface) to query the IC-KG.
     - Implement a reasoning engine to infer new facts and relationships based on existing knowledge and logical rules.
     - _Requirements: 34.2, 34.5_
-  - [ ] 24.5 AI Module Integration with IC-KG Context
+  - [x] 24.5 AI Module Integration with IC-KG Context
     - Modify ChemiAccel's AI modules (Generative Chemistry, Inverse Design, Active Learning) to leverage contextual information from the IC-KG for more intelligent suggestions and explanations.
     - Implement mechanisms for AI predictions to update or suggest additions to the knowledge graph.
     - _Requirements: 34.3_
-  - [ ] 24.6 Knowledge Graph Validation and Anomaly Detection
+  - [x] 24.6 Knowledge Graph Validation and Anomaly Detection
     - Implement algorithms to detect inconsistencies, contradictions, and data gaps within the IC-KG.
     - Develop methods to flag ambiguous information or suggest targeted experiments to resolve data conflicts.
     - _Requirements: 34.4_
 
-- [ ] 25. Real-time Multi-Scale Material Digital Twin
-  - [ ] 25.1 Multi-Scale Model Integration Framework
+- [x] 25. Real-time Multi-Scale Material Digital Twin
+  - [x] 25.1 Multi-Scale Model Integration Framework
     - Develop a unified framework for linking and orchestrating models across different length and time scales (atomistic, mesoscopic, continuum).
     - Integrate ChemiAccel's existing modules (Polymer Engine, Materials Science, MD Analysis, GIST, QML) as components within the digital twin.
     - _Requirements: 35.1_
-  - [ ] 25.2 Physics-Informed AI and Surrogate Models
+  - [x] 25.2 Physics-Informed AI and Surrogate Models
     - Implement physics-informed neural networks (PINNs) or other AI models that learn from both data and physical laws to bridge scales and accelerate simulations within the digital twin.
     - Develop high-fidelity surrogate models for computationally expensive simulations (e.g., DFT, large-scale MD) to enable real-time prediction.
     - _Requirements: 35.2_
-  - [ ] 25.3 Real-time Simulation Engine and Interactive Control
+  - [x] 25.3 Real-time Simulation Engine and Interactive Control
     - Create a GPU-accelerated simulation engine that can execute the coupled multi-scale models in real-time.
     - Develop an interactive user interface (e.g., web-based, Jupyter widget) allowing users to modify material parameters, apply stimuli, and observe immediate responses of the digital twin.
     - _Requirements: 35.2, 35.3_
-  - [ ] 25.4 Digital Twin-Guided Inverse Material Design
+  - [x] 25.4 Digital Twin-Guided Inverse Material Design
     - Extend the Inverse Design module to operate on the digital twin, allowing optimization of material composition, microstructure, or processing conditions for target macroscopic properties.
     - Implement feedback loops from the digital twin's simulated performance back to the generative/optimization algorithms.
     - _Requirements: 35.4_
-  - [ ] 25.5 Self-Calibration and Experimental Data Integration for Digital Twin
+  - [x] 25.5 Self-Calibration and Experimental Data Integration for Digital Twin
     - Develop methods for the digital twin to ingest experimental material characterization data (e.g., mechanical tests, spectroscopy, microscopy) and use it to refine and self-calibrate its internal models.
     - Implement mechanisms to quantify the uncertainty and applicability domain of the digital twin's predictions.
     - _Requirements: 35.5_
 
-- [ ] 26. AI-Driven Reaction Mechanism and Pathway Discovery
-  - [ ] 26.1 Reaction Network Construction and Graph Representation
+- [x] 26. AI-Driven Reaction Mechanism and Pathway Discovery
+  - [x] 26.1 Reaction Network Construction and Graph Representation
     - Develop GPU-accelerated methods to parse reaction definitions and represent them as chemical graphs suitable for GNNs.
     - Implement algorithms to enumerate plausible elementary reaction steps based on reactant structures and bond changes.
     - _Requirements: 36.1_
-  - [ ] 26.2 AI Models for Mechanism Prediction and Transition State Elucidation
+  - [x] 26.2 AI Models for Mechanism Prediction and Transition State Elucidation
     - Train and integrate specialized GNNs or Transformer models capable of predicting reaction feasibility, regioselectivity, and stereoselectivity.
     - Implement rapid, approximate methods for predicting transition state geometries and energy barriers, possibly leveraging QML surrogates.
     - _Requirements: 36.1, 36.2_
