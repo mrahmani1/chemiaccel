@@ -136,6 +136,79 @@ try:
 except ImportError:
     _POLYMORPH_DESIGN_AVAILABLE = False
 
+# Solid-State Properties (with optional imports)
+try:
+    from .materials import (  # GPU-accelerated property prediction; Density calculations; Elastic moduli; Thermal properties; Solubility prediction; ML-based models; Enums; Data structures; Main classes; Utility functions; Exceptions; Enums; Data structures; Main classes; Utility functions; Exceptions
+        CrystalStructureData,
+        DensityCalculationError,
+        DensityCalculator,
+        ElasticModuliCalculationError,
+        ElasticModuliPredictor,
+        ElasticProperties,
+        ElasticProperty,
+        ElasticPropertyNet,
+        PropertyPredictionConfig,
+        PropertyPredictionError,
+        PropertyResult,
+        PropertyType,
+        SolidStatePropertyEngine,
+        SolidStatePropertyError,
+        SolubilityPredictionError,
+        SolubilityPredictor,
+        SolubilityResult,
+        SolubilityType,
+        ThermalProperties,
+        ThermalProperty,
+        ThermalPropertyError,
+        ThermalPropertyPredictor,
+        calculate_structure_density,
+        create_crystal_structure,
+        create_property_config,
+        predict_elastic_moduli,
+        predict_solid_state_properties,
+        predict_solubility,
+        predict_thermal_properties,
+    )
+
+    _SOLID_STATE_PROPERTIES_AVAILABLE = True
+except ImportError:
+    _SOLID_STATE_PROPERTIES_AVAILABLE = False
+
+# Experimental Validation (with optional imports)
+try:
+    from .materials import (  # Experimental validation and refinement; XRD pattern simulation; Data comparison; Feedback loops; Model refinement; Enums; Data structures; Main classes; Utility functions; Exceptions; Enums; Data structures; Main classes; Utility functions; Exceptions
+        ComparisonResult,
+        DataValidationError,
+        ExperimentalComparator,
+        ExperimentalData,
+        ExperimentalDataValidator,
+        ExperimentalTechnique,
+        ExperimentalValidationEngine,
+        ExperimentalValidationError,
+        FeedbackData,
+        FeedbackLoop,
+        FeedbackLoopError,
+        ModelRefinementEngine,
+        ModelRefinementError,
+        PowderXRDPattern,
+        RefinementConfig,
+        RefinementStrategy,
+        ValidationMetric,
+        ValidationResult,
+        XRDComparisonError,
+        XRDPatternSimulator,
+        compare_with_experiment,
+        create_experimental_data,
+        create_refinement_config,
+        setup_feedback_loop,
+        simulate_xrd_pattern,
+        validate_experimental_quality,
+    )
+
+    _EXPERIMENTAL_VALIDATION_AVAILABLE = True
+except ImportError:
+    _EXPERIMENTAL_VALIDATION_AVAILABLE = False
+
 # Sustainability modules (with optional imports)
 try:
     from .sustainability import (  # Degradation modeling; Recyclability assessment; LCA integration; Inverse design for sustainable materials; Interactive lifecycle simulation and visualization
@@ -798,6 +871,85 @@ if _POLYMORPH_DESIGN_AVAILABLE:
         ]
     )
 
+# Add Solid-State Properties exports if available
+if _SOLID_STATE_PROPERTIES_AVAILABLE:
+    __all__.extend(
+        [
+            # Enums
+            "PropertyType",
+            "ElasticProperty",
+            "ThermalProperty",
+            "SolubilityType",
+            # Data structures
+            "CrystalStructureData",
+            "PropertyPredictionConfig",
+            "PropertyResult",
+            "ElasticProperties",
+            "ThermalProperties",
+            "SolubilityResult",
+            # Main classes
+            "DensityCalculator",
+            "ElasticModuliPredictor",
+            "ThermalPropertyPredictor",
+            "SolubilityPredictor",
+            "SolidStatePropertyEngine",
+            "ElasticPropertyNet",
+            # Utility functions
+            "create_property_config",
+            "create_crystal_structure",
+            "predict_solid_state_properties",
+            "calculate_structure_density",
+            "predict_elastic_moduli",
+            "predict_thermal_properties",
+            "predict_solubility",
+            # Exceptions
+            "SolidStatePropertyError",
+            "PropertyPredictionError",
+            "DensityCalculationError",
+            "ElasticModuliCalculationError",
+            "ThermalPropertyError",
+            "SolubilityPredictionError",
+        ]
+    )
+
+# Add Experimental Validation exports if available
+if _EXPERIMENTAL_VALIDATION_AVAILABLE:
+    __all__.extend(
+        [
+            # Enums
+            "ExperimentalTechnique",
+            "ValidationMetric",
+            "RefinementStrategy",
+            # Data structures
+            "ExperimentalData",
+            "PowderXRDPattern",
+            "ValidationResult",
+            "ComparisonResult",
+            "RefinementConfig",
+            "FeedbackData",
+            # Main classes
+            "XRDPatternSimulator",
+            "ExperimentalDataValidator",
+            "ExperimentalComparator",
+            "ModelRefinementEngine",
+            "FeedbackLoop",
+            "ExperimentalValidationEngine",
+            # Utility functions
+            "create_experimental_data",
+            "create_refinement_config",
+            "simulate_xrd_pattern",
+            "validate_experimental_quality",
+            "compare_with_experiment",
+            "setup_feedback_loop",
+            # Exceptions
+            "ExperimentalValidationError",
+            "XRDComparisonError",
+            "DataValidationError",
+            "ModelRefinementError",
+            "FeedbackLoopError",
+        ]
+    )
+
 # Biological interactions modules (with optional imports)
 try:
     from .biological_interactions import (  # Multi-target prediction; Pathway modeling; Multi-omics integration; Systems toxicology; Inverse design; Visualization; Multi-target interaction prediction; Multi-omics data integration; Systems toxicology and off-target effects; Systems inverse design; Systems visualization and explanation
@@ -1057,6 +1209,127 @@ if _SPECTROSCOPY_AVAILABLE:
         ]
     )
 
+# Retrosynthesis modules (with optional imports)
+try:
+    from .retrosynthesis import (  # GPU-accelerated generative retrosynthesis; Multi-step route enumeration; Forward prediction; Multi-objective optimization; Interactive visualization; Generative Engine; Route Enumeration; Forward Prediction; Multi-Objective Optimization; Route Visualization
+        BuildingBlockDatabase,
+        BuildingBlockQuery,
+        BuildingBlockSource,
+        ByproductPrediction,
+        ColorScheme,
+        ComplexityCalculator,
+        ConfidenceLevel,
+        ConvergenceError,
+        DatabaseQueryError,
+        DisconnectionError,
+        DisconnectionPredictor,
+        DisconnectionSite,
+        DisconnectionStrategy,
+        DominanceAnalyzer,
+        DominanceRelation,
+        ForwardPredictionError,
+        ForwardPredictionResult,
+        ForwardReactionPredictor,
+        GraphRetroModel,
+        InteractionError,
+        InteractionMode,
+        InteractiveVisualizer,
+        KineticsEstimator,
+        KineticsModel,
+        KineticsModelingError,
+        KineticsParameters,
+        LayoutAlgorithm,
+        LayoutCalculator,
+        LayoutError,
+        ModelLoadingError,
+        ModelPrediction,
+        ModelType,
+        MolecularFeaturizer,
+        MolecularRepresentation,
+        MoleculeNode,
+        MoleculeRenderer,
+        MultiObjectiveConfig,
+        MultiObjectiveOptimizationError,
+        MultiObjectiveOptimizer,
+        ObjectiveEvaluationError,
+        ObjectiveEvaluator,
+        OptimizationAlgorithm,
+        OptimizationError,
+        OptimizationObjective,
+        OptimizationObjectiveSpec,
+        OptimizationResult,
+        OptimizationSolution,
+        ParetoFront,
+        ParetoFrontError,
+        ParetoFrontNavigator,
+        ParetoRanking,
+        PredictionError,
+        PruningCriteria,
+        ReactionCondition,
+        ReactionConditions,
+        ReactionEdge,
+        ReactionTemplate,
+        ReactionTemplateExtractor,
+        ReactionType,
+        RenderingError,
+        RetrosynthesisConfig,
+        RetrosynthesisEngine,
+        RetrosynthesisError,
+        RetrosynthesisResult,
+        RouteEnumerationConfig,
+        RouteEnumerationError,
+        RouteEnumerator,
+        RouteEvaluationResult,
+        RouteMetrics,
+        RouteOptimizer,
+        RouteStrategy,
+        SelectivityPrediction,
+        SelectivityPredictionError,
+        SelectivityPredictor,
+        SelectivityType,
+        SynthesisComplexity,
+        SynthesisNode,
+        SynthesisRoute,
+        SynthesisTree,
+        SynthesisTreeBuilder,
+        TransformerRetroModel,
+        TreeConstructionError,
+        VisualizationConfig,
+        VisualizationData,
+        VisualizationElement,
+        VisualizationError,
+        VisualizationType,
+        YieldCategory,
+        YieldPredictionError,
+        YieldPredictor,
+        build_synthesis_tree,
+        calculate_complexity,
+        create_multi_objective_config,
+        create_pareto_front_plot,
+        create_reaction_conditions,
+        create_retro_config,
+        create_route_config,
+        create_visualization_config,
+        decode_molecule,
+        encode_molecule,
+        enumerate_routes,
+        estimate_reaction_kinetics,
+        evaluate_synthesis_route_forward,
+        extract_disconnection_sites,
+        find_pareto_optimal_routes,
+        launch_streamlit_dashboard,
+        optimize_route,
+        optimize_synthesis_routes,
+        predict_reaction_yield,
+        predict_retrosynthesis,
+        query_building_blocks,
+        visualize_synthesis_route_simple,
+    )
+
+    _RETROSYNTHESIS_AVAILABLE = True
+except ImportError:
+    _RETROSYNTHESIS_AVAILABLE = False
+
 # Add biological interactions exports if available
 if _BIOLOGICAL_INTERACTIONS_AVAILABLE:
     __all__.extend(
@@ -1193,5 +1466,149 @@ if _BIOLOGICAL_INTERACTIONS_AVAILABLE:
             "VisualizationCreationError",
             "ExplanationGenerationError",
             "DashboardCreationError",
+        ]
+    )
+
+# Add retrosynthesis exports if available
+if _RETROSYNTHESIS_AVAILABLE:
+    __all__.extend(
+        [
+            # Generative Engine - Enums
+            "ModelType",
+            "DisconnectionStrategy",
+            "ConfidenceLevel",
+            "ReactionType",
+            # Generative Engine - Data structures
+            "RetrosynthesisConfig",
+            "MolecularRepresentation",
+            "RetrosynthesisResult",
+            "DisconnectionSite",
+            "ReactionTemplate",
+            "ModelPrediction",
+            # Generative Engine - Main classes
+            "TransformerRetroModel",
+            "GraphRetroModel",
+            "RetrosynthesisEngine",
+            "DisconnectionPredictor",
+            "ReactionTemplateExtractor",
+            # Generative Engine - Utility functions
+            "create_retro_config",
+            "encode_molecule",
+            "decode_molecule",
+            "predict_retrosynthesis",
+            "extract_disconnection_sites",
+            # Generative Engine - Exceptions
+            "RetrosynthesisError",
+            "ModelLoadingError",
+            "PredictionError",
+            "DisconnectionError",
+            # Route Enumeration - Enums
+            "RouteStrategy",
+            "PruningCriteria",
+            "BuildingBlockSource",
+            "SynthesisComplexity",
+            # Route Enumeration - Data structures
+            "SynthesisNode",
+            "SynthesisTree",
+            "RouteEnumerationConfig",
+            "SynthesisRoute",
+            "RouteMetrics",
+            "BuildingBlockQuery",
+            # Route Enumeration - Main classes
+            "RouteEnumerator",
+            "SynthesisTreeBuilder",
+            "BuildingBlockDatabase",
+            "RouteOptimizer",
+            "ComplexityCalculator",
+            # Route Enumeration - Utility functions
+            "create_route_config",
+            "build_synthesis_tree",
+            "enumerate_routes",
+            "optimize_route",
+            "calculate_complexity",
+            "query_building_blocks",
+            # Route Enumeration - Exceptions
+            "RouteEnumerationError",
+            "TreeConstructionError",
+            "DatabaseQueryError",
+            "OptimizationError",
+            # Forward Prediction - Enums
+            "ReactionCondition",
+            "YieldCategory",
+            "SelectivityType",
+            "KineticsModel",
+            # Forward Prediction - Data structures
+            "ReactionConditions",
+            "KineticsParameters",
+            "SelectivityPrediction",
+            "ByproductPrediction",
+            "ForwardPredictionResult",
+            "RouteEvaluationResult",
+            # Forward Prediction - Main classes
+            "MolecularFeaturizer",
+            "YieldPredictor",
+            "SelectivityPredictor",
+            "KineticsEstimator",
+            "ForwardReactionPredictor",
+            # Forward Prediction - Utility functions
+            "create_reaction_conditions",
+            "predict_reaction_yield",
+            "estimate_reaction_kinetics",
+            "evaluate_synthesis_route_forward",
+            # Forward Prediction - Exceptions
+            "ForwardPredictionError",
+            "KineticsModelingError",
+            "YieldPredictionError",
+            "SelectivityPredictionError",
+            # Multi-Objective Optimization - Enums
+            "OptimizationObjective",
+            "OptimizationAlgorithm",
+            "DominanceRelation",
+            "ParetoRanking",
+            # Multi-Objective Optimization - Data structures
+            "OptimizationObjectiveSpec",
+            "MultiObjectiveConfig",
+            "OptimizationSolution",
+            "ParetoFront",
+            "OptimizationResult",
+            # Multi-Objective Optimization - Main classes
+            "ObjectiveEvaluator",
+            "DominanceAnalyzer",
+            "ParetoFrontNavigator",
+            "MultiObjectiveOptimizer",
+            # Multi-Objective Optimization - Utility functions
+            "create_multi_objective_config",
+            "optimize_synthesis_routes",
+            "find_pareto_optimal_routes",
+            # Multi-Objective Optimization - Exceptions
+            "MultiObjectiveOptimizationError",
+            "ParetoFrontError",
+            "ObjectiveEvaluationError",
+            "ConvergenceError",
+            # Route Visualization - Enums
+            "VisualizationType",
+            "ColorScheme",
+            "LayoutAlgorithm",
+            "InteractionMode",
+            # Route Visualization - Data structures
+            "VisualizationConfig",
+            "VisualizationElement",
+            "MoleculeNode",
+            "ReactionEdge",
+            "VisualizationData",
+            # Route Visualization - Main classes
+            "MoleculeRenderer",
+            "LayoutCalculator",
+            "InteractiveVisualizer",
+            # Route Visualization - Utility functions
+            "create_visualization_config",
+            "visualize_synthesis_route_simple",
+            "create_pareto_front_plot",
+            "launch_streamlit_dashboard",
+            # Route Visualization - Exceptions
+            "VisualizationError",
+            "RenderingError",
+            "LayoutError",
+            "InteractionError",
         ]
     )

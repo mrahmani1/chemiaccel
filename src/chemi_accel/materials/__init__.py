@@ -112,6 +112,80 @@ try:
 except ImportError:
     _POLYMORPH_DESIGN_AVAILABLE = False
 
+# Solid-State Properties (with optional imports)
+try:
+    from .solid_state_properties import (  # GPU-accelerated property prediction; Density calculations; Elastic moduli; Thermal properties; Solubility prediction; ML-based models; Enums; Data structures; Main classes; Utility functions; Exceptions; Enums; Data structures; Main classes; Utility functions; Exceptions
+        CrystalStructureData,
+        DataQuality,
+        DensityCalculationError,
+        DensityCalculator,
+        ElasticModuliCalculationError,
+        ElasticModuliPredictor,
+        ElasticProperties,
+        ElasticProperty,
+        ElasticPropertyNet,
+        PropertyPredictionConfig,
+        PropertyPredictionError,
+        PropertyResult,
+        PropertyType,
+        SolidStatePropertyEngine,
+        SolidStatePropertyError,
+        SolubilityPredictionError,
+        SolubilityPredictor,
+        SolubilityResult,
+        SolubilityType,
+        ThermalProperties,
+        ThermalProperty,
+        ThermalPropertyError,
+        ThermalPropertyPredictor,
+        calculate_structure_density,
+        create_crystal_structure,
+        create_property_config,
+        predict_elastic_moduli,
+        predict_solid_state_properties,
+        predict_solubility,
+        predict_thermal_properties,
+    )
+
+    _SOLID_STATE_PROPERTIES_AVAILABLE = True
+except ImportError:
+    _SOLID_STATE_PROPERTIES_AVAILABLE = False
+
+# Experimental Validation (with optional imports)
+try:
+    from .experimental_validation import (  # Experimental validation and refinement; XRD pattern simulation; Data comparison; Feedback loops; Model refinement; Enums; Data structures; Main classes; Utility functions; Exceptions; Enums; Data structures; Main classes; Utility functions; Exceptions
+        ComparisonResult,
+        DataValidationError,
+        ExperimentalComparator,
+        ExperimentalData,
+        ExperimentalDataValidator,
+        ExperimentalTechnique,
+        ExperimentalValidationEngine,
+        ExperimentalValidationError,
+        FeedbackData,
+        FeedbackLoop,
+        FeedbackLoopError,
+        ModelRefinementEngine,
+        ModelRefinementError,
+        PowderXRDPattern,
+        RefinementConfig,
+        RefinementStrategy,
+        ValidationMetric,
+        ValidationResult,
+        XRDComparisonError,
+        XRDPatternSimulator,
+        compare_with_experiment,
+        create_experimental_data,
+        create_refinement_config,
+        setup_feedback_loop,
+        simulate_xrd_pattern,
+        validate_experimental_quality,
+    )
+
+    _EXPERIMENTAL_VALIDATION_AVAILABLE = True
+except ImportError:
+    _EXPERIMENTAL_VALIDATION_AVAILABLE = False
+
 __all__ = [
     "CIFParser",
     "POSCARParser",
@@ -227,5 +301,85 @@ if _POLYMORPH_DESIGN_AVAILABLE:
             "MolecularModificationError",
             "DesignOptimizationError",
             "ConfigurationError",
+        ]
+    )
+
+# Add Solid-State Properties exports if available
+if _SOLID_STATE_PROPERTIES_AVAILABLE:
+    __all__.extend(
+        [
+            # Enums
+            "PropertyType",
+            "ElasticProperty",
+            "ThermalProperty",
+            "SolubilityType",
+            "DataQuality",
+            # Data structures
+            "CrystalStructureData",
+            "PropertyPredictionConfig",
+            "PropertyResult",
+            "ElasticProperties",
+            "ThermalProperties",
+            "SolubilityResult",
+            # Main classes
+            "DensityCalculator",
+            "ElasticModuliPredictor",
+            "ThermalPropertyPredictor",
+            "SolubilityPredictor",
+            "SolidStatePropertyEngine",
+            "ElasticPropertyNet",
+            # Utility functions
+            "create_property_config",
+            "create_crystal_structure",
+            "predict_solid_state_properties",
+            "calculate_structure_density",
+            "predict_elastic_moduli",
+            "predict_thermal_properties",
+            "predict_solubility",
+            # Exceptions
+            "SolidStatePropertyError",
+            "PropertyPredictionError",
+            "DensityCalculationError",
+            "ElasticModuliCalculationError",
+            "ThermalPropertyError",
+            "SolubilityPredictionError",
+        ]
+    )
+
+# Add Experimental Validation exports if available
+if _EXPERIMENTAL_VALIDATION_AVAILABLE:
+    __all__.extend(
+        [
+            # Enums
+            "ExperimentalTechnique",
+            "ValidationMetric",
+            "RefinementStrategy",
+            # Data structures
+            "ExperimentalData",
+            "PowderXRDPattern",
+            "ValidationResult",
+            "ComparisonResult",
+            "RefinementConfig",
+            "FeedbackData",
+            # Main classes
+            "XRDPatternSimulator",
+            "ExperimentalDataValidator",
+            "ExperimentalComparator",
+            "ModelRefinementEngine",
+            "FeedbackLoop",
+            "ExperimentalValidationEngine",
+            # Utility functions
+            "create_experimental_data",
+            "create_refinement_config",
+            "simulate_xrd_pattern",
+            "validate_experimental_quality",
+            "compare_with_experiment",
+            "setup_feedback_loop",
+            # Exceptions
+            "ExperimentalValidationError",
+            "XRDComparisonError",
+            "DataValidationError",
+            "ModelRefinementError",
+            "FeedbackLoopError",
         ]
     )

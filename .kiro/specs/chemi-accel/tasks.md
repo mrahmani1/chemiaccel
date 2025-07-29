@@ -680,7 +680,7 @@
     - Provide tools to explain AI predictions in the context of biological systems.
     - _Requirements: 42.5_
 
-- [ ] 33. AI-Driven De Novo Crystal Structure Prediction & Polymorph Engineering
+- [x] 33. AI-Driven De Novo Crystal Structure Prediction & Polymorph Engineering
   - [x] 33.1 GPU-Accelerated Crystal Structure Prediction (CSP) Models
     - Implement or integrate GPU-accelerated AI models (e.g., GNNs predicting packing motifs, generative models for unit cells) for *de novo* prediction of crystal structures.
     - Combine AI with efficient lattice energy minimization and search algorithms to explore polymorphic landscapes.
@@ -692,30 +692,30 @@
     - Extend inverse design (Req 17) to *molecular modifications* that bias crystallization towards a specific, desired polymorph.
     - Utilize AI and optimization techniques to navigate the molecular design space for solid-state properties.
     - _Requirements: 43.3_
-  - [ ] 33.4 Predictive Solid-State Property Calculation
+  - [x] 33.4 Predictive Solid-State Property Calculation
     - Implement GPU-accelerated models for predicting key properties of predicted polymorphs (e.g., density, elastic moduli, thermal expansion, melting point, solubility) from their crystal structures.
     - _Requirements: 43.4_
-  - [ ] 33.5 Experimental Validation and Refinement
+  - [x] 33.5 Experimental Validation and Refinement
     - Develop modules for comparing predicted crystal structures/properties with experimental data (e.g., simulated XRD vs. experimental XRD).
     - Implement feedback loops to refine CSP models based on new experimental polymorph discoveries.
     - _Requirements: 43.5_
 
-- [ ] 34. Generative Multi-Step Synthesis Route Optimization
-  - [ ] 34.1 GPU-Accelerated Generative Retrosynthesis Engine
+- [x] 34. Generative Multi-Step Synthesis Route Optimization
+  - [x] 34.1 GPU-Accelerated Generative Retrosynthesis Engine
     - Implement a GPU-accelerated engine for proposing one-step retrosynthetic disconnections, leveraging transformer or graph-based generative models trained on large reaction datasets.
     - _Requirements: 44.1_
-  - [ ] 34.2 Multi-Step Route Enumeration and Graph Construction
+  - [x] 34.2 Multi-Step Route Enumeration and Graph Construction
     - Develop algorithms to iteratively apply retrosynthetic steps, construct a multi-step synthesis tree, and identify purchasable starting materials by querying a chemical building block database.
     - _Requirements: 44.2_
-  - [ ] 34.3 Forward Reaction Prediction for Route Evaluation
+  - [x] 34.3 Forward Reaction Prediction for Route Evaluation
     - Integrate with Req 32 (AI-Driven Reaction Mechanism and Pathway Discovery) to predict yield, selectivity, and byproduct formation for each individual step in a proposed synthesis route.
     - Implement models to estimate reaction kinetics and conditions based on molecular structure and reaction type.
     - _Requirements: 44.3_
-  - [ ] 34.4 Multi-Objective Route Optimization
+  - [x] 34.4 Multi-Objective Route Optimization
     - Apply Req 31 (Multi-Objective Optimization Framework) to optimize entire synthesis routes based on objectives like overall yield, cost, number of steps, and environmental impact.
     - Implement algorithms to navigate the Pareto front of synthetic routes.
     - _Requirements: 44.4_
-  - [ ] 34.5 Interactive Route Visualization and Analysis
+  - [x] 34.5 Interactive Route Visualization and Analysis
     - Develop interactive tools to visualize proposed synthesis routes, displaying predicted properties for each step and allowing users to compare trade-offs between different routes.
     - _Requirements: 44.5_
 
