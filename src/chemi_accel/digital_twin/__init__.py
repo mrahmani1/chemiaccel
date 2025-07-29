@@ -13,6 +13,60 @@ Main components:
 - Self-Calibration: Experimental data integration and model refinement
 """
 
+# Fault Scenario Simulation and Corrective Actions
+from .fault_scenario_simulation import (
+    AlternativeRouteOptimizer,
+    CorrectiveAction,
+    CorrectiveActionType,
+    DecisionSupportSystem,
+    FaultAnalysisResult,
+    FaultCause,
+    FaultDetector,
+    FaultInjector,
+    FaultScenario,
+    FaultScenarioSimulator,
+    FaultSeverity,
+    FaultType,
+    create_contamination_fault,
+    create_pressure_fault,
+    create_temperature_fault,
+)
+
+# Fluid Dynamics Coupling
+from .fluid_dynamics_coupling import (
+    AdaptiveMeshRefinement,
+    CouplingScheme,
+    FiniteDifferenceHeatSolver,
+    FluidDomain,
+    FluidDynamicsCouplingManager,
+    FluidDynamicsSolver,
+    FluidProperties,
+    FluidState,
+    FluidThermalCoupledSolver,
+    HeatTransferSolver,
+    MaterialPropertyCoupling,
+    SimpleFDFluidSolver,
+)
+
+# Inverse Design Integration
+from .inverse_design import (
+    DigitalTwinGuidedOptimizer,
+    MaterialDesignObjective,
+    MaterialOptimizationConfig,
+    MultiObjectiveDesigner,
+)
+
+# Manufacturing Process Integration
+from .manufacturing_integration import (
+    FluidDynamicsSimulator,
+    HeatTransferSimulator,
+    ManufacturingDigitalTwin,
+    MaterialFlowProperties,
+    ProcessConditions,
+    ProcessOutput,
+    ProcessType,
+)
+
 # Multi-Scale Framework Core
 from .multiscale_framework import (
     LengthScale,
@@ -20,6 +74,19 @@ from .multiscale_framework import (
     MultiScaleFramework,
     ScaleInterface,
     TimeScale,
+)
+
+# Parameter Space Exploration
+from .parameter_space_exploration import (
+    AdaptiveGridExplorer,
+    ExplorationConfig,
+    ExplorationStrategy,
+    GaussianProcessExplorer,
+    MultiObjectiveExplorer,
+    ParameterExplorer,
+    ParameterExplorerFactory,
+    ParameterSpace,
+    RLParameterExplorer,
 )
 
 # Physics-Informed AI Models
@@ -31,6 +98,49 @@ from .physics_informed_ai import (
     SurrogateModelTrainer,
 )
 
+# Process Engineering Interfaces
+from .process_engineering_interfaces import (
+    ANSYSFluentInterface,
+    COMSOLInterface,
+    ExternalSimulationInterface,
+    MeshGeometry,
+    OpenFOAMInterface,
+    ProcessCouplingManager,
+    ProcessEngineeringInterfaceFactory,
+    SimulationConfig,
+)
+
+# Real-time Data Streaming
+from .realtime_data_streaming import (
+    AnomalyDetectionProcessor,
+    DataExporter,
+    DataFormat,
+    DataPacket,
+    DataStreamManager,
+    PropertyAggregationProcessor,
+    QualityOfService,
+    RealTimeDataConnector,
+    StreamingConfig,
+    StreamingMode,
+    StreamProcessor,
+)
+
+# Real-time Process Simulation
+from .realtime_process_simulation import (
+    MaterialProperty,
+    MechanicalPropertyModel,
+    MicrostructureState,
+    PropertyEvolutionModel,
+    PropertyType,
+    RealTimeSimulationCore,
+    SimulationConfig,
+    SimulationMode,
+    SimulationMonitor,
+    SimulationState,
+    ThermalPropertyModel,
+    UpdateStrategy,
+)
+
 # Real-time Simulation Engine
 from .realtime_simulation import (
     InteractiveController,
@@ -40,12 +150,43 @@ from .realtime_simulation import (
     UserInterface,
 )
 
-# Inverse Design Integration
-from .inverse_design import (
-    DigitalTwinGuidedOptimizer,
-    MaterialDesignObjective,
-    MaterialOptimizationConfig,
-    MultiObjectiveDesigner,
+# Real-time Visualization
+from .realtime_visualization import (
+    MatplotlibVisualizationEngine,
+    PlotConfiguration,
+    PlotlyVisualizationEngine,
+    PlotType,
+    RealTimeVisualizer,
+    VisualizationConfig,
+    VisualizationEngine,
+    VisualizationMode,
+    VisualizationServer,
+)
+
+# RL Agents
+from .rl_agents import (
+    DDPGAgent,
+    PPOAgent,
+    ProcessOptimizer,
+    RLAgent,
+    RLAgentFactory,
+    SACAgent,
+)
+
+# Reinforcement Learning Process Optimization
+from .rl_process_optimization import (
+    Actor,
+    Critic,
+    EnergyEfficiencyRewardFunction,
+    MultiObjectiveRewardFunction,
+    OptimizationObjective,
+    ProcessAction,
+    ProcessEnvironment,
+    ProcessState,
+    QualityRewardFunction,
+    ReplayBuffer,
+    RLAlgorithm,
+    RLConfig,
 )
 
 # Self-Calibration and Data Integration
@@ -89,6 +230,117 @@ __all__ = [
     "UncertaintyQuantifier",
     "CalibrationData",
     "CalibrationResult",
+    # Manufacturing Process Integration
+    "ProcessType",
+    "ProcessConditions",
+    "MaterialFlowProperties",
+    "ProcessOutput",
+    "FluidDynamicsSimulator",
+    "HeatTransferSimulator",
+    "ManufacturingDigitalTwin",
+    # Process Engineering Interfaces
+    "SimulationConfig",
+    "MeshGeometry",
+    "ExternalSimulationInterface",
+    "OpenFOAMInterface",
+    "ANSYSFluentInterface",
+    "COMSOLInterface",
+    "ProcessEngineeringInterfaceFactory",
+    "ProcessCouplingManager",
+    # Fluid Dynamics Coupling
+    "CouplingScheme",
+    "FluidProperties",
+    "FluidDomain",
+    "FluidState",
+    "FluidDynamicsSolver",
+    "HeatTransferSolver",
+    "SimpleFDFluidSolver",
+    "FiniteDifferenceHeatSolver",
+    "FluidThermalCoupledSolver",
+    "MaterialPropertyCoupling",
+    "AdaptiveMeshRefinement",
+    "FluidDynamicsCouplingManager",
+    # Reinforcement Learning Process Optimization
+    "RLConfig",
+    "RLAlgorithm",
+    "OptimizationObjective",
+    "ProcessState",
+    "ProcessAction",
+    "ProcessEnvironment",
+    "QualityRewardFunction",
+    "EnergyEfficiencyRewardFunction",
+    "MultiObjectiveRewardFunction",
+    "Actor",
+    "Critic",
+    "ReplayBuffer",
+    # RL Agents
+    "RLAgent",
+    "PPOAgent",
+    "DDPGAgent",
+    "SACAgent",
+    "RLAgentFactory",
+    "ProcessOptimizer",
+    # Parameter Space Exploration
+    "ExplorationStrategy",
+    "ExplorationConfig",
+    "ParameterSpace",
+    "ParameterExplorer",
+    "GaussianProcessExplorer",
+    "MultiObjectiveExplorer",
+    "AdaptiveGridExplorer",
+    "ParameterExplorerFactory",
+    "RLParameterExplorer",
+    # Real-time Process Simulation
+    "SimulationConfig",
+    "SimulationMode",
+    "PropertyType",
+    "UpdateStrategy",
+    "MaterialProperty",
+    "MicrostructureState",
+    "SimulationState",
+    "PropertyEvolutionModel",
+    "MechanicalPropertyModel",
+    "ThermalPropertyModel",
+    "RealTimeSimulationCore",
+    "SimulationMonitor",
+    # Real-time Visualization
+    "VisualizationConfig",
+    "VisualizationMode",
+    "PlotType",
+    "PlotConfiguration",
+    "VisualizationEngine",
+    "PlotlyVisualizationEngine",
+    "MatplotlibVisualizationEngine",
+    "RealTimeVisualizer",
+    "VisualizationServer",
+    # Real-time Data Streaming
+    "StreamingConfig",
+    "StreamingMode",
+    "DataFormat",
+    "QualityOfService",
+    "DataPacket",
+    "StreamProcessor",
+    "PropertyAggregationProcessor",
+    "AnomalyDetectionProcessor",
+    "DataStreamManager",
+    "RealTimeDataConnector",
+    "DataExporter",
+    # Fault Scenario Simulation and Corrective Actions
+    "FaultType",
+    "FaultSeverity",
+    "FaultCause",
+    "CorrectiveActionType",
+    "FaultScenario",
+    "CorrectiveAction",
+    "FaultAnalysisResult",
+    "FaultInjector",
+    "FaultDetector",
+    "DecisionSupportSystem",
+    "AlternativeRouteOptimizer",
+    "FaultScenarioSimulator",
+    "create_temperature_fault",
+    "create_contamination_fault",
+    "create_pressure_fault",
 ]
 
 # Version information

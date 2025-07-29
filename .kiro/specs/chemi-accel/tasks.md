@@ -539,156 +539,156 @@
     - Train and integrate specialized GNNs or Transformer models capable of predicting reaction feasibility, regioselectivity, and stereoselectivity.
     - Implement rapid, approximate methods for predicting transition state geometries and energy barriers, possibly leveraging QML surrogates.
     - _Requirements: 36.1, 36.2_
-  - [ ] 26.3 Reaction Condition and Catalyst Suggestion
+  - [x] 26.3 Reaction Condition and Catalyst Suggestion
     - Develop a module that analyzes predicted reaction pathways and their energetics to suggest optimal catalysts, solvents, and environmental conditions.
     - Integrate with the Intelligent Chemical Knowledge Graph (IC-KG) to leverage known catalyst performance and reaction conditions from literature.
     - _Requirements: 36.3_
-  - [ ] 26.4 "What-If" Scenario Simulation for Reactions
+  - [x] 26.4 "What-If" Scenario Simulation for Reactions
     - Implement an interactive interface allowing users to modify reactants, catalysts, or conditions and instantly visualize the predicted impact on reaction pathways and product distributions.
     - _Requirements: 36.4_
-      - [ ] 26.5 Experimental Feedback for Mechanism Refinement
+  - [x] 26.5 Experimental Feedback for Mechanism Refinement
     - Create a feedback loop where experimental kinetic and product distribution data can be ingested to refine and re-weight predicted reaction pathways and rate constants.
     - _Requirements: 36.5_
 
-- [ ] 27. Autonomous Materials Process Optimization & Digital Manufacturing
-  - [ ] 27.1 Digital Manufacturing Twin Integration Framework
+- [x] 27. Autonomous Materials Process Optimization & Digital Manufacturing
+  - [x] 27.1 Digital Manufacturing Twin Integration Framework
     - Extend the multi-scale material digital twin to incorporate manufacturing process parameters as inputs and outputs.
     - Develop interfaces to link ChemiAccel's material models with process engineering simulation tools (e.g., fluid dynamics, heat transfer).
     - _Requirements: 37.1_
-  - [ ] 27.2 Reinforcement Learning for Process Optimization
+  - [x] 27.2 Reinforcement Learning for Process Optimization
     - Implement GPU-accelerated reinforcement learning (RL) agents capable of exploring and optimizing process parameter spaces.
     - Design reward functions based on desired material properties and manufacturing objectives (e.g., yield, energy efficiency).
     - _Requirements: 37.2_
-  - [ ] 27.3 Real-time Process Simulation and Property Evolution
+  - [x] 27.3 Real-time Process Simulation and Property Evolution
     - Develop a real-time simulation core for the digital manufacturing twin, dynamically predicting material properties and microstructure throughout the process.
     - Create interactive visualizations to display the evolution of properties and process parameters.
     - _Requirements: 37.3_
-  - [ ] 27.4 Sensor Data Integration and Predictive Control
+  - [x] 27.4 Sensor Data Integration and Predictive Control
     - Implement robust data streams for ingesting real-time sensor data from manufacturing equipment.
     - Develop predictive control algorithms that use sensor data to update the digital twin and suggest real-time adjustments to process parameters.
     - _Requirements: 37.4_
-  - [ ] 27.5 Fault Scenario Simulation and Corrective Actions
+  - [x] 27.5 Fault Scenario Simulation and Corrective Actions
     - Enable the digital twin to simulate and analyze various fault scenarios (e.g., sudden temperature drops, impurity introduction).
     - Implement a decision support system that suggests corrective actions or alternative process routes to mitigate the impact of deviations.
     - _Requirements: 37.5_
 
-- [ ] 28. Adaptive & Autonomous Experimental Design for Synthesis & Process Optimization
-  - [ ] 28.1 GPU-Accelerated Bayesian Optimization Framework
-    - Implement a parallel Bayesian Optimization engine leveraging ChemiAccel's GPU capabilities for rapid surrogate model training and acquisition function evaluation in high-dimensional experimental spaces.
-    - _Requirements: 38.1_
-  - [ ] 28.2 Reinforcement Learning for Process Control
-    - Develop RL agents capable of learning optimal experimental policies for multi-step synthesis or continuous manufacturing processes, using ChemiAccel's material models as the simulation environment.
-    - _Requirements: 38.1_
-  - [ ] 28.3 Cost-Aware and Constraint-Based Experimental Planning
-    - Integrate experimental cost models (material, energy, time) and safety/process constraints into the acquisition functions to guide efficient and practical experimental design.
-    - _Requirements: 38.2_
-  - [ ] 28.4 Real-time Feedback Loop and Model Update
-    - Implement APIs for ingesting real-time experimental data streams (e.g., from spectroscopy, chromatography, rheometry) to continuously update internal predictive models and refine the experimental design.
-    - _Requirements: 38.3_
-  - [ ] 28.5 Multi-Objective Experimental Optimization & Pareto Front Navigation
-    - Extend the multi-objective optimization framework (Req 31) to experimental conditions, providing Pareto fronts of optimal experimental settings for conflicting objectives.
-    - Implement interactive tools for navigating these multi-objective trade-offs in the experimental space.
-    - _Requirements: 38.4_
-  - [ ] 28.6 Autonomous Lab Protocol Generation and Execution
-    - Develop a module to translate optimized experimental conditions into machine-executable protocols (e.g., workcells for robotic liquid handlers, temperature profiles for reactors).
-    - Establish communication protocols for direct integration with and control of automated laboratory equipment.
-    - _Requirements: 38.5_
+- [x] 28. Adaptive & Autonomous Experimental Design for Synthesis & Process Optimization
+  - [x] 28.1 GPU-Accelerated Bayesian Optimization Framework
+  - Implement a parallel Bayesian Optimization engine leveraging ChemiAccel's GPU capabilities for rapid surrogate model training and acquisition function evaluation in high-dimensional experimental spaces.
+  - _Requirements: 38.1_
+  - [x] 28.2 Reinforcement Learning for Process Control
+  - Develop RL agents capable of learning optimal experimental policies for multi-step synthesis or continuous manufacturing processes, using ChemiAccel's material models as the simulation environment.
+  - _Requirements: 38.1_
+  - [x] 28.3 Cost-Aware and Constraint-Based Experimental Planning
+  - Integrate experimental cost models (material, energy, time) and safety/process constraints into the acquisition functions to guide efficient and practical experimental design.
+  - _Requirements: 38.2_
+  - [x] 28.4 Real-time Feedback Loop and Model Update
+  - Implement APIs for ingesting real-time experimental data streams (e.g., from spectroscopy, chromatography, rheometry) to continuously update internal predictive models and refine the experimental design.
+  - _Requirements: 38.3_
+  - [x] 28.5 Multi-Objective Experimental Optimization & Pareto Front Navigation
+  - Extend the multi-objective optimization framework (Req 31) to experimental conditions, providing Pareto fronts of optimal experimental settings for conflicting objectives.
+  - Implement interactive tools for navigating these multi-objective trade-offs in the experimental space.
+  - _Requirements: 38.4_
+  - [x] 28.6 Autonomous Lab Protocol Generation and Execution
+  - Develop a module to translate optimized experimental conditions into machine-executable protocols (e.g., workcells for robotic liquid handlers, temperature profiles for reactors).
+  - Establish communication protocols for direct integration with and control of automated laboratory equipment.
+  - _Requirements: 38.5_
 
-- [ ] 29. Predictive Material Lifecycle & De-manufacturing Optimization
-  - [ ] 29.1 GPU-Accelerated Degradation Modeling
-    - Implement comprehensive multi-scale models (e.g., combining atomistic MD, reactive force fields, and kinetic Monte Carlo simulations) to predict material degradation mechanisms and rates under various environmental stressors (e.g., UV, heat, oxidation, hydrolysis, enzymatic activity).
-    - Develop surrogate AI models for rapid prediction of long-term property retention.
-    - _Requirements: 39.1_
-  - [ ] 29.2 Recyclability and Re-usability Assessment Module
-    - Create a module to analyze molecular structure and material composition to predict the feasibility and efficiency of various recycling processes (e.g., mechanical, chemical, biological).
-    - Develop metrics and scores for material re-usability and circularity potential.
-    - _Requirements: 39.2_
-  - [ ] 29.3 Lifecycle Assessment (LCA) Integration
-    - Integrate with established LCA databases and open-source LCA frameworks (e.g., openLCA, Brightway2) to estimate the full cradle-to-grave environmental impact of materials and processes.
-    - Develop GPU-accelerated methods for rapid LCA calculations for large material databases.
-    - _Requirements: 39.3_
-  - [ ] 29.4 Inverse Design for Sustainable Materials
-    - Extend the inverse material design capabilities to explicitly include sustainability metrics (e.g., degradation rate, recyclability score, carbon footprint) as optimization objectives or constraints.
-    - _Requirements: 39.4_
-  - [ ] 29.5 Interactive Lifecycle Simulation and Visualization
-    - Develop interactive tools to simulate and visualize the evolution of material properties, degradation products, and environmental impacts over the entire lifecycle.
-    - Provide dashboards to compare the sustainability profiles of different material candidates.
-    - _Requirements: 39.5_
+- [x] 29. Predictive Material Lifecycle & De-manufacturing Optimization
+  - [x] 29.1 GPU-Accelerated Degradation Modeling
+  - Implement comprehensive multi-scale models (e.g., combining atomistic MD, reactive force fields, and kinetic Monte Carlo simulations) to predict material degradation mechanisms and rates under various environmental stressors (e.g., UV, heat, oxidation, hydrolysis, enzymatic activity).
+  - Develop surrogate AI models for rapid prediction of long-term property retention.
+  - _Requirements: 39.1_
+  - [x] 29.2 Recyclability and Re-usability Assessment Module
+  - Create a module to analyze molecular structure and material composition to predict the feasibility and efficiency of various recycling processes (e.g., mechanical, chemical, biological).
+  - Develop metrics and scores for material re-usability and circularity potential.
+  - _Requirements: 39.2_
+  - [x] 29.3 Lifecycle Assessment (LCA) Integration
+  - Integrate with established LCA databases and open-source LCA frameworks (e.g., openLCA, Brightway2) to estimate the full cradle-to-grave environmental impact of materials and processes.
+  - Develop GPU-accelerated methods for rapid LCA calculations for large material databases.
+  - _Requirements: 39.3_
+  - [x] 29.4 Inverse Design for Sustainable Materials
+  - Extend the inverse material design capabilities to explicitly include sustainability metrics (e.g., degradation rate, recyclability score, carbon footprint) as optimization objectives or constraints.
+  - _Requirements: 39.4_
+  - [x] 29.5 Interactive Lifecycle Simulation and Visualization
+  - Develop interactive tools to simulate and visualize the evolution of material properties, degradation products, and environmental impacts over the entire lifecycle.
+  - Provide dashboards to compare the sustainability profiles of different material candidates.
+  - _Requirements: 39.5_
 
-- [ ] 30. AI-Driven Self-Assembly & Complex System Design
-  - [ ] 30.1 GPU-Accelerated Coarse-Grained/DPD Simulation Engine
+- [x] 30. AI-Driven Self-Assembly & Complex System Design
+  - [x] 30.1 GPU-Accelerated Coarse-Grained/DPD Simulation Engine
     - Implement or integrate a GPU-accelerated simulation engine for coarse-grained molecular dynamics or Dissipative Particle Dynamics (DPD) to model mesoscale self-assembly.
     - Develop efficient particle interaction potentials tailored for self-assembling systems.
     - _Requirements: 40.1_
-  - [ ] 30.2 Self-Assembly Characterization Module
+  - [x] 30.2 Self-Assembly Characterization Module
     - Develop algorithms to analyze simulation trajectories and characterize emergent structures (e.g., identifying micelles, vesicles, liquid crystals, hydrogel networks).
     - Implement calculation of self-assembly metrics like aggregation number, CMC, morphology, and phase behavior.
     - _Requirements: 40.2_
-  - [ ] 30.3 Inverse Design for Emergent Properties
+  - [x] 30.3 Inverse Design for Emergent Properties
     - Extend inverse design capabilities to optimize molecular building blocks (e.g., polymer sequence, surfactant head/tail groups, nanoparticle ligands) or environmental conditions for desired mesoscale self-assembled structures or functions.
     - Utilize AI techniques (RL, genetic algorithms, generative models) to navigate the design space.
     - _Requirements: 40.3_
-  - [ ] 30.4 Multi-Scale Integration for Complex Systems
+  - [x] 30.4 Multi-Scale Integration for Complex Systems
     - Create seamless data flow and model coupling between atomistic (MD Analysis), molecular property (Calculator), and mesoscale (self-assembly simulation) modules within ChemiAccel.
     - _Requirements: 40.4_
-  - [ ] 30.5 Interactive Self-Assembly Visualization
+  - [x] 30.5 Interactive Self-Assembly Visualization
     - Develop interactive 3D visualization tools for self-assembly simulations, allowing users to observe structural evolution and phase transitions.
     - Provide dashboards to track emergent properties over time or across different design parameters.
     - _Requirements: 40.5_
 
-- [ ] 31. Integrated AI-Spectroscopy for Automated Structure Elucidation & Quality Control
-  - [ ] 31.1 GPU-Accelerated Predictive Spectroscopy Models
+- [x] 31. Integrated AI-Spectroscopy for Automated Structure Elucidation & Quality Control
+  - [x] 31.1 GPU-Accelerated Predictive Spectroscopy Models
     - Implement or integrate GPU-accelerated QML surrogates or AI models for predicting 1D/2D NMR, IR, MS, and UV-Vis spectra from 3D molecular structures.
     - Develop fast, approximate quantum chemistry methods for spectral feature generation where applicable.
     - _Requirements: 41.1_
-  - [ ] 31.2 Automated Experimental Spectra Processing
+  - [x] 31.2 Automated Experimental Spectra Processing
     - Develop GPU-accelerated pipelines for automated loading, pre-processing (baseline correction, normalization, peak picking), alignment, and denoising of raw experimental spectroscopic data (e.g., FID, JCAMP-DX).
     - _Requirements: 41.2_
-  - [ ] 31.3 AI-Driven Inverse Spectroscopy for Structure Elucidation
+  - [x] 31.3 AI-Driven Inverse Spectroscopy for Structure Elucidation
     - Implement a GPU-accelerated inverse problem framework that takes experimental spectra as input and proposes candidate chemical structures.
     - Combine generative chemistry (Req 22) with spectral matching algorithms to explore chemical space for best fits.
     - _Requirements: 41.3_
-  - [ ] 31.4 Spectral Comparison and Discrepancy Highlighting
+  - [x] 31.4 Spectral Comparison and Discrepancy Highlighting
     - Develop quantitative metrics for comparing predicted and experimental spectra.
     - Implement visualization tools that highlight discrepancies between predicted and experimental data to aid manual inspection and validation.
     - _Requirements: 41.4_
-  - [ ] 31.5 Integration with Intelligent Chemical Knowledge Graph
+  - [x] 31.5 Integration with Intelligent Chemical Knowledge Graph
     - Leverage the IC-KG (Req 30) for validating elucidated structures against known compounds and reactions.
     - Implement mechanisms to use spectroscopic data to detect novel compounds or flag inconsistencies with existing knowledge in the graph.
     - _Requirements: 41.5_
 
 - [ ] 32. AI-Driven Systems Pharmacology & Multi-Omics Integration
-  - [ ] 32.1 GPU-Accelerated Multi-Target Interaction Prediction
+  - [x] 32.1 GPU-Accelerated Multi-Target Interaction Prediction
     - Implement or integrate GPU-accelerated AI models (e.g., multi-task GNNs, deep learning models) for predicting compound interactions with a large panel of biological targets.
     - _Requirements: 42.1_
-  - [ ] 32.2 Biological Pathway and Network Modeling
+  - [x] 32.2 Biological Pathway and Network Modeling
     - Develop a framework for integrating predicted molecular interactions with curated biological pathway databases (e.g., KEGG, Reactome) and protein-protein interaction networks.
     - Implement algorithms to predict pathway activation/inhibition and cellular phenotype changes from molecular input.
     - _Requirements: 42.2_
-  - [ ] 32.3 Multi-Omics Data Integration and Prediction Refinement
+  - [x] 32.3 Multi-Omics Data Integration and Prediction Refinement
     - Create robust data pipelines for ingesting and integrating experimental multi-omics data (genomics, proteomics, metabolomics) to contextualize and refine system-level predictions.
     - _Requirements: 42.2_
-  - [ ] 32.4 Off-Target Effects and Systems Toxicology Prediction
+  - [x] 32.4 Off-Target Effects and Systems Toxicology Prediction
     - Implement models to predict potential off-target binding events and correlate them with known adverse drug reactions or toxicology pathways.
     - Develop a module to quantify and flag system-level toxicological risks.
     - _Requirements: 42.3_
-  - [ ] 32.5 Inverse Design for Systems-Level Profiles
+  - [x] 32.5 Inverse Design for Systems-Level Profiles
     - Extend the inverse design capabilities to optimize molecules for desired polypharmacology profiles or to minimize predicted system-level adverse effects.
     - _Requirements: 42.4_
-  - [ ] 32.6 Interactive Systems Visualization and Explanation
+  - [x] 32.6 Interactive Systems Visualization and Explanation
     - Develop interactive network visualizations showing predicted target engagement, pathway modulation, and system-level impacts.
     - Provide tools to explain AI predictions in the context of biological systems.
     - _Requirements: 42.5_
 
 - [ ] 33. AI-Driven De Novo Crystal Structure Prediction & Polymorph Engineering
-  - [ ] 33.1 GPU-Accelerated Crystal Structure Prediction (CSP) Models
+  - [x] 33.1 GPU-Accelerated Crystal Structure Prediction (CSP) Models
     - Implement or integrate GPU-accelerated AI models (e.g., GNNs predicting packing motifs, generative models for unit cells) for *de novo* prediction of crystal structures.
     - Combine AI with efficient lattice energy minimization and search algorithms to explore polymorphic landscapes.
     - _Requirements: 43.1_
-  - [ ] 33.2 Intermolecular Interaction Modeling
+  - [x] 33.2 Intermolecular Interaction Modeling
     - Develop high-fidelity, GPU-accelerated methods for calculating and optimizing intermolecular interactions (e.g., hydrogen bonding networks, π-π stacking, van der Waals) critical for crystal packing.
     - _Requirements: 43.2_
-  - [ ] 33.3 Inverse Design for Polymorph Control
+  - [x] 33.3 Inverse Design for Polymorph Control
     - Extend inverse design (Req 17) to *molecular modifications* that bias crystallization towards a specific, desired polymorph.
     - Utilize AI and optimization techniques to navigate the molecular design space for solid-state properties.
     - _Requirements: 43.3_
