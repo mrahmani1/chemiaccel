@@ -18,10 +18,19 @@ var/
 wheels/
 share/python-wheels/
 *.egg-info/
+.claude/
+.benchmarks/
+specs/
+vscode/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+demo_outputs/
 .installed.cfg
 *.egg
 PIPFILE.lock
 CLAUDE.md
+workspace.code-workspace
 
 # PyTorch
 *.pth
