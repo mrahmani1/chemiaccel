@@ -372,9 +372,11 @@ class MechanicalRecyclingPredictor(RecyclabilityPredictor):
             material_composition=composition,
             material_category=category,
             recycling_scores={RecyclingMethod.MECHANICAL_RECYCLING: mechanical_score},
-            recommended_methods=[RecyclingMethod.MECHANICAL_RECYCLING]
-            if mechanical_score.feasibility
-            else [],
+            recommended_methods=(
+                [RecyclingMethod.MECHANICAL_RECYCLING]
+                if mechanical_score.feasibility
+                else []
+            ),
             circularity_metrics=circularity_metrics,
             processing_recommendations=self._generate_processing_recommendations(
                 composition

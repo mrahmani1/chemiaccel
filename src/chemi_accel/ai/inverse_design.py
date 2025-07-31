@@ -683,9 +683,11 @@ class KGContextualInverseDesign:
                 prediction = {
                     "optimized_molecules": [mol],
                     "target_properties": self.target_properties,
-                    "optimization_score": float(np.mean(objective_values[i]))
-                    if len(objective_values) > i
-                    else 0.0,
+                    "optimization_score": (
+                        float(np.mean(objective_values[i]))
+                        if len(objective_values) > i
+                        else 0.0
+                    ),
                     "properties": {
                         k: v[i] for k, v in final_properties.items() if len(v) > i
                     },
@@ -821,9 +823,11 @@ class KGContextualInverseDesign:
             "iterations": iterations,
             "losses": losses,
             "gradient_norms": grad_norms,
-            "n_pareto_solutions": len(result.pareto_front_indices)
-            if result.pareto_front_indices is not None
-            else 0,
+            "n_pareto_solutions": (
+                len(result.pareto_front_indices)
+                if result.pareto_front_indices is not None
+                else 0
+            ),
         }
 
         return visualization_data

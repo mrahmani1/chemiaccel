@@ -541,7 +541,7 @@ class CPUNLPBackend(NLPBackend):
 
         for single_text in text:
             text_lower = single_text.lower()
-            scores = {label: 0.0 for label in class_labels}
+            scores = dict.fromkeys(class_labels, 0.0)
 
             # Score based on keyword presence
             for label, keywords in classification_keywords.items():

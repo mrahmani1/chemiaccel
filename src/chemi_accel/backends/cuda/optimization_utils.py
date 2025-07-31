@@ -122,9 +122,11 @@ class MemoryAccessAnalyzer:
             "coalescing_efficiency": coalescing_efficiency,
             "transactions_per_warp": avg_transactions_per_warp,
             "ideal_transactions_per_warp": 1.0,
-            "memory_efficiency": 1.0 / avg_transactions_per_warp
-            if avg_transactions_per_warp > 0
-            else 0.0,
+            "memory_efficiency": (
+                1.0 / avg_transactions_per_warp
+                if avg_transactions_per_warp > 0
+                else 0.0
+            ),
         }
 
     def analyze_bank_conflicts(
@@ -433,9 +435,9 @@ class KernelProfiler:
         )
 
         return KernelPerformanceMetrics(
-            kernel_name=kernel_func.__name__
-            if hasattr(kernel_func, "__name__")
-            else "unknown",
+            kernel_name=(
+                kernel_func.__name__ if hasattr(kernel_func, "__name__") else "unknown"
+            ),
             execution_time_ms=avg_time,
             throughput_elements_per_sec=throughput,
             memory_bandwidth_gb_per_sec=memory_bandwidth,

@@ -1240,16 +1240,20 @@ class CrystalPackingOptimizer:
                 coordinates=fragment.coordinates.coordinates.copy(),
                 elements=fragment.coordinates.elements.copy(),
                 atomic_numbers=fragment.coordinates.atomic_numbers.copy(),
-                charges=fragment.coordinates.charges.copy()
-                if fragment.coordinates.charges is not None
-                else None,
+                charges=(
+                    fragment.coordinates.charges.copy()
+                    if fragment.coordinates.charges is not None
+                    else None
+                ),
             ),
             fragment_id=fragment.fragment_id,
             molecule_id=fragment.molecule_id,
             charge=fragment.charge,
-            dipole_moment=fragment.dipole_moment.copy()
-            if fragment.dipole_moment is not None
-            else None,
+            dipole_moment=(
+                fragment.dipole_moment.copy()
+                if fragment.dipole_moment is not None
+                else None
+            ),
             aromatic_rings=fragment.aromatic_rings.copy(),
             hydrogen_bond_donors=fragment.hydrogen_bond_donors.copy(),
             hydrogen_bond_acceptors=fragment.hydrogen_bond_acceptors.copy(),

@@ -4,7 +4,6 @@ Unit tests for 3D molecular descriptor calculations.
 Tests GPU-accelerated 3D descriptor kernels and calculations.
 """
 
-
 import numpy as np
 import pytest
 

@@ -714,12 +714,16 @@ class InteractiveVisualizer:
                 edge.predicted_yield = step_pred.main_product_yield
                 edge.confidence = step_pred.confidence
                 edge.reaction_conditions = {
-                    "temperature": step_pred.optimal_conditions.temperature
-                    if step_pred.optimal_conditions
-                    else 298.15,
-                    "catalyst": step_pred.optimal_conditions.catalyst
-                    if step_pred.optimal_conditions
-                    else None,
+                    "temperature": (
+                        step_pred.optimal_conditions.temperature
+                        if step_pred.optimal_conditions
+                        else 298.15
+                    ),
+                    "catalyst": (
+                        step_pred.optimal_conditions.catalyst
+                        if step_pred.optimal_conditions
+                        else None
+                    ),
                 }
 
             vis_data.add_edge(edge)
@@ -731,9 +735,11 @@ class InteractiveVisualizer:
             "total_steps": route.total_steps,
             "overall_confidence": route.overall_confidence,
             "total_cost": route.total_cost,
-            "complexity": route.complexity.value
-            if hasattr(route.complexity, "value")
-            else str(route.complexity),
+            "complexity": (
+                route.complexity.value
+                if hasattr(route.complexity, "value")
+                else str(route.complexity)
+            ),
         }
 
         return vis_data

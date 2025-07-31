@@ -5,7 +5,6 @@ This module tests the JAX backend descriptor calculation functions
 with synthetic molecular data.
 """
 
-
 import numpy as np
 import pytest
 

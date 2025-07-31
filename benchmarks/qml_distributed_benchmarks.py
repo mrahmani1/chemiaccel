@@ -578,9 +578,9 @@ class DistributedQMLBenchmark:
             info.update(
                 {
                     "total_memory_gb": psutil.virtual_memory().total / (1024**3),
-                    "cpu_freq_mhz": psutil.cpu_freq().current
-                    if psutil.cpu_freq()
-                    else 0,
+                    "cpu_freq_mhz": (
+                        psutil.cpu_freq().current if psutil.cpu_freq() else 0
+                    ),
                 }
             )
 

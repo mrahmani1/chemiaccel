@@ -423,9 +423,11 @@ class OptimizedCUDAKernelManager:
             try:
                 kernel = RawKernel(
                     source,
-                    f"calculate_{name}"
-                    if not name.endswith("profiler")
-                    else "kernel_profiler",
+                    (
+                        f"calculate_{name}"
+                        if not name.endswith("profiler")
+                        else "kernel_profiler"
+                    ),
                     options=compile_options,
                 )
                 self._kernels[name] = kernel
@@ -436,9 +438,11 @@ class OptimizedCUDAKernelManager:
                 try:
                     kernel = RawKernel(
                         source,
-                        f"calculate_{name}"
-                        if not name.endswith("profiler")
-                        else "kernel_profiler",
+                        (
+                            f"calculate_{name}"
+                            if not name.endswith("profiler")
+                            else "kernel_profiler"
+                        ),
                     )
                     self._kernels[name] = kernel
                     logger.warning(f"Compiled kernel {name} without optimization flags")

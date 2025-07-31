@@ -788,11 +788,11 @@ class MolecularDeduplicator:
                     [r for r in inchikey_results if r.is_successful]
                 ),
                 "duplicate_group_count": len(duplicate_groups),
-                "largest_duplicate_group": max(
-                    len(indices) for indices in duplicate_groups.values()
-                )
-                if duplicate_groups
-                else 0,
+                "largest_duplicate_group": (
+                    max(len(indices) for indices in duplicate_groups.values())
+                    if duplicate_groups
+                    else 0
+                ),
             },
         )
 

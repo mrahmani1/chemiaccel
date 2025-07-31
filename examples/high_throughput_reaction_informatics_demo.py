@@ -498,55 +498,57 @@ def generate_comprehensive_report(
         },
         "reaction_prediction": {
             "total_predictions": len(predictions),
-            "average_feasibility": np.mean(
-                [p.get("feasibility_score", 0) for p in predictions]
-            )
-            if predictions
-            else 0,
-            "reaction_types_covered": len(
-                set(p.get("reaction_type", "") for p in predictions)
-            )
-            if predictions
-            else 0,
+            "average_feasibility": (
+                np.mean([p.get("feasibility_score", 0) for p in predictions])
+                if predictions
+                else 0
+            ),
+            "reaction_types_covered": (
+                len(set(p.get("reaction_type", "") for p in predictions))
+                if predictions
+                else 0
+            ),
         },
         "retrosynthesis_analysis": {
             "targets_analyzed": len(retro_results),
-            "average_complexity": np.mean(
-                [r["complexity_score"] for r in retro_results]
-            )
-            if retro_results
-            else 0,
-            "average_estimated_cost": np.mean(
-                [r["estimated_cost"] for r in retro_results]
-            )
-            if retro_results
-            else 0,
+            "average_complexity": (
+                np.mean([r["complexity_score"] for r in retro_results])
+                if retro_results
+                else 0
+            ),
+            "average_estimated_cost": (
+                np.mean([r["estimated_cost"] for r in retro_results])
+                if retro_results
+                else 0
+            ),
         },
         "condition_optimization": {
             "optimizations_performed": len(optimization_results),
-            "average_improvement": np.mean(
-                [r["predicted_improvement"] for r in optimization_results]
-            )
-            if optimization_results
-            else 0,
+            "average_improvement": (
+                np.mean([r["predicted_improvement"] for r in optimization_results])
+                if optimization_results
+                else 0
+            ),
         },
         "mechanism_classification": {
             "reactions_classified": len(mechanism_results),
-            "average_confidence": np.mean([r["confidence"] for r in mechanism_results])
-            if mechanism_results
-            else 0,
+            "average_confidence": (
+                np.mean([r["confidence"] for r in mechanism_results])
+                if mechanism_results
+                else 0
+            ),
         },
         "performance_metrics": {
-            "peak_throughput": max(
-                [r.get("molecules_per_second", 0) for r in benchmark_results]
-            )
-            if benchmark_results
-            else 0,
-            "peak_prediction_rate": max(
-                [r.get("predictions_per_second", 0) for r in benchmark_results]
-            )
-            if benchmark_results
-            else 0,
+            "peak_throughput": (
+                max([r.get("molecules_per_second", 0) for r in benchmark_results])
+                if benchmark_results
+                else 0
+            ),
+            "peak_prediction_rate": (
+                max([r.get("predictions_per_second", 0) for r in benchmark_results])
+                if benchmark_results
+                else 0
+            ),
         },
     }
 

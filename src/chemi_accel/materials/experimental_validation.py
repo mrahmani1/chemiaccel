@@ -784,9 +784,11 @@ class ExperimentalComparator:
             "matched_peaks": matched_peaks,
             "total_predicted": len(predicted.peak_positions),
             "total_experimental": len(exp_peaks),
-            "matching_fraction": matched_peaks / len(predicted.peak_positions)
-            if predicted.peak_positions
-            else 0,
+            "matching_fraction": (
+                matched_peaks / len(predicted.peak_positions)
+                if predicted.peak_positions
+                else 0
+            ),
             "tolerance_degrees": tolerance,
         }
 

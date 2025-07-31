@@ -211,9 +211,9 @@ class RobustnessTestFramework:
                     mol_id=f"error_test_{hash(smiles)}",
                     num_atoms=mol.GetNumAtoms(),
                     num_bonds=mol.GetNumBonds(),
-                    molecular_weight=Descriptors.MolWt(mol)
-                    if mol.GetNumAtoms() > 0
-                    else 0.0,
+                    molecular_weight=(
+                        Descriptors.MolWt(mol) if mol.GetNumAtoms() > 0 else 0.0
+                    ),
                     backend_data={"rdkit_mol": mol},
                 )
 

@@ -601,7 +601,8 @@ class BasicDescriptorCalculator:
             results[
                 "molecular_weight"
             ] = self.kernel_manager.calculate_molecular_weights(
-                molecular_data["atom_weights"], molecular_data["molecule_boundaries"]
+                molecular_data["atom_weights"],
+                molecular_data["molecule_boundaries"],
             )
 
         # Atom counts

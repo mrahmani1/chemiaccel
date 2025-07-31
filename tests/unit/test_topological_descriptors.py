@@ -2,7 +2,6 @@
 Unit tests for topological molecular descriptors.
 """
 
-
 import numpy as np
 import pandas as pd
 import pytest

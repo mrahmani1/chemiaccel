@@ -2,7 +2,6 @@
 Tests for quantum property extraction and processing utilities.
 """
 
-
 import numpy as np
 import pytest
 from chemi_accel.qml.base import QMLPrediction, QuantumProperty

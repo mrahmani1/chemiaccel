@@ -739,9 +739,11 @@ class ModelPredictiveController:
             "model_uncertainty": self.process_model.get_model_uncertainty(),
             "current_state": self.current_state,
             "control_bounds": self.control_bounds,
-            "last_update": max([action["timestamp"] for action in recent_actions])
-            if recent_actions
-            else 0.0,
+            "last_update": (
+                max([action["timestamp"] for action in recent_actions])
+                if recent_actions
+                else 0.0
+            ),
         }
 
 
@@ -826,13 +828,13 @@ class AdaptiveController:
         return {
             "adaptation_events": len(recent_adaptations),
             "average_performance": np.mean(performance_scores),
-            "performance_trend": np.polyfit(
-                range(len(performance_scores)), performance_scores, 1
-            )[0]
-            if len(performance_scores) > 1
-            else 0.0,
-            "last_adaptation": recent_adaptations[-1]["timestamp"]
-            if recent_adaptations
-            else 0.0,
+            "performance_trend": (
+                np.polyfit(range(len(performance_scores)), performance_scores, 1)[0]
+                if len(performance_scores) > 1
+                else 0.0
+            ),
+            "last_adaptation": (
+                recent_adaptations[-1]["timestamp"] if recent_adaptations else 0.0
+            ),
             "current_config": asdict(self.base_controller.config),
         }

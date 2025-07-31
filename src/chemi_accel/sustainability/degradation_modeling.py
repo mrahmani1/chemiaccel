@@ -206,10 +206,12 @@ class AtomisticMDModel(DegradationModel):
                 mechanical_retention=mechanical_retention,
                 chemical_changes={
                     "crosslink_density": 1.0 - (1.0 - molecular_weight_retention) * 0.8,
-                    "crystallinity": material.crystallinity
-                    * (0.9 + 0.1 * molecular_weight_retention)
-                    if material.crystallinity
-                    else 1.0,
+                    "crystallinity": (
+                        material.crystallinity
+                        * (0.9 + 0.1 * molecular_weight_retention)
+                        if material.crystallinity
+                        else 1.0
+                    ),
                 },
                 degradation_products=degradation_products,
             )
@@ -658,9 +660,9 @@ class SurrogateAIModel(DegradationModel):
             return {
                 "molecular_weight_retention": outputs[0, 0].item(),
                 "carbonyl_index": outputs[0, 1].item() if outputs.shape[1] > 1 else 0.0,
-                "double_bond_index": outputs[0, 2].item()
-                if outputs.shape[1] > 2
-                else 1.0,
+                "double_bond_index": (
+                    outputs[0, 2].item() if outputs.shape[1] > 2 else 1.0
+                ),
             }
 
     def _predict_sklearn(self, features: np.ndarray) -> Dict[str, float]:
@@ -1044,9 +1046,7 @@ class MultiScaleDegradationPredictor:
         else:
             logger.warning("Invalid weights provided, using equal weights")
             num_scales = len(weights)
-            self.ensemble_weights = {
-                scale: 1.0 / num_scales for scale in weights.keys()
-            }
+            self.ensemble_weights = dict.fromkeys(weights.keys(), 1.0 / num_scales)
 
 
 # Utility functions

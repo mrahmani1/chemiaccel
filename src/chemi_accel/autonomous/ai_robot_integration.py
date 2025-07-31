@@ -176,9 +176,11 @@ class ActiveLearningDecisionEngine(AIDecisionEngine):
                 constraints=constraints or {},
                 metadata={
                     "query_strategy": "uncertainty_sampling",
-                    "model_version": self.adaptive_manager.get_model_version()
-                    if hasattr(self.adaptive_manager, "get_model_version")
-                    else "unknown",
+                    "model_version": (
+                        self.adaptive_manager.get_model_version()
+                        if hasattr(self.adaptive_manager, "get_model_version")
+                        else "unknown"
+                    ),
                 },
             )
 
@@ -1366,9 +1368,11 @@ class AIRobotIntegrationManager:
                 plan_id=plan_id,
                 experiment_id=experiment_id,
                 actions=actions,
-                optimization_objective=getattr(self.optimizer.config, "objective", None)
-                if self.optimizer
-                else None,
+                optimization_objective=(
+                    getattr(self.optimizer.config, "objective", None)
+                    if self.optimizer
+                    else None
+                ),
                 target_parameters=synthesis_task.target_molecule,
                 constraints=design.success_criteria,
                 metadata={

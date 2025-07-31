@@ -308,9 +308,9 @@ class PolymerValidator:
                     "calculated": calculated,
                     "expected": expected,
                     "within_tolerance": abs(calculated - expected) < 0.2,
-                    "relative_error": abs(calculated - expected) / expected
-                    if expected != 0
-                    else 0,
+                    "relative_error": (
+                        abs(calculated - expected) / expected if expected != 0 else 0
+                    ),
                 }
 
             # Validate reactivity
@@ -322,9 +322,9 @@ class PolymerValidator:
                     "calculated": calculated,
                     "expected": expected,
                     "within_tolerance": abs(calculated - expected) < 0.2,
-                    "relative_error": abs(calculated - expected) / expected
-                    if expected != 0
-                    else 0,
+                    "relative_error": (
+                        abs(calculated - expected) / expected if expected != 0 else 0
+                    ),
                 }
 
             # Check functional group identification
@@ -404,10 +404,11 @@ class PolymerValidator:
                         "expected": expected_ete,
                         "within_tolerance": abs(calculated_ete - expected_ete)
                         < expected_ete * 0.3,
-                        "relative_error": abs(calculated_ete - expected_ete)
-                        / expected_ete
-                        if expected_ete != 0
-                        else 0,
+                        "relative_error": (
+                            abs(calculated_ete - expected_ete) / expected_ete
+                            if expected_ete != 0
+                            else 0
+                        ),
                     }
 
             # Check sequence analysis

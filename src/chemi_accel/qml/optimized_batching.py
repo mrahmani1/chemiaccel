@@ -895,9 +895,9 @@ class DataTransferOptimizer:
                 "transfer_size_mb": transfer_size,
                 "estimated_time": estimated_time,
                 "prefetch_priority": metadata.priority,
-                "target_device": target_devices[i % len(target_devices)]
-                if target_devices
-                else "cpu",
+                "target_device": (
+                    target_devices[i % len(target_devices)] if target_devices else "cpu"
+                ),
             }
 
             prefetch_queue.append(prefetch_info)
@@ -932,9 +932,9 @@ class DataTransferOptimizer:
                 "stage_type": "transfer_compute",
                 "dependencies": [i - 1] if i > 0 else [],
                 "estimated_duration": metadata.estimated_compute_time,
-                "target_device": target_devices[i % len(target_devices)]
-                if target_devices
-                else "cpu",
+                "target_device": (
+                    target_devices[i % len(target_devices)] if target_devices else "cpu"
+                ),
             }
 
             pipeline_stages.append(stage)
@@ -1046,9 +1046,9 @@ class DataTransferOptimizer:
                 "batch_index": i,
                 "batch_id": metadata.batch_id,
                 "transfer_size_mb": transfer_size,
-                "target_device": target_devices[i % len(target_devices)]
-                if target_devices
-                else "cpu",
+                "target_device": (
+                    target_devices[i % len(target_devices)] if target_devices else "cpu"
+                ),
             }
 
             basic_info.append(batch_info)

@@ -5,7 +5,6 @@ This module tests the complete JAX backend workflow including
 molecular processing, descriptor calculations, and vectorization.
 """
 
-
 import numpy as np
 import pytest
 

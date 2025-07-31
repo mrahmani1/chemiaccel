@@ -900,9 +900,11 @@ class KGContextualGenerativeChemistry:
             "total_molecules_generated": total_molecules,
             "average_execution_time": avg_execution_time,
             "kg_updates_performed": len(self.kg_update_history),
-            "latest_generation_stats": self.generation_history[-1].statistics
-            if self.generation_history
-            else {},
+            "latest_generation_stats": (
+                self.generation_history[-1].statistics
+                if self.generation_history
+                else {}
+            ),
         }
 
 

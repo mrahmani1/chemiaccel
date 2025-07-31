@@ -711,9 +711,9 @@ class GPUAcceleratedCSPEngine:
                 predicted_structures=ranked_structures[: self.config.max_structures],
                 energy_landscape=self._calculate_energy_landscape(ranked_structures),
                 polymorphs=polymorphs,
-                most_stable_structure=ranked_structures[0]
-                if ranked_structures
-                else None,
+                most_stable_structure=(
+                    ranked_structures[0] if ranked_structures else None
+                ),
                 prediction_confidence=confidence,
                 computational_cost=0.0,  # Will be updated
                 method_used=self.config.method,
@@ -1939,14 +1939,18 @@ class GPUAcceleratedCSPEngine:
                     "rank": i + 1,
                     "energy": structure.lattice_energy,
                     "formula": structure.formula,
-                    "crystal_system": structure.unit_cell.crystal_system.value
-                    if structure.unit_cell.crystal_system
-                    else "unknown",
+                    "crystal_system": (
+                        structure.unit_cell.crystal_system.value
+                        if structure.unit_cell.crystal_system
+                        else "unknown"
+                    ),
                     "space_group": structure.space_group,
                     "density": structure.density,
-                    "packing_motif": structure.packing_motif.value
-                    if structure.packing_motif
-                    else "unknown",
+                    "packing_motif": (
+                        structure.packing_motif.value
+                        if structure.packing_motif
+                        else "unknown"
+                    ),
                 }
             )
 

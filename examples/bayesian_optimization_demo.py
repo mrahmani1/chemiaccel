@@ -551,9 +551,11 @@ class BayesianOptimizationDemo:
                 acquisition_function=acq_func,
                 use_gpu=self.use_gpu,
                 device="auto",
-                exploration_weight=2.0
-                if acq_func == AcquisitionFunction.UPPER_CONFIDENCE_BOUND
-                else 0.01,
+                exploration_weight=(
+                    2.0
+                    if acq_func == AcquisitionFunction.UPPER_CONFIDENCE_BOUND
+                    else 0.01
+                ),
             )
 
             optimizer = BayesianOptimizer(parameter_spaces, config)

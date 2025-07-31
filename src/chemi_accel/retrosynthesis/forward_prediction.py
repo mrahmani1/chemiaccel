@@ -1011,9 +1011,11 @@ class ForwardReactionPredictor:
             # Calculate overall selectivity
             overall_selectivity = np.mean(
                 [
-                    sp.selectivity_predictions[0].major_product_ratio
-                    if sp.selectivity_predictions
-                    else 0.8
+                    (
+                        sp.selectivity_predictions[0].major_product_ratio
+                        if sp.selectivity_predictions
+                        else 0.8
+                    )
                     for sp in step_predictions
                 ]
             )

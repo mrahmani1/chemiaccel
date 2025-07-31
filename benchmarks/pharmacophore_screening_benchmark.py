@@ -241,12 +241,14 @@ class PharmacophoreScreeningBenchmark:
                 "aromatic": 1,
                 "hydrophobic": 2,
             },
-            "distance_constraints": {
-                "donor_acceptor": (2.0, 8.0),
-                "aromatic_hydrophobic": (3.0, 10.0),
-            }
-            if self.config.include_3d_constraints
-            else None,
+            "distance_constraints": (
+                {
+                    "donor_acceptor": (2.0, 8.0),
+                    "aromatic_hydrophobic": (3.0, 10.0),
+                }
+                if self.config.include_3d_constraints
+                else None
+            ),
             "description": "Complex multi-feature pharmacophore with distance constraints",
         }
 

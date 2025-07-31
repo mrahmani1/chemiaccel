@@ -343,9 +343,9 @@ class AdvancedConformerGenerator:
                             method=ConformerMethod.MMFF,
                             quality=self.quality,
                             final_energy=energy,
-                            convergence_status="converged"
-                            if convergence == 0
-                            else "partial",
+                            convergence_status=(
+                                "converged" if convergence == 0 else "partial"
+                            ),
                         )
 
                         optimized_geometries.append(optimized_geometry)
@@ -386,9 +386,9 @@ class AdvancedConformerGenerator:
                         method=ConformerMethod.UFF,
                         quality=self.quality,
                         final_energy=energy,
-                        convergence_status="converged"
-                        if convergence == 0
-                        else "partial",
+                        convergence_status=(
+                            "converged" if convergence == 0 else "partial"
+                        ),
                     )
 
                     optimized_geometries.append(optimized_geometry)
@@ -785,9 +785,9 @@ class ConformerEnsembleProcessor:
                     # Select lowest energy from cluster
                     cluster_rep = min(
                         cluster_members,
-                        key=lambda x: x.energy
-                        if x.energy is not None
-                        else float("inf"),
+                        key=lambda x: (
+                            x.energy if x.energy is not None else float("inf")
+                        ),
                     )
                     representatives.append(cluster_rep)
 

@@ -2,7 +2,6 @@
 Unit tests for polymer processing system.
 """
 
-
 import pytest
 
 from src.chemi_accel.descriptors.polymer import (

@@ -434,7 +434,7 @@ def demo_parallel_trajectory_reading():
 
 
 def demo_gpu_accelerated_timeseries_analysis(
-    trajectory_results: Dict[str, List[TrajectoryFrame]]
+    trajectory_results: Dict[str, List[TrajectoryFrame]],
 ):
     """Demonstrate GPU-accelerated time-series property calculations."""
     print("\n" + "=" * 80)
@@ -1035,9 +1035,9 @@ def demo_dynamic_plif_generation(trajectory_results: Dict[str, List[TrajectoryFr
             "residue_name": residue_names[residue_id % len(residue_names)],
             "atom_name": atom_name,
             "element": element,
-            "partial_charge": 0.1
-            if element == "N"
-            else (-0.2 if element == "O" else 0.0),
+            "partial_charge": (
+                0.1 if element == "N" else (-0.2 if element == "O" else 0.0)
+            ),
         }
 
     # Create ligand topology

@@ -5,7 +5,6 @@ Tests SMILES parsing, validation, descriptor calculation,
 and error handling with diverse molecular structures.
 """
 
-
 import pandas as pd
 import pytest
 from chemi_accel.core.exceptions import ChemiAccelError, InvalidMoleculeError

@@ -416,9 +416,9 @@ class KGContextualActiveLearning:
             uncertainty_estimates=selected_uncertainties,
             diversity_scores=selected_diversity_scores,
             iteration=self.current_iteration,
-            model_performance=self.performance_history[-1]
-            if self.performance_history
-            else {},
+            model_performance=(
+                self.performance_history[-1] if self.performance_history else {}
+            ),
         )
 
         # Add KG-specific metadata
@@ -520,16 +520,16 @@ class KGContextualActiveLearning:
         summary = {
             "total_iterations": len(self.iteration_history),
             "total_training_molecules": len(self.training_molecules),
-            "search_space_size": len(self.search_space)
-            if self.search_space is not None
-            else 0,
+            "search_space_size": (
+                len(self.search_space) if self.search_space is not None else 0
+            ),
             "iterations": iterations,
             "average_uncertainties": avg_uncertainties,
             "average_acquisition_scores": avg_acquisition_scores,
             "model_rmse_history": model_performances,
-            "current_model_performance": self.performance_history[-1]
-            if self.performance_history
-            else {},
+            "current_model_performance": (
+                self.performance_history[-1] if self.performance_history else {}
+            ),
             "acquisition_function": self.acquisition_function_name,
             "uncertainty_method": self.uncertainty_method,
         }
@@ -727,15 +727,17 @@ class KGContextualActiveLearning:
             "kg_contexts_collected": len(self.kg_contexts),
             "contextual_predictions_made": len(self.contextual_predictions),
             "kg_update_suggestions": len(self.kg_update_suggestions),
-            "avg_kg_confidence": np.mean(
-                [
-                    np.mean(list(context.confidence_scores.values()))
-                    for context in self.kg_contexts.values()
-                    if context.confidence_scores
-                ]
-            )
-            if self.kg_contexts
-            else 0.0,
+            "avg_kg_confidence": (
+                np.mean(
+                    [
+                        np.mean(list(context.confidence_scores.values()))
+                        for context in self.kg_contexts.values()
+                        if context.confidence_scores
+                    ]
+                )
+                if self.kg_contexts
+                else 0.0
+            ),
             "kg_guidance_enabled": self.use_kg_guidance,
             "kg_weight": self.kg_weight,
         }

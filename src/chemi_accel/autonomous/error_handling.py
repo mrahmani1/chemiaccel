@@ -155,9 +155,11 @@ class ConnectionErrorHandler(ErrorHandler):
                 **context,
             },
             stack_trace=traceback.format_exc(),
-            recovery_action=RecoveryAction.RETRY
-            if failure_info["consecutive_failures"] <= self.max_retries
-            else RecoveryAction.ALERT_ONLY,
+            recovery_action=(
+                RecoveryAction.RETRY
+                if failure_info["consecutive_failures"] <= self.max_retries
+                else RecoveryAction.ALERT_ONLY
+            ),
         )
 
         logger.error(
@@ -257,9 +259,11 @@ class DataValidationErrorHandler(ErrorHandler):
                 "quarantined": stats["quarantined"],
                 **context,
             },
-            stack_trace=traceback.format_exc()
-            if severity in [ErrorSeverity.HIGH, ErrorSeverity.CRITICAL]
-            else None,
+            stack_trace=(
+                traceback.format_exc()
+                if severity in [ErrorSeverity.HIGH, ErrorSeverity.CRITICAL]
+                else None
+            ),
             recovery_action=recovery_action,
         )
 
@@ -374,9 +378,9 @@ class FileSystemErrorHandler(ErrorHandler):
         return {
             "handler_type": "file_system_error",
             "description": "Handles file system related errors with backup capability",
-            "backup_directory": str(self.backup_directory)
-            if self.backup_directory
-            else None,
+            "backup_directory": (
+                str(self.backup_directory) if self.backup_directory else None
+            ),
             "backup_enabled": self.backup_directory is not None,
         }
 
@@ -451,9 +455,11 @@ class InstrumentErrorHandler(ErrorHandler):
                 "is_critical": is_critical,
                 **context,
             },
-            stack_trace=traceback.format_exc()
-            if severity in [ErrorSeverity.HIGH, ErrorSeverity.CRITICAL]
-            else None,
+            stack_trace=(
+                traceback.format_exc()
+                if severity in [ErrorSeverity.HIGH, ErrorSeverity.CRITICAL]
+                else None
+            ),
             recovery_action=recovery_action,
         )
 
@@ -539,9 +545,11 @@ class CircuitBreakerErrorHandler(ErrorHandler):
             context={
                 "circuit_state": breaker["state"],
                 "failure_count": breaker["failure_count"],
-                "next_attempt": breaker["next_attempt"].isoformat()
-                if breaker["next_attempt"]
-                else None,
+                "next_attempt": (
+                    breaker["next_attempt"].isoformat()
+                    if breaker["next_attempt"]
+                    else None
+                ),
                 **context,
             },
             recovery_action=recovery_action,
@@ -596,9 +604,9 @@ class CircuitBreakerErrorHandler(ErrorHandler):
             "circuit_breakers": {
                 k: {
                     **v,
-                    "next_attempt": v["next_attempt"].isoformat()
-                    if v["next_attempt"]
-                    else None,
+                    "next_attempt": (
+                        v["next_attempt"].isoformat() if v["next_attempt"] else None
+                    ),
                 }
                 for k, v in self.circuit_breakers.items()
             },

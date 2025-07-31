@@ -194,9 +194,9 @@ class ComprehensiveValidationRunner:
                 "summary": {
                     "exact_matches": exact_matches,
                     "total_tests": total_tests,
-                    "accuracy_rate": exact_matches / total_tests
-                    if total_tests > 0
-                    else 0,
+                    "accuracy_rate": (
+                        exact_matches / total_tests if total_tests > 0 else 0
+                    ),
                 },
                 "detailed_results": results,
             }

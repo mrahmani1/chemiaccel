@@ -5,7 +5,6 @@ This module validates the accuracy of ChemiAccel's 3D descriptor calculations
 by comparing results against established reference implementations like RDKit.
 """
 
-
 import numpy as np
 import pytest
 

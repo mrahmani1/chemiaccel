@@ -459,7 +459,7 @@ class MatrixLCACalculator(LCACalculator):
         }
 
         for stage in LifecycleStage:
-            stage_contributions[stage] = {cat: 0.0 for cat in ImpactCategory}
+            stage_contributions[stage] = dict.fromkeys(ImpactCategory, 0.0)
 
         # Assign contributions based on process names (simplified)
         for i, process in enumerate(processes):

@@ -29,9 +29,9 @@ def create_job_config(args) -> MLJobConfig:
         instance_count=args.instance_count,
         input_data_uri=args.input_data,
         output_data_uri=args.output_data,
-        hyperparameters=json.loads(args.hyperparameters)
-        if args.hyperparameters
-        else None,
+        hyperparameters=(
+            json.loads(args.hyperparameters) if args.hyperparameters else None
+        ),
         environment_variables=json.loads(args.env_vars) if args.env_vars else None,
         max_runtime_seconds=args.max_runtime,
         role_arn=args.role_arn,

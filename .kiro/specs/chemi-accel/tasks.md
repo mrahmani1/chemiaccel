@@ -719,121 +719,121 @@
     - Develop interactive tools to visualize proposed synthesis routes, displaying predicted properties for each step and allowing users to compare trade-offs between different routes.
     - _Requirements: 44.5_
 
-- [ ] 35. Universal Explainable AI (XAI) for Molecular and Material Predictions
-  - [ ] 35.1 Feature Attribution for Molecular Structures
+- [x] 35. Universal Explainable AI (XAI) for Molecular and Material Predictions
+  - [x] 35.1 Feature Attribution for Molecular Structures
     - Implement GPU-accelerated methods to identify and quantify the contribution of individual atoms, bonds, or substructures to ChemiAccel's molecular property predictions.
     - _Requirements: 45.1_
-  - [ ] 35.2 Graph Neural Network (GNN) Explainers
+  - [x] 35.2 Graph Neural Network (GNN) Explainers
     - Integrate or develop GPU-accelerated GNN explainers (e.g., GNNExplainer, Grad-CAM for GNNs) to provide insights into predictions made by GNN models within ChemiAccel (e.g., QML, generative models, systems pharmacology).
     - _Requirements: 45.2_
-  - [ ] 35.3 Model-Agnostic XAI for Black-Box Models
+  - [x] 35.3 Model-Agnostic XAI for Black-Box Models
     - Implement GPU-optimized versions of model-agnostic XAI techniques (e.g., SHAP, LIME) tailored for ChemiAccel's diverse data types and models, to explain predictions regardless of the underlying AI architecture.
     - _Requirements: 45.3_
-  - [ ] 35.4 XAI for Dynamic and Multi-Scale Simulations
+  - [x] 35.4 XAI for Dynamic and Multi-Scale Simulations
     - Develop methods to extract and explain critical events, driving forces, or structural motifs identified during MD simulations, self-assembly, or digital twin operations that lead to specific emergent properties.
     - _Requirements: 45.4_
-  - [ ] 35.5 Interactive Visualization of Explanations
+  - [x] 35.5 Interactive Visualization of Explanations
     - Create interactive visualization tools (e.g., heatmaps overlayed on 2D/3D molecular structures, saliency maps for material microstructures, feature importance dashboards) to effectively communicate AI explanations to users.
     - _Requirements: 45.5_
 
-- [ ] 36. Intelligent Microreactor & Flow Chemistry Design and Optimization
-  - [ ] 36.1 Integration of Reaction Kinetics with CFD Models
+- [x] 36. Intelligent Microreactor & Flow Chemistry Design and Optimization
+  - [x] 36.1 Integration of Reaction Kinetics with CFD Models
     - Develop a framework to couple ChemiAccel's AI-driven reaction mechanism predictions (Req 36) with GPU-accelerated Computational Fluid Dynamics (CFD) solvers.
     - Implement methods for simulating mass transport, heat transfer, and reaction kinetics within complex flow geometries.
     - _Requirements: 46.1_
-  - [ ] 36.2 Generative Design for Microreactor Geometries
+  - [x] 36.2 Generative Design for Microreactor Geometries
     - Extend generative design capabilities (Req 22) to propose novel microreactor geometries (e.g., channel patterns, mixing features, heat exchangers) optimized for specific chemical reactions and process objectives.
     - _Requirements: 46.2_
-  - [ ] 36.3 Multi-Objective Optimization for Flow Parameters
+  - [x] 36.3 Multi-Objective Optimization for Flow Parameters
     - Apply Req 31 (Multi-Objective Optimization Framework) to optimize flow rates, temperature gradients, and other process parameters within the designed microreactors, targeting yield, selectivity, and safety.
     - _Requirements: 46.3_
-  - [ ] 36.4 Process Safety and Sustainability Quantification
+  - [x] 36.4 Process Safety and Sustainability Quantification
     - Develop modules to quantify inherent safety risks (e.g., runaway reactions, hot spots) and environmental footprint (e.g., energy consumption, waste generation) for flow chemistry processes.
     - Integrate these metrics into the optimization objectives.
     - _Requirements: 46.4_
-  - [ ] 36.5 Interactive Simulation and Blueprint Generation
+  - [x] 36.5 Interactive Simulation and Blueprint Generation
     - Create interactive 3D visualizations of reaction behavior within designed microreactors (e.g., concentration profiles, temperature maps).
     - Implement functionality to export optimized reactor geometries as CAD-compatible blueprints.
     - _Requirements: 46.5_
 
-- [ ] 37. AI-Driven In-Operando Characterization & Self-Correcting Models
-  - [ ] 37.1 GPU-Accelerated Real-time Sensor Data Processing
+- [x] 37. AI-Driven In-Operando Characterization & Self-Correcting Models
+  - [x] 37.1 GPU-Accelerated Real-time Sensor Data Processing
     - Develop high-throughput, GPU-accelerated pipelines for real-time ingestion, pre-processing (denoising, baseline correction), and feature extraction from *in-operando* spectroscopic (Raman, IR, UV-Vis) and other sensor data streams.
     - _Requirements: 47.1_
-  - [ ] 37.2 Real-time Species Identification and Quantification
+  - [x] 37.2 Real-time Species Identification and Quantification
     - Leverage Req 41 (Integrated AI-Spectroscopy) to rapidly identify and quantify known species in real-time.
     - Implement advanced chemometric and AI models for the detection and tentative identification of *unknown* intermediates or impurities directly from complex spectral mixtures.
     - _Requirements: 47.2_
-  - [ ] 37.3 Real-time Process State Monitoring and Deviation Detection
+  - [x] 37.3 Real-time Process State Monitoring and Deviation Detection
     - Develop models to predict key process variables (e.g., conversion, crystal size distribution, phase transitions) from *in-operando* data.
     - Implement anomaly detection algorithms to identify process deviations or unexpected events.
     - _Requirements: 47.3_
-  - [ ] 37.4 Adaptive Model Refinement and Self-Correction
+  - [x] 37.4 Adaptive Model Refinement and Self-Correction
     - Design a feedback loop where *in-operando* data is continuously used to refine and update ChemiAccel's underlying kinetic, property, or process models (e.g., using online learning, active learning for model parameters).
     - Implement mechanisms for quantifiable model confidence and applicability domain in real-time.
     - _Requirements: 47.4_
-  - [ ] 37.5 Hypothesis Generation for Unexpected Phenomena
+  - [x] 37.5 Hypothesis Generation for Unexpected Phenomena
     - When novel species or unexpected behavior are detected, develop AI-driven hypothesis generation tools to suggest possible chemical identities or mechanistic explanations for further investigation.
     - _Requirements: 47.5_
 
-- [ ] 38. AI-Driven Chemical Process Digital Twin for Multi-Product Optimization
-  - [ ] 38.1 Multi-Product Process Digital Twin Construction
+- [x] 38. AI-Driven Chemical Process Digital Twin for Multi-Product Optimization
+  - [x] 38.1 Multi-Product Process Digital Twin Construction
     - Develop an adaptive digital twin framework that can dynamically reconfigure itself to model the production of different chemical products within a defined chemical family on the same plant infrastructure.
     - Integrate with ChemiAccel's reaction modeling (Req 32) and flow chemistry (Req 40) modules.
     - _Requirements: 48.1_
-  - [ ] 38.2 Rapid Product Changeover Optimization
+  - [x] 38.2 Rapid Product Changeover Optimization
     - Implement GPU-accelerated optimization algorithms that, upon a product switch, quickly re-calculate and suggest optimal process parameters (e.g., feed rates, temperature, pressure, residence time, purification stages) for the new target.
     - _Requirements: 48.2_
-  - [ ] 38.3 Real-time Plant Data Calibration and Validation
+  - [x] 38.3 Real-time Plant Data Calibration and Validation
     - Develop robust data ingestion pipelines for continuous, real-time sensor data from chemical plants.
     - Implement adaptive learning mechanisms to continuously calibrate and validate the digital twin's predictive models against live plant performance.
     - _Requirements: 48.3_
-  - [ ] 38.4 Process Flexibility Analysis and Bottleneck Identification
+  - [x] 38.4 Process Flexibility Analysis and Bottleneck Identification
     - Create tools to simulate the digital twin's performance across various products and identify potential bottlenecks or limitations in equipment capacity or process design.
     - Quantify the economic trade-offs associated with multi-product flexibility.
     - _Requirements: 48.4_
-  - [ ] 38.5 Autonomous Control System Integration for Multi-Product Manufacturing
+  - [x] 38.5 Autonomous Control System Integration for Multi-Product Manufacturing
     - Extend Req 28 (Autonomous AI-Lab Integration) to enable ChemiAccel to interface with and provide adaptive control strategies for full-scale multi-product chemical plants.
     - _Requirements: 48.5_
 
-- [ ] 39. Predictive Materials Degradation & Failure Diagnostics with Remediation Suggestions
-  - [ ] 39.1 GPU-Accelerated Degradation Pathway and Kinetics Modeling
+- [x] 39. Predictive Materials Degradation & Failure Diagnostics with Remediation Suggestions
+  - [x] 39.1 GPU-Accelerated Degradation Pathway and Kinetics Modeling
     - Enhance Req 35.1 (GPU-Accelerated Degradation Modeling) to include more complex degradation pathways (e.g., multi-step chemical reactions, mechanical fatigue, stress corrosion cracking).
     - Develop accurate kinetic models for degradation processes, leveraging quantum chemical insights where applicable.
     - _Requirements: 49.1_
-  - [ ] 39.2 Failure Prediction and Remaining Useful Life (RUL) Estimation
+  - [x] 39.2 Failure Prediction and Remaining Useful Life (RUL) Estimation
     - Integrate with physics-based models of fracture mechanics and damage accumulation (e.g., creep, fatigue) to predict the precise timing and mechanism of material failure.
     - Implement algorithms for real-time estimation of Remaining Useful Life (RUL) based on material state and operational history.
     - _Requirements: 49.2_
-  - [ ] 39.3 AI-Driven Damage Diagnostics and Root Cause Analysis
+  - [x] 39.3 AI-Driven Damage Diagnostics and Root Cause Analysis
     - Develop AI models that can ingest various forms of damage data (e.g., non-destructive testing (NDT) results, visual inspections, sensor data anomalies) and diagnose the underlying material degradation mechanisms and root causes of failure.
     - _Requirements: 49.3_
-  - [ ] 39.4 Inverse Design for Lifetime Extension and Resilience
+  - [x] 39.4 Inverse Design for Lifetime Extension and Resilience
     - Extend Req 17/35's inverse design capabilities to actively suggest molecular or microstructural modifications, or environmental mitigation strategies (e.g., new coatings, self-healing additives, altered operating conditions), to prolong material lifespan and enhance resilience.
     - _Requirements: 49.4_
-  - [ ] 39.5 Interactive Failure Simulation and Remediation Impact Visualization
+  - [x] 39.5 Interactive Failure Simulation and Remediation Impact Visualization
     - Create interactive simulations that visualize damage initiation and propagation, stress concentrations, and the impact of proposed remediation strategies on material integrity over time.
     - Provide dashboards for scenario planning related to material failure.
     - _Requirements: 49.5_
 
-- [ ] 40. AI-Driven Discovery of Novel Chemical Transformations & Reaction Rules
-  - [ ] 40.1 Generative Models for Novel Chemical Transformations
+- [x] 40. AI-Driven Discovery of Novel Chemical Transformations & Reaction Rules
+  - [x] 40.1 Generative Models for Novel Chemical Transformations
     - Implement GPU-accelerated generative models (e.g., advanced graph-to-graph transformers, reinforcement learning agents) capable of proposing novel chemical transformations based on desired bond changes or functional group interconversions.
     - _Requirements: 50.1_
-  - [ ] 40.2 Energetic and Transition State Prediction for Novel Reactions
+  - [x] 40.2 Energetic and Transition State Prediction for Novel Reactions
     - Integrate with Req 33 (High-Throughput Quantum Machine Learning) to rapidly predict the energetics of proposed novel transformations, including key intermediates and transition states.
     - _Requirements: 50.2_
-  - [ ] 40.3 Automated Catalyst and Condition Suggestion for Novel Reactions
+  - [x] 40.3 Automated Catalyst and Condition Suggestion for Novel Reactions
     - Extend Req 36 (AI-Driven Reaction Mechanism and Pathway Discovery) to suggest initial catalysts and reaction conditions for newly proposed transformations based on predicted mechanisms and energetics.
     - _Requirements: 50.2_
-  - [ ] 40.4 Adaptive Learning for Reaction Rule Discovery
+  - [x] 40.4 Adaptive Learning for Reaction Rule Discovery
     - Develop a feedback loop where experimental validation data for novel transformations is ingested to refine the AI models and potentially discover new, generalizable reaction rules.
     - _Requirements: 50.3_
-  - [ ] 40.5 Symbolic AI/Causal Inference for Rule Formalization
+  - [x] 40.5 Symbolic AI/Causal Inference for Rule Formalization
     - Implement symbolic AI or causal inference methods to extract and formalize new reaction rules (e.g., new SMIRKS patterns, reactivity principles) from large datasets of known and newly generated reactions.
     - Integrate these rules into the Intelligent Chemical Knowledge Graph (Req 34).
     - _Requirements: 50.4_
-  - [ ] 40.6 Test Case Generation for New Reaction Rules
+  - [x] 40.6 Test Case Generation for New Reaction Rules
     - Develop a module to automatically generate diverse test cases (molecules) for newly discovered reaction rules to validate their applicability domain and predict potential side reactions.
     - _Requirements: 50.5_
 

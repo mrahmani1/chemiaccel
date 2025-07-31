@@ -732,11 +732,11 @@ if __name__ == "__main__":
                 "image": image_uri,
                 "vcpus": job_config.get("vcpus", 4),
                 "memory": job_config.get("memory", 8192),
-                "resourceRequirements": [
-                    {"type": "GPU", "value": str(job_config.get("gpus", 1))}
-                ]
-                if job_config.get("gpus", 0) > 0
-                else [],
+                "resourceRequirements": (
+                    [{"type": "GPU", "value": str(job_config.get("gpus", 1))}]
+                    if job_config.get("gpus", 0) > 0
+                    else []
+                ),
                 "jobRoleArn": job_config.get("job_role_arn"),
                 "executionRoleArn": job_config.get("execution_role_arn"),
             },
@@ -779,16 +779,18 @@ if __name__ == "__main__":
                             "machineType": job_config.get(
                                 "machine_type", "n1-standard-4"
                             ),
-                            "accelerators": [
-                                {
-                                    "type": job_config.get(
-                                        "gpu_type", "nvidia-tesla-t4"
-                                    ),
-                                    "count": job_config.get("gpus", 1),
-                                }
-                            ]
-                            if job_config.get("gpus", 0) > 0
-                            else [],
+                            "accelerators": (
+                                [
+                                    {
+                                        "type": job_config.get(
+                                            "gpu_type", "nvidia-tesla-t4"
+                                        ),
+                                        "count": job_config.get("gpus", 1),
+                                    }
+                                ]
+                                if job_config.get("gpus", 0) > 0
+                                else []
+                            ),
                         }
                     }
                 ]

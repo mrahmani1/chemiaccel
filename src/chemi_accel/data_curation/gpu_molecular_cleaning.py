@@ -1221,9 +1221,9 @@ def validate_cleaning_results(
     validation = {
         "original_count": len(original_df),
         "cleaned_count": len(cleaned_df),
-        "retention_rate": len(cleaned_df) / len(original_df)
-        if len(original_df) > 0
-        else 0.0,
+        "retention_rate": (
+            len(cleaned_df) / len(original_df) if len(original_df) > 0 else 0.0
+        ),
         "quality_improvement": {},
         "data_integrity_checks": {},
     }

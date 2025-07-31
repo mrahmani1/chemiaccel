@@ -199,7 +199,7 @@ class SurrogateExperimentalModel(ExperimentalModel):
         """Predict experimental outcomes."""
         if not self.fitted:
             # Return dummy predictions if not fitted
-            return {key: 0.0 for key in self.models.keys()}
+            return dict.fromkeys(self.models.keys(), 0.0)
 
         predictions = {}
         for objective, model in self.models.items():

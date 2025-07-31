@@ -178,9 +178,9 @@ class AtomisticModel(ModelInterface):
         """Get current state."""
         return {
             "positions": self.positions.copy() if self.positions is not None else None,
-            "velocities": self.velocities.copy()
-            if self.velocities is not None
-            else None,
+            "velocities": (
+                self.velocities.copy() if self.velocities is not None else None
+            ),
             "energy": self.energy,
             "temperature": self.temperature,
             "pressure": self.pressure,
@@ -289,12 +289,16 @@ class MesoscopicModel(ModelInterface):
     def get_state(self) -> Dict[str, Any]:
         """Get current state."""
         return {
-            "particle_positions": self.particle_positions.copy()
-            if self.particle_positions is not None
-            else None,
-            "particle_velocities": self.particle_velocities.copy()
-            if self.particle_velocities is not None
-            else None,
+            "particle_positions": (
+                self.particle_positions.copy()
+                if self.particle_positions is not None
+                else None
+            ),
+            "particle_velocities": (
+                self.particle_velocities.copy()
+                if self.particle_velocities is not None
+                else None
+            ),
             "phase_fraction": self.phase_fraction,
             "temperature": self.temperature,
         }
@@ -389,30 +393,34 @@ class ContinuumModel(ModelInterface):
             self.deformation = np.mean(self.strain_field)
 
         return {
-            "stress": np.mean(self.stress_field)
-            if self.stress_field is not None
-            else 0.0,
-            "strain": np.mean(self.strain_field)
-            if self.strain_field is not None
-            else 0.0,
+            "stress": (
+                np.mean(self.stress_field) if self.stress_field is not None else 0.0
+            ),
+            "strain": (
+                np.mean(self.strain_field) if self.strain_field is not None else 0.0
+            ),
             "deformation": self.deformation,
-            "temperature": np.mean(self.temperature_field)
-            if self.temperature_field is not None
-            else 300.0,
+            "temperature": (
+                np.mean(self.temperature_field)
+                if self.temperature_field is not None
+                else 300.0
+            ),
         }
 
     def get_state(self) -> Dict[str, Any]:
         """Get current state."""
         return {
-            "stress_field": self.stress_field.copy()
-            if self.stress_field is not None
-            else None,
-            "strain_field": self.strain_field.copy()
-            if self.strain_field is not None
-            else None,
-            "temperature_field": self.temperature_field.copy()
-            if self.temperature_field is not None
-            else None,
+            "stress_field": (
+                self.stress_field.copy() if self.stress_field is not None else None
+            ),
+            "strain_field": (
+                self.strain_field.copy() if self.strain_field is not None else None
+            ),
+            "temperature_field": (
+                self.temperature_field.copy()
+                if self.temperature_field is not None
+                else None
+            ),
             "deformation": self.deformation,
         }
 

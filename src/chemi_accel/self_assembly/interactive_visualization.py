@@ -1092,11 +1092,13 @@ class PropertyTrackingDashboard:
                                                                         }
                                                                         for name in self.time_series_data.keys()
                                                                     ],
-                                                                    value=list(
-                                                                        self.time_series_data.keys()
-                                                                    )[0]
-                                                                    if self.time_series_data
-                                                                    else None,
+                                                                    value=(
+                                                                        list(
+                                                                            self.time_series_data.keys()
+                                                                        )[0]
+                                                                        if self.time_series_data
+                                                                        else None
+                                                                    ),
                                                                     clearable=False,
                                                                 ),
                                                             ],
@@ -1980,9 +1982,11 @@ def create_demo_visualization() -> InteractiveSelfAssemblyVisualizer:
                     )(),
                     "particle_type": type("ParticleType", (), {"name": ptype})(),
                     "particle_id": i,
-                    "velocity": type("Velocity", (), {"x": 0, "y": 0, "z": 0})()
-                    if frame_idx > 0
-                    else None,
+                    "velocity": (
+                        type("Velocity", (), {"x": 0, "y": 0, "z": 0})()
+                        if frame_idx > 0
+                        else None
+                    ),
                     "energy": np.random.uniform(-1, 1),
                 },
             )()

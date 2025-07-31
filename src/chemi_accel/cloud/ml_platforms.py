@@ -184,12 +184,16 @@ class SageMakerIntegration(MLPlatformProvider):
             job_name=job_name,
             status=response["ProcessingJobStatus"],
             created_at=response["CreationTime"].isoformat(),
-            started_at=response.get("ProcessingStartTime", {}).isoformat()
-            if response.get("ProcessingStartTime")
-            else None,
-            completed_at=response.get("ProcessingEndTime", {}).isoformat()
-            if response.get("ProcessingEndTime")
-            else None,
+            started_at=(
+                response.get("ProcessingStartTime", {}).isoformat()
+                if response.get("ProcessingStartTime")
+                else None
+            ),
+            completed_at=(
+                response.get("ProcessingEndTime", {}).isoformat()
+                if response.get("ProcessingEndTime")
+                else None
+            ),
             failure_reason=response.get("FailureReason"),
             metrics=response.get("ProcessingResources", {}),
         )
@@ -345,22 +349,26 @@ class SageMakerIntegration(MLPlatformProvider):
         processing_step = ProcessingStep(
             name=step_name,
             processor=processor,
-            inputs=[
-                ProcessingInput(
-                    source=input_data_param, destination="/opt/ml/processing/input"
-                )
-            ]
-            if job_config.input_data_uri
-            else [],
-            outputs=[
-                ProcessingOutput(
-                    output_name="processed-data",
-                    source="/opt/ml/processing/output",
-                    destination=output_data_param,
-                )
-            ]
-            if job_config.output_data_uri
-            else [],
+            inputs=(
+                [
+                    ProcessingInput(
+                        source=input_data_param, destination="/opt/ml/processing/input"
+                    )
+                ]
+                if job_config.input_data_uri
+                else []
+            ),
+            outputs=(
+                [
+                    ProcessingOutput(
+                        output_name="processed-data",
+                        source="/opt/ml/processing/output",
+                        destination=output_data_param,
+                    )
+                ]
+                if job_config.output_data_uri
+                else []
+            ),
             code=self._create_pipeline_processing_script(descriptor_config),
         )
 
@@ -687,9 +695,9 @@ class VertexAIIntegration(MLPlatformProvider):
 
                 # Initialize calculator
                 calc = Calculator(
-                    backend="cuda"
-                    if os.environ.get("CUDA_VISIBLE_DEVICES")
-                    else "auto",
+                    backend=(
+                        "cuda" if os.environ.get("CUDA_VISIBLE_DEVICES") else "auto"
+                    ),
                     batch_size=config.get("batch_size", 1000),
                 )
 
@@ -792,12 +800,16 @@ class AzureMLIntegration(MLPlatformProvider):
             environment=env,
             compute=job_config.instance_type,
             instance_count=job_config.instance_count,
-            inputs={"input_data": job_config.input_data_uri}
-            if job_config.input_data_uri
-            else {},
-            outputs={"output_data": job_config.output_data_uri}
-            if job_config.output_data_uri
-            else {},
+            inputs=(
+                {"input_data": job_config.input_data_uri}
+                if job_config.input_data_uri
+                else {}
+            ),
+            outputs=(
+                {"output_data": job_config.output_data_uri}
+                if job_config.output_data_uri
+                else {}
+            ),
             environment_variables=job_config.environment_variables or {},
         )
 
@@ -814,14 +826,16 @@ class AzureMLIntegration(MLPlatformProvider):
         return MLJobStatus(
             job_name=job_name,
             status=job.status,
-            created_at=job.creation_context.created_at.isoformat()
-            if job.creation_context
-            else None,
+            created_at=(
+                job.creation_context.created_at.isoformat()
+                if job.creation_context
+                else None
+            ),
             started_at=job.start_time.isoformat() if job.start_time else None,
             completed_at=job.end_time.isoformat() if job.end_time else None,
-            failure_reason=job.error.message
-            if hasattr(job, "error") and job.error
-            else None,
+            failure_reason=(
+                job.error.message if hasattr(job, "error") and job.error else None
+            ),
         )
 
     def stop_job(self, job_name: str) -> bool:
@@ -955,9 +969,9 @@ class AzureMLIntegration(MLPlatformProvider):
 
                 # Initialize calculator
                 calc = Calculator(
-                    backend="cuda"
-                    if os.environ.get("CUDA_VISIBLE_DEVICES")
-                    else "auto",
+                    backend=(
+                        "cuda" if os.environ.get("CUDA_VISIBLE_DEVICES") else "auto"
+                    ),
                     batch_size=config.get("batch_size", 1000),
                 )
 

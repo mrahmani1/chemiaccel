@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 def validate_smiles_series(
-    smiles: Union[pd.Series, List[str], np.ndarray]
+    smiles: Union[pd.Series, List[str], np.ndarray],
 ) -> pd.Series:
     """
     Validate and clean a series of SMILES strings.

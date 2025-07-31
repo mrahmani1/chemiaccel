@@ -1083,10 +1083,14 @@ class FluidDynamicsCouplingManager:
             "total_steps": len(self.simulation_history),
             "simulation_time": latest_result["time"],
             "latest_flow_metrics": latest_result["flow_metrics"],
-            "coupling_scheme": self.coupled_solver.coupling_scheme.value
-            if self.coupled_solver
-            else None,
-            "material_coupling_points": len(self.material_coupling.coupling_history)
-            if self.material_coupling
-            else 0,
+            "coupling_scheme": (
+                self.coupled_solver.coupling_scheme.value
+                if self.coupled_solver
+                else None
+            ),
+            "material_coupling_points": (
+                len(self.material_coupling.coupling_history)
+                if self.material_coupling
+                else 0
+            ),
         }

@@ -4,7 +4,6 @@ Unit tests for conformer generation system.
 Tests GPU-accelerated conformer generation, validation, and quality metrics.
 """
 
-
 import numpy as np
 import pytest
 

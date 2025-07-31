@@ -894,9 +894,9 @@ class LoadTestAnalyzer:
             "request_types": request_types,
             "system_metrics": system_summary,
             "throughput_stats": {
-                "avg_molecules_per_second": statistics.mean(throughputs)
-                if throughputs
-                else 0,
+                "avg_molecules_per_second": (
+                    statistics.mean(throughputs) if throughputs else 0
+                ),
                 "max_molecules_per_second": max(throughputs) if throughputs else 0,
             },
         }

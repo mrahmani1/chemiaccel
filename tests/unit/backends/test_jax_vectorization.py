@@ -5,7 +5,6 @@ This module tests the JAX backend vectorization, JIT compilation,
 and automatic differentiation functionality.
 """
 
-
 import numpy as np
 import pytest
 

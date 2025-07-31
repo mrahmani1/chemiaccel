@@ -885,9 +885,11 @@ class SensorTwinIntegrationManager:
             "metrics": self.integration_metrics,
             "sensor_status": self.sensor_manager.get_metrics(),
             "twin_updater_status": self.twin_updater.get_update_metrics(),
-            "controller_status": self.predictive_controller.get_controller_status()
-            if self.predictive_controller
-            else None,
+            "controller_status": (
+                self.predictive_controller.get_controller_status()
+                if self.predictive_controller
+                else None
+            ),
             "last_sensor_count": len(self.last_sensor_data),
             "integration_quality": self._calculate_integration_quality(),
         }

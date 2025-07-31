@@ -129,7 +129,7 @@ class TestSchemaValidationRule:
             data_type="test",
             raw_data={
                 "data_field": "should_be_list",  # Wrong type
-                "optional_field": 150.0  # Out of range
+                "optional_field": 150.0,  # Out of range
                 # Missing required field: timestamp_field
             },
         )

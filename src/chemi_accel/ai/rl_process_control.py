@@ -1495,9 +1495,11 @@ class ProcessControlTrainer:
             "final_reward": self.episode_rewards[-1] if self.episode_rewards else 0.0,
             "training_time": training_time,
             "convergence_episode": self._find_convergence_episode(),
-            "agent_metrics": dict(self.agent.training_metrics)
-            if hasattr(self.agent, "training_metrics")
-            else {},
+            "agent_metrics": (
+                dict(self.agent.training_metrics)
+                if hasattr(self.agent, "training_metrics")
+                else {}
+            ),
         }
 
         logger.info(f"Training completed in {training_time:.2f}s")

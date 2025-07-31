@@ -183,11 +183,13 @@ class PropertyAggregationProcessor(StreamProcessor):
                             "std": np.std(window_values),
                             "min": np.min(window_values),
                             "max": np.max(window_values),
-                            "trend": np.polyfit(
-                                range(len(window_values)), window_values, 1
-                            )[0]
-                            if len(window_values) > 1
-                            else 0.0,
+                            "trend": (
+                                np.polyfit(range(len(window_values)), window_values, 1)[
+                                    0
+                                ]
+                                if len(window_values) > 1
+                                else 0.0
+                            ),
                         }
 
         if aggregated_properties:
@@ -258,9 +260,12 @@ class AnomalyDetectionProcessor(StreamProcessor):
                                 "baseline_mean": baseline["mean"],
                                 "deviation": abs(value - baseline["mean"])
                                 / max(baseline["std"], 1e-10),
-                                "severity": "high"
-                                if abs(value - baseline["mean"]) > 3 * baseline["std"]
-                                else "medium",
+                                "severity": (
+                                    "high"
+                                    if abs(value - baseline["mean"])
+                                    > 3 * baseline["std"]
+                                    else "medium"
+                                ),
                             }
 
         if anomalies:
@@ -287,7 +292,7 @@ class DataStreamManager:
 
     def __init__(self, config: StreamingConfig):
         self.config = config
-        self.streams: Dict[str, "DataStream"] = {}
+        self.streams: Dict[str, DataStream] = {}
         self.processors: List[StreamProcessor] = []
         self.subscribers: Dict[str, List[Callable[[DataPacket], None]]] = defaultdict(
             list

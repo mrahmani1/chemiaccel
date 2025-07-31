@@ -347,8 +347,8 @@ class TestChemicalEntityRecognizer:
         aspirin_entity.name = "aspirin"
         aspirin_entity.uri = "http://example.org/aspirin"
 
-        ontology.find_entity.side_effect = (
-            lambda name: [aspirin_entity] if "aspirin" in name.lower() else []
+        ontology.find_entity.side_effect = lambda name: (
+            [aspirin_entity] if "aspirin" in name.lower() else []
         )
 
         return ontology
@@ -567,8 +567,8 @@ class TestAdvancedNLPProcessor:
         aspirin_entity.uri = "http://example.org/aspirin"
         aspirin_entity.entity_type = EntityType.DRUG
 
-        ontology.find_entity.side_effect = (
-            lambda name: [aspirin_entity] if "aspirin" in name.lower() else []
+        ontology.find_entity.side_effect = lambda name: (
+            [aspirin_entity] if "aspirin" in name.lower() else []
         )
         ontology.get_related_entities.return_value = []
 
@@ -661,8 +661,8 @@ class TestSemanticQueryEngine:
             uri="http://example.org/aspirin",
         )
 
-        ontology.find_entity.side_effect = (
-            lambda name: [aspirin_entity] if "aspirin" in name.lower() else []
+        ontology.find_entity.side_effect = lambda name: (
+            [aspirin_entity] if "aspirin" in name.lower() else []
         )
         ontology.get_related_entities.return_value = []
 

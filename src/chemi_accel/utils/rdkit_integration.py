@@ -355,11 +355,11 @@ class RDKitDescriptorCalculator:
             "num_hba": Descriptors.NumHAcceptors,
             # Ring information
             "ring_count": Descriptors.RingCount,
-            "largest_ring_size": lambda mol: max(
-                [len(ring) for ring in mol.GetRingInfo().AtomRings()]
-            )
-            if mol.GetRingInfo().AtomRings()
-            else 0,
+            "largest_ring_size": lambda mol: (
+                max([len(ring) for ring in mol.GetRingInfo().AtomRings()])
+                if mol.GetRingInfo().AtomRings()
+                else 0
+            ),
             # Complexity measures
             "bertz_complexity": Descriptors.BertzCT,
             "fraction_csp3": Descriptors.FractionCSP3,

@@ -556,9 +556,11 @@ class LifecycleVisualizationDemo:
                 "initial_retention": initial_retention,
                 "final_retention": final_retention,
                 "degradation_rate_per_day": degradation_rate,
-                "half_life_days": np.log(2) / (degradation_rate + 1e-6)
-                if degradation_rate > 0
-                else float("inf"),
+                "half_life_days": (
+                    np.log(2) / (degradation_rate + 1e-6)
+                    if degradation_rate > 0
+                    else float("inf")
+                ),
             }
 
         # Analyze environmental impact
@@ -584,9 +586,11 @@ class LifecycleVisualizationDemo:
             analysis["phase_analysis"][phase.value] = {
                 "event_count": len(events),
                 "environmental_impact": phase_impact,
-                "duration": max(e.time for e in events) - min(e.time for e in events)
-                if len(events) > 1
-                else 0,
+                "duration": (
+                    max(e.time for e in events) - min(e.time for e in events)
+                    if len(events) > 1
+                    else 0
+                ),
             }
 
         return analysis

@@ -561,15 +561,17 @@ class OnTheFlyPredictor:
                 "total_molecules": len(molecular_inputs),
                 "successful_predictions": len(predictions) - len(errors),
                 "failed_predictions": len(errors),
-                "average_prediction_time": execution_time / len(predictions)
-                if predictions
-                else 0,
-                "throughput": len(predictions) / execution_time
-                if execution_time > 0
-                else 0,
-                "cache_hit_rate": cache_hits / (cache_hits + cache_misses)
-                if (cache_hits + cache_misses) > 0
-                else 0,
+                "average_prediction_time": (
+                    execution_time / len(predictions) if predictions else 0
+                ),
+                "throughput": (
+                    len(predictions) / execution_time if execution_time > 0 else 0
+                ),
+                "cache_hit_rate": (
+                    cache_hits / (cache_hits + cache_misses)
+                    if (cache_hits + cache_misses) > 0
+                    else 0
+                ),
             }
 
             return BatchPredictionResult(

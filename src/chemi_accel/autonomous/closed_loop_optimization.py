@@ -299,9 +299,9 @@ class ClosedLoopOptimizer:
             current_parameters={},
             objective_values=[],
             best_parameters={},
-            best_objective=float("-inf")
-            if self._is_maximization_objective()
-            else float("inf"),
+            best_objective=(
+                float("-inf") if self._is_maximization_objective() else float("inf")
+            ),
             convergence_criteria=config.convergence_criteria,
             total_experiments=0,
             successful_experiments=0,
@@ -1038,11 +1038,11 @@ class ClosedLoopOptimizer:
                     "successful_results": len(
                         [r for r in self.experiment_results if r.success]
                     ),
-                    "average_execution_time": np.mean(
-                        [r.execution_time for r in self.experiment_results]
-                    )
-                    if self.experiment_results
-                    else 0,
+                    "average_execution_time": (
+                        np.mean([r.execution_time for r in self.experiment_results])
+                        if self.experiment_results
+                        else 0
+                    ),
                     "objective_history": self.optimization_state.objective_values[
                         -10:
                     ],  # Last 10 values

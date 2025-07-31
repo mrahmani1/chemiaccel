@@ -340,12 +340,12 @@ class StatisticalValidator:
             "ks_p_value": ks_p_value,
             "mean_absolute_error": np.mean(absolute_errors),
             "max_absolute_error": np.max(absolute_errors),
-            "mean_relative_error": np.mean(relative_errors)
-            if len(relative_errors) > 0
-            else np.nan,
-            "max_relative_error": np.max(relative_errors)
-            if len(relative_errors) > 0
-            else np.nan,
+            "mean_relative_error": (
+                np.mean(relative_errors) if len(relative_errors) > 0 else np.nan
+            ),
+            "max_relative_error": (
+                np.max(relative_errors) if len(relative_errors) > 0 else np.nan
+            ),
             "rmse": np.sqrt(np.mean((ca_values - ref_values) ** 2)),
             "failed_comparisons": failed_comparisons,
             "success_rate": len(ca_values) / len(smiles_list),

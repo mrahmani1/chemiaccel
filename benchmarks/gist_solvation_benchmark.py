@@ -408,9 +408,9 @@ class GISTSolvationBenchmark:
                         "total_time_seconds": total_time,
                         "total_grid_points": total_grid_points,
                         "grid_points_per_second": grid_points_per_second,
-                        "maps_per_second": successful_maps / total_time
-                        if total_time > 0
-                        else 0,
+                        "maps_per_second": (
+                            successful_maps / total_time if total_time > 0 else 0
+                        ),
                     }
 
                     spatial_results.append(result)
@@ -493,9 +493,9 @@ class GISTSolvationBenchmark:
                         "gpu_memory_mb": gpu_memory_used,
                         "memory_per_molecule": (peak_memory - baseline_memory) / size,
                         "processing_time": end_time - start_time,
-                        "successful_calculations": len(batch_results)
-                        if not batch_results.empty
-                        else 0,
+                        "successful_calculations": (
+                            len(batch_results) if not batch_results.empty else 0
+                        ),
                         "memory_efficiency": size
                         / max(peak_memory - baseline_memory, 1),
                     }
@@ -716,9 +716,9 @@ class GISTSolvationBenchmark:
                     "molecules": len(test_molecules),
                     "calculation_time": gpu_time,
                     "throughput": len(test_molecules) / gpu_time,
-                    "successful_calcs": len(gpu_results)
-                    if not gpu_results.empty
-                    else 0,
+                    "successful_calcs": (
+                        len(gpu_results) if not gpu_results.empty else 0
+                    ),
                 }
 
                 engine_gpu.cleanup()
@@ -749,9 +749,9 @@ class GISTSolvationBenchmark:
                     "molecules": len(test_molecules),
                     "calculation_time": cpu_time,
                     "throughput": len(test_molecules) / cpu_time,
-                    "successful_calcs": len(cpu_results)
-                    if not cpu_results.empty
-                    else 0,
+                    "successful_calcs": (
+                        len(cpu_results) if not cpu_results.empty else 0
+                    ),
                 }
 
                 engine_cpu.cleanup()

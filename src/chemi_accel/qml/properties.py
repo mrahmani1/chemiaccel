@@ -346,9 +346,11 @@ class QuantumPropertyExtractor:
                     "std": float(np.std(values)),
                     "min": float(np.min(values)),
                     "max": float(np.max(values)),
-                    "coefficient_of_variation": float(np.std(values) / np.mean(values))
-                    if np.mean(values) != 0
-                    else float("inf"),
+                    "coefficient_of_variation": (
+                        float(np.std(values) / np.mean(values))
+                        if np.mean(values) != 0
+                        else float("inf")
+                    ),
                 }
 
                 # Analyze agreement

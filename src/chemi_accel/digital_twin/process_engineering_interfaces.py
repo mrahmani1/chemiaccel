@@ -613,9 +613,9 @@ fields ({field_name});
                 "flow_uniformity": velocity_uniformity,
             },
             morphology={
-                "flow_pattern": "uniform"
-                if velocity_uniformity > 0.8
-                else "non_uniform",
+                "flow_pattern": (
+                    "uniform" if velocity_uniformity > 0.8 else "non_uniform"
+                ),
             },
             processing_time=1000.0,  # From simulation time
         )

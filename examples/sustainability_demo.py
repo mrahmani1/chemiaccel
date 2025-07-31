@@ -136,9 +136,9 @@ class SustainabilityDemo:
                 material_results[condition_name] = {
                     "half_life": prediction.half_life,
                     "failure_time": prediction.failure_time,
-                    "final_mw_retention": final_state.molecular_weight_retention
-                    if final_state
-                    else None,
+                    "final_mw_retention": (
+                        final_state.molecular_weight_retention if final_state else None
+                    ),
                     "dominant_mechanisms": [
                         mech.value for mech in prediction.dominant_mechanisms
                     ],
@@ -507,11 +507,13 @@ class SustainabilityDemo:
                 "dominant_mechanisms": [
                     mech.value for mech in degradation_prediction.dominant_mechanisms
                 ],
-                "final_property_retention": degradation_prediction.degradation_states[
-                    -1
-                ].molecular_weight_retention
-                if degradation_prediction.degradation_states
-                else None,
+                "final_property_retention": (
+                    degradation_prediction.degradation_states[
+                        -1
+                    ].molecular_weight_retention
+                    if degradation_prediction.degradation_states
+                    else None
+                ),
             },
             "recyclability_analysis": {
                 "circularity_index": recyclability_assessment.circularity_metrics.circularity_index,
@@ -519,12 +521,14 @@ class SustainabilityDemo:
                     method.value
                     for method in recyclability_assessment.recommended_methods
                 ],
-                "best_recycling_score": max(
-                    score.overall_score
-                    for score in recyclability_assessment.recycling_scores.values()
-                )
-                if recyclability_assessment.recycling_scores
-                else 0,
+                "best_recycling_score": (
+                    max(
+                        score.overall_score
+                        for score in recyclability_assessment.recycling_scores.values()
+                    )
+                    if recyclability_assessment.recycling_scores
+                    else 0
+                ),
             },
             "lca_analysis": {
                 "virgin_production_impacts": virgin_lca.impact_scores,

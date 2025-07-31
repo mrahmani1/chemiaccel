@@ -91,9 +91,11 @@ class MaterialProperty:
         return {
             "name": self.name,
             "property_type": self.property_type.value,
-            "value": self.value.tolist()
-            if isinstance(self.value, np.ndarray)
-            else self.value,
+            "value": (
+                self.value.tolist()
+                if isinstance(self.value, np.ndarray)
+                else self.value
+            ),
             "units": self.units,
             "uncertainty": self.uncertainty,
             "timestamp": self.timestamp,

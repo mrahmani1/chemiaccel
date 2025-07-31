@@ -944,12 +944,14 @@ class QMLMolecularOptimizer:
                 {prop: final_predictions[prop][i] for prop in final_predictions}
                 for i in range(len(final_molecules))
             ],
-            qml_uncertainties=[
-                {prop: final_uncertainties[prop][i] for prop in final_uncertainties}
-                for i in range(len(final_molecules))
-            ]
-            if final_uncertainties
-            else None,
+            qml_uncertainties=(
+                [
+                    {prop: final_uncertainties[prop][i] for prop in final_uncertainties}
+                    for i in range(len(final_molecules))
+                ]
+                if final_uncertainties
+                else None
+            ),
             gradient_norms=opt_state.gradient_norms,
             property_evolution={},
         )

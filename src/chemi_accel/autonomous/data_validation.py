@@ -188,9 +188,9 @@ class RangeValidationRule(DataValidationRule):
 
         return ValidationResult(
             is_valid=len(errors) == 0,
-            confidence_score=np.mean(list(quality_metrics.values()))
-            if quality_metrics
-            else 0.8,
+            confidence_score=(
+                np.mean(list(quality_metrics.values())) if quality_metrics else 0.8
+            ),
             errors=errors,
             warnings=warnings,
             quality_metrics=quality_metrics,
@@ -284,9 +284,9 @@ class StatisticalValidationRule(DataValidationRule):
 
         return ValidationResult(
             is_valid=len(errors) == 0,
-            confidence_score=np.mean(list(quality_metrics.values()))
-            if quality_metrics
-            else 0.7,
+            confidence_score=(
+                np.mean(list(quality_metrics.values())) if quality_metrics else 0.7
+            ),
             errors=errors,
             warnings=warnings,
             quality_metrics=quality_metrics,

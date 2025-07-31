@@ -187,9 +187,9 @@ class ReactionTransformer(nn.Module if TORCH_AVAILABLE else object):
         # Transformer
         x = self.transformer(
             x,
-            src_key_padding_mask=~attention_mask
-            if attention_mask is not None
-            else None,
+            src_key_padding_mask=(
+                ~attention_mask if attention_mask is not None else None
+            ),
         )
 
         # Global representation (CLS token or mean pooling)

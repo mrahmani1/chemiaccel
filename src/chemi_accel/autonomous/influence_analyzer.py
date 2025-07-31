@@ -525,11 +525,13 @@ class InfluenceAnalyzer:
             {
                 "type": "temporal",
                 "description": f"Decision made {time_gap:.1f} hours after experiment completion",
-                "strength": "strong"
-                if time_gap < 24
-                else "moderate"
-                if time_gap < 168
-                else "weak",
+                "strength": (
+                    "strong"
+                    if time_gap < 24
+                    else "moderate"
+                    if time_gap < 168
+                    else "weak"
+                ),
             }
         )
 
@@ -539,11 +541,13 @@ class InfluenceAnalyzer:
             {
                 "type": "contextual",
                 "description": f"High contextual similarity (score: {semantic_sim:.2f})",
-                "strength": "strong"
-                if semantic_sim > 0.7
-                else "moderate"
-                if semantic_sim > 0.4
-                else "weak",
+                "strength": (
+                    "strong"
+                    if semantic_sim > 0.7
+                    else "moderate"
+                    if semantic_sim > 0.4
+                    else "weak"
+                ),
             }
         )
 
@@ -553,11 +557,13 @@ class InfluenceAnalyzer:
             {
                 "type": "pattern",
                 "description": f"Similar patterns observed in {frequency_weight:.1%} of cases",
-                "strength": "strong"
-                if frequency_weight > 0.7
-                else "moderate"
-                if frequency_weight > 0.3
-                else "weak",
+                "strength": (
+                    "strong"
+                    if frequency_weight > 0.7
+                    else "moderate"
+                    if frequency_weight > 0.3
+                    else "weak"
+                ),
             }
         )
 

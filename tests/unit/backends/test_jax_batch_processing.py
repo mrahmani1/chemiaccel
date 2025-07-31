@@ -5,7 +5,6 @@ This module tests the JAX backend batch processing functionality
 including automatic shape handling and memory management.
 """
 
-
 import numpy as np
 import pytest
 

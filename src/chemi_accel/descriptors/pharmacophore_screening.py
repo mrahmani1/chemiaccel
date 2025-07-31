@@ -437,9 +437,11 @@ class PharmacophoreScreeningEngine:
             return {
                 "feature_counts": optimized_gpu_query.feature_counts,
                 "distance_constraints": optimized_gpu_query.distance_constraints,
-                "weight_vector": optimized_gpu_query.weight_vector.tolist()
-                if optimized_gpu_query.weight_vector is not None
-                else None,
+                "weight_vector": (
+                    optimized_gpu_query.weight_vector.tolist()
+                    if optimized_gpu_query.weight_vector is not None
+                    else None
+                ),
                 "tolerance": optimized_gpu_query.tolerance,
                 "query_name": optimized_gpu_query.query_id,
             }
@@ -547,9 +549,9 @@ class PharmacophoreScreeningEngine:
                 "total_molecules": len(test_molecules),
                 "total_time_seconds": total_time,
                 "molecules_per_second": len(test_molecules) / total_time,
-                "hits_found": len(results[results["matches_query"]])
-                if not results.empty
-                else 0,
+                "hits_found": (
+                    len(results[results["matches_query"]]) if not results.empty else 0
+                ),
             }
 
     def cleanup(self):

@@ -1488,9 +1488,9 @@ def predict_polymorph_stability(
         "overall_stability": overall_stability,
         "polymorph_probability": target_prob,
         "polymorph_stability": polymorph_stability,
-        "relative_stability": target_prob / max(polymorph_probs.values())
-        if polymorph_probs
-        else 0.0,
+        "relative_stability": (
+            target_prob / max(polymorph_probs.values()) if polymorph_probs else 0.0
+        ),
     }
 
 

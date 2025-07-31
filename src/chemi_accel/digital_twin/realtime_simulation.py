@@ -486,9 +486,9 @@ class RealtimeSimulationEngine:
     def get_visualization_data(self) -> Dict[str, Any]:
         """Get data for visualization."""
         return {
-            "time_series": self.framework.history[-100:]
-            if self.framework.history
-            else [],
+            "time_series": (
+                self.framework.history[-100:] if self.framework.history else []
+            ),
             "current_state": self.get_current_state(),
             "material_properties": self.framework.get_material_properties(),
             "performance_metrics": self.get_performance_metrics(),

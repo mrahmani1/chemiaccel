@@ -915,9 +915,9 @@ class SpectralComparator:
                         "frequency_difference": pred_freq - exp_freq,
                         "predicted_intensity": pred_int,
                         "experimental_intensity": exp_int,
-                        "intensity_ratio": pred_int / exp_int
-                        if exp_int > 0
-                        else np.inf,
+                        "intensity_ratio": (
+                            pred_int / exp_int if exp_int > 0 else np.inf
+                        ),
                     }
                 )
 
@@ -984,9 +984,11 @@ class SpectralComparator:
             tests["pearson_correlation"] = {
                 "statistic": float(corr_stat),
                 "p_value": float(corr_p),
-                "interpretation": "correlated"
-                if corr_p < 0.05 and abs(corr_stat) > 0.5
-                else "not_correlated",
+                "interpretation": (
+                    "correlated"
+                    if corr_p < 0.05 and abs(corr_stat) > 0.5
+                    else "not_correlated"
+                ),
             }
         except Exception as e:
             logger.warning(f"Pearson correlation test failed: {e}")
@@ -1135,9 +1137,11 @@ class SpectralVisualizer:
                         region.frequency_end,
                         color=self.config.color_discrepancy,
                         alpha=self.config.alpha_fill,
-                        label="Discrepancy"
-                        if region == comparison.discrepancy_regions[0]
-                        else "",
+                        label=(
+                            "Discrepancy"
+                            if region == comparison.discrepancy_regions[0]
+                            else ""
+                        ),
                     )
 
         # Formatting

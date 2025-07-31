@@ -225,13 +225,13 @@ class PerformanceMonitor:
         return {
             "monitoring_active": self.monitoring_active,
             "baseline_performance": self.baseline_performance,
-            "last_evaluation": self.last_evaluation.isoformat()
-            if self.last_evaluation
-            else None,
+            "last_evaluation": (
+                self.last_evaluation.isoformat() if self.last_evaluation else None
+            ),
             "evaluation_count": len(self.performance_history),
-            "recent_performance": self.performance_history[-5:]
-            if self.performance_history
-            else [],
+            "recent_performance": (
+                self.performance_history[-5:] if self.performance_history else []
+            ),
         }
 
 

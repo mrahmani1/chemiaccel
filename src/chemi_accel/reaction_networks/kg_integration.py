@@ -177,9 +177,11 @@ class CatalystKnowledgeRetriever:
                     "catalyst_name": result.get("catalystName", ""),
                     "catalyst_uri": result.get("catalyst", ""),
                     "yield": float(result.get("yield", 0)),
-                    "selectivity": float(result.get("selectivity", 0))
-                    if result.get("selectivity")
-                    else None,
+                    "selectivity": (
+                        float(result.get("selectivity", 0))
+                        if result.get("selectivity")
+                        else None
+                    ),
                     "conditions": result.get("conditions", ""),
                     "reference": result.get("reference", ""),
                 }
@@ -200,9 +202,11 @@ class CatalystKnowledgeRetriever:
             try:
                 processed_result = {
                     "reaction_uri": result.get("reaction", ""),
-                    "temperature": float(result.get("temperature", 0))
-                    if result.get("temperature")
-                    else None,
+                    "temperature": (
+                        float(result.get("temperature", 0))
+                        if result.get("temperature")
+                        else None
+                    ),
                     "solvent": result.get("solvent", ""),
                     "catalyst": result.get("catalyst", ""),
                     "yield": float(result.get("yield", 0)),

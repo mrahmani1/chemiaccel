@@ -1106,9 +1106,9 @@ class ReasoningEngine:
             "total_inferences": total_inferences,
             "valid_inferences": valid_inferences,
             "invalid_inferences": total_inferences - valid_inferences,
-            "validation_rate": valid_inferences / total_inferences
-            if total_inferences > 0
-            else 0,
+            "validation_rate": (
+                valid_inferences / total_inferences if total_inferences > 0 else 0
+            ),
             "confidence_distribution": confidence_distribution,
             "rule_usage": rule_usage,
             "active_rules": len([r for r in self.rules if r.enabled]),

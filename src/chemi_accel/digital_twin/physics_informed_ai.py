@@ -780,7 +780,7 @@ class SurrogateModelTrainer:
         return {
             "total_samples": total_samples,
             "validation_scores": self.validation_scores,
-            "latest_score": self.validation_scores[-1]
-            if self.validation_scores
-            else None,
+            "latest_score": (
+                self.validation_scores[-1] if self.validation_scores else None
+            ),
         }

@@ -816,9 +816,11 @@ class AutonomousLabDemo:
                 {
                     "action_id": result.action_id,
                     "success": result.success,
-                    "error_type": self._classify_error(result.error_message)
-                    if not result.success
-                    else None,
+                    "error_type": (
+                        self._classify_error(result.error_message)
+                        if not result.success
+                        else None
+                    ),
                 }
                 for result in execution_results
             ],

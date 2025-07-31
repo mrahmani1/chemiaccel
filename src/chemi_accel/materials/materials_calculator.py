@@ -413,24 +413,36 @@ class MaterialsCalculator:
             "density": structure.density,
             "space_group": structure.space_group,
             "space_group_number": structure.space_group_number,
-            "lattice_a": structure.lattice_parameters[0]
-            if structure.lattice_parameters is not None
-            else None,
-            "lattice_b": structure.lattice_parameters[1]
-            if structure.lattice_parameters is not None
-            else None,
-            "lattice_c": structure.lattice_parameters[2]
-            if structure.lattice_parameters is not None
-            else None,
-            "lattice_alpha": structure.lattice_parameters[3]
-            if structure.lattice_parameters is not None
-            else None,
-            "lattice_beta": structure.lattice_parameters[4]
-            if structure.lattice_parameters is not None
-            else None,
-            "lattice_gamma": structure.lattice_parameters[5]
-            if structure.lattice_parameters is not None
-            else None,
+            "lattice_a": (
+                structure.lattice_parameters[0]
+                if structure.lattice_parameters is not None
+                else None
+            ),
+            "lattice_b": (
+                structure.lattice_parameters[1]
+                if structure.lattice_parameters is not None
+                else None
+            ),
+            "lattice_c": (
+                structure.lattice_parameters[2]
+                if structure.lattice_parameters is not None
+                else None
+            ),
+            "lattice_alpha": (
+                structure.lattice_parameters[3]
+                if structure.lattice_parameters is not None
+                else None
+            ),
+            "lattice_beta": (
+                structure.lattice_parameters[4]
+                if structure.lattice_parameters is not None
+                else None
+            ),
+            "lattice_gamma": (
+                structure.lattice_parameters[5]
+                if structure.lattice_parameters is not None
+                else None
+            ),
         }
 
     def get_supported_formats(self) -> List[str]:

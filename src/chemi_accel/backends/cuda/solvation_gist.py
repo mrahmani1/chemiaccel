@@ -696,15 +696,15 @@ class GPUSolvationGIST:
             structural_water_molecules=int(
                 np.sum(order_cpu > 0.5) / (30.0 / self.grid_spacing**3)
             ),
-            average_hbonds_per_water=float(avg_hbonds)
-            if not np.isnan(avg_hbonds)
-            else 3.7,
+            average_hbonds_per_water=(
+                float(avg_hbonds) if not np.isnan(avg_hbonds) else 3.7
+            ),
             hbond_network_connectivity=float(hbond_connectivity),
             water_residence_time=10.0,  # Default ps
             diffusion_coefficient=2.3e-5,  # Default cm²/s for water
-            hbond_enthalpy_contribution=-2.5 * avg_hbonds
-            if not np.isnan(avg_hbonds)
-            else -9.25,
+            hbond_enthalpy_contribution=(
+                -2.5 * avg_hbonds if not np.isnan(avg_hbonds) else -9.25
+            ),
             translational_entropy_loss=order_entropy * 0.4,
             orientational_entropy_loss=order_entropy * 0.6,
         )
@@ -900,26 +900,29 @@ class GPUSolvationGIST:
         water_analysis = binding_results.get("water_structure_analysis")
 
         desolvation_analysis = {
-            "desolvation_free_energy": thermo_props.desolvation_penalty
-            if thermo_props
-            else 5.0,
-            "displaced_waters": thermo_props.displaced_water_molecules
-            if thermo_props
-            else 3,
-            "binding_site_volume": thermo_props.favorable_volume
-            + thermo_props.unfavorable_volume
-            if thermo_props
-            else 200.0,
-            "water_structure_penalty": water_analysis.orientational_entropy_loss
-            + water_analysis.translational_entropy_loss
-            if water_analysis
-            else -10.0,
-            "hydrophobic_contribution": thermo_props.hydrophobic_surface_area * 0.02
-            if thermo_props
-            else 2.0,
-            "polar_contribution": thermo_props.polar_surface_area * -0.05
-            if thermo_props
-            else -3.0,
+            "desolvation_free_energy": (
+                thermo_props.desolvation_penalty if thermo_props else 5.0
+            ),
+            "displaced_waters": (
+                thermo_props.displaced_water_molecules if thermo_props else 3
+            ),
+            "binding_site_volume": (
+                thermo_props.favorable_volume + thermo_props.unfavorable_volume
+                if thermo_props
+                else 200.0
+            ),
+            "water_structure_penalty": (
+                water_analysis.orientational_entropy_loss
+                + water_analysis.translational_entropy_loss
+                if water_analysis
+                else -10.0
+            ),
+            "hydrophobic_contribution": (
+                thermo_props.hydrophobic_surface_area * 0.02 if thermo_props else 2.0
+            ),
+            "polar_contribution": (
+                thermo_props.polar_surface_area * -0.05 if thermo_props else -3.0
+            ),
         }
 
         return desolvation_analysis

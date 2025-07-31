@@ -1469,6 +1469,54 @@ if _BIOLOGICAL_INTERACTIONS_AVAILABLE:
         ]
     )
 
+# CFD-Kinetics modules (with optional imports)
+try:
+    from .cfd_kinetics import (  # CFD Solver Core; Kinetics Coupling; Reactor Modeling; Microreactor Design; Visualization
+        BoundaryCondition,
+        BoundaryType,
+        CFDConfig,
+        CFDSolver,
+        CFDVisualizer,
+        ConcentrationField,
+        DesignParameters,
+        FlowField,
+        FlowVisualizer,
+        GenerativeMicroreactorDesigner,
+        GeometryConstraints,
+        GPUCFDSolver,
+        HeatTransferCoupling,
+        KineticsModel,
+        MassTransferCoupling,
+        MicroreactorGeometry,
+        MicroreactorSimulator,
+        OptimizationObjective,
+        PerformanceMetrics,
+        ProcessConditions,
+        ReactionKineticsCoupler,
+        ReactionNetwork,
+        ReactionStep,
+        ReactorAnalyzer,
+        ReactorGeometry,
+        ReactorModel,
+        ReactorOptimizer,
+        ReactorType,
+        ResultsPostProcessor,
+        SerpentineGeometry,
+        SpeciesProperties,
+        StraightChannelGeometry,
+        TemperatureField,
+        TMixerGeometry,
+        create_cfd_solver,
+        create_mixing_optimization_objectives,
+        create_reaction_optimization_objectives,
+        create_standard_constraints,
+        create_visualization_suite,
+    )
+
+    _CFD_KINETICS_AVAILABLE = True
+except ImportError:
+    _CFD_KINETICS_AVAILABLE = False
+
 # Add retrosynthesis exports if available
 if _RETROSYNTHESIS_AVAILABLE:
     __all__.extend(
@@ -1610,5 +1658,56 @@ if _RETROSYNTHESIS_AVAILABLE:
             "RenderingError",
             "LayoutError",
             "InteractionError",
+        ]
+    )
+
+# Add CFD-Kinetics exports if available
+if _CFD_KINETICS_AVAILABLE:
+    __all__.extend(
+        [
+            # CFD Solver Core
+            "CFDSolver",
+            "GPUCFDSolver",
+            "FlowField",
+            "TemperatureField",
+            "ConcentrationField",
+            "CFDConfig",
+            "BoundaryCondition",
+            "BoundaryType",
+            "create_cfd_solver",
+            # Kinetics Coupling
+            "ReactionKineticsCoupler",
+            "KineticsModel",
+            "ReactionStep",
+            "SpeciesProperties",
+            "ReactionNetwork",
+            "HeatTransferCoupling",
+            "MassTransferCoupling",
+            # Reactor Modeling
+            "ReactorGeometry",
+            "ReactorModel",
+            "ProcessConditions",
+            "MicroreactorSimulator",
+            "ReactorOptimizer",
+            # Microreactor Design
+            "GenerativeMicroreactorDesigner",
+            "GeometryConstraints",
+            "DesignParameters",
+            "PerformanceMetrics",
+            "ReactorType",
+            "OptimizationObjective",
+            "MicroreactorGeometry",
+            "StraightChannelGeometry",
+            "SerpentineGeometry",
+            "TMixerGeometry",
+            "create_standard_constraints",
+            "create_mixing_optimization_objectives",
+            "create_reaction_optimization_objectives",
+            # Visualization
+            "CFDVisualizer",
+            "FlowVisualizer",
+            "ReactorAnalyzer",
+            "ResultsPostProcessor",
+            "create_visualization_suite",
         ]
     )

@@ -873,9 +873,11 @@ class BayesianOptimizer:
                 self.optimization_history.append(
                     {
                         "iteration": iteration,
-                        "best_objective": self.best_y
-                        if not self.is_multi_objective
-                        else np.max(y_array),
+                        "best_objective": (
+                            self.best_y
+                            if not self.is_multi_objective
+                            else np.max(y_array)
+                        ),
                         "acquisition_values": acquisition_values,
                         "model_training_time": model_time,
                         "acquisition_time": acq_time,

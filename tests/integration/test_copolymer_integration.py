@@ -399,7 +399,7 @@ class TestCopolymerIntegration:
                 "name": "Ethylene",
                 "mole_fraction": 0.5,
                 "weight_fraction": 0.5,
-                "molecular_weight": 28.0
+                "molecular_weight": 28.0,
                 # Missing Tg and other properties
             },
             {
@@ -407,7 +407,7 @@ class TestCopolymerIntegration:
                 "name": "Styrene",
                 "mole_fraction": 0.5,
                 "weight_fraction": 0.5,
-                "molecular_weight": 104.0
+                "molecular_weight": 104.0,
                 # Missing Tg and other properties
             },
         ]

@@ -203,7 +203,7 @@ class LifecycleSimulator:
         events = []
         current_time = 0.0
         current_properties = initial_properties.copy()
-        cumulative_impacts = {cat: 0.0 for cat in ImpactCategory}
+        cumulative_impacts = dict.fromkeys(ImpactCategory, 0.0)
 
         # Phase 1: Raw material extraction and manufacturing
         manufacturing_event = await self._simulate_manufacturing_phase(
@@ -354,7 +354,7 @@ class LifecycleSimulator:
                 phase=LifecyclePhase.USE_PHASE,
                 event_type="usage",
                 properties=properties.copy(),
-                environmental_impact={cat: 0.0 for cat in ImpactCategory},
+                environmental_impact=dict.fromkeys(ImpactCategory, 0.0),
                 degradation_products=[],
                 description="Material use phase",
                 metadata={"degradation_included": False},
@@ -420,7 +420,7 @@ class LifecycleSimulator:
 
         # Assess recyclability
         fate = "landfill"
-        environmental_impact = {cat: 0.0 for cat in ImpactCategory}
+        environmental_impact = dict.fromkeys(ImpactCategory, 0.0)
 
         if self.config.include_recyclability:
             try:
@@ -458,15 +458,15 @@ class LifecycleSimulator:
                         }
                 elif assessment.circularity_metrics.biodegradability_score > 0.5:
                     fate = "biodegradation"
-                    environmental_impact = {cat: 0.1 for cat in ImpactCategory}
+                    environmental_impact = dict.fromkeys(ImpactCategory, 0.1)
                 else:
                     fate = "landfill"
-                    environmental_impact = {cat: 0.05 for cat in ImpactCategory}
+                    environmental_impact = dict.fromkeys(ImpactCategory, 0.05)
 
             except Exception as e:
                 logger.warning(f"Recyclability assessment failed: {e}")
                 fate = "landfill"
-                environmental_impact = {cat: 0.05 for cat in ImpactCategory}
+                environmental_impact = dict.fromkeys(ImpactCategory, 0.05)
 
         return LifecycleEvent(
             time=start_time,
@@ -551,9 +551,9 @@ class LifecycleSimulator:
                     "mechanical_retention": {"tensile_strength": retention},
                     "chemical_changes": {},
                 },
-                environmental_impact={
-                    cat: 0.001 * (1 - retention) for cat in ImpactCategory
-                },
+                environmental_impact=dict.fromkeys(
+                    ImpactCategory, 0.001 * (1 - retention)
+                ),
                 degradation_products=["unknown_products"],
                 description=f"Simple degradation at {t:.1f} hours",
                 metadata={"model": "exponential_decay"},
@@ -567,7 +567,7 @@ class LifecycleSimulator:
     ) -> Dict[LifecyclePhase, float]:
         """Calculate duration of each lifecycle phase."""
 
-        phase_durations = {phase: 0.0 for phase in LifecyclePhase}
+        phase_durations = dict.fromkeys(LifecyclePhase, 0.0)
 
         # Group events by phase
         phase_events = {}
@@ -694,7 +694,7 @@ class LifecycleVisualizer:
         impact_data = {cat.value: [] for cat in ImpactCategory}
         times = []
 
-        cumulative_impacts = {cat: 0.0 for cat in ImpactCategory}
+        cumulative_impacts = dict.fromkeys(ImpactCategory, 0.0)
         for event in trajectory.events:
             times.append(event.time)
             for cat, impact in event.environmental_impact.items():
@@ -750,7 +750,7 @@ class LifecycleVisualizer:
 
         # Calculate impact by phase
         phase_impacts = {
-            phase: {cat: 0.0 for cat in ImpactCategory} for phase in LifecyclePhase
+            phase: dict.fromkeys(ImpactCategory, 0.0) for phase in LifecyclePhase
         }
 
         for event in trajectory.events:
@@ -1448,9 +1448,11 @@ class SustainabilityDashboard:
 
         return html.Div(
             [
-                dcc.Graph(figure=fig)
-                if isinstance(fig, go.Figure)
-                else html.Div(str(fig)),
+                (
+                    dcc.Graph(figure=fig)
+                    if isinstance(fig, go.Figure)
+                    else html.Div(str(fig))
+                ),
                 html.H4("Material Rankings"),
                 html.Div(
                     [
@@ -1484,14 +1486,16 @@ class SustainabilityDashboard:
         return html.Div(
             [
                 html.H4("Sustainability Metrics Comparison"),
-                dbc.Table.from_dataframe(
-                    pd.DataFrame(metrics_table, columns=headers),
-                    striped=True,
-                    bordered=True,
-                    hover=True,
-                )
-                if PANDAS_AVAILABLE
-                else html.Div("Pandas not available for table display"),
+                (
+                    dbc.Table.from_dataframe(
+                        pd.DataFrame(metrics_table, columns=headers),
+                        striped=True,
+                        bordered=True,
+                        hover=True,
+                    )
+                    if PANDAS_AVAILABLE
+                    else html.Div("Pandas not available for table display")
+                ),
             ]
         )
 

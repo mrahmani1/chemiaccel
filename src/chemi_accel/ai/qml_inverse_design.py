@@ -864,12 +864,14 @@ class QMLInverseDesign:
                 {prop: final_predictions[prop][i] for prop in final_predictions}
                 for i in range(len(final_molecules))
             ],
-            qml_uncertainties=[
-                {prop: final_uncertainties[prop][i] for prop in final_uncertainties}
-                for i in range(len(final_molecules))
-            ]
-            if final_uncertainties
-            else None,
+            qml_uncertainties=(
+                [
+                    {prop: final_uncertainties[prop][i] for prop in final_uncertainties}
+                    for i in range(len(final_molecules))
+                ]
+                if final_uncertainties
+                else None
+            ),
             gradient_norms=gradient_norms,
             qml_convergence_metrics=convergence_metrics,
             conformer_statistics=conformer_stats,
@@ -1083,9 +1085,9 @@ class QMLInverseDesign:
         # Convergence analysis
         analysis["convergence"] = {
             "converged": result.convergence_info.get("converged", False),
-            "final_gradient_norm": result.gradient_norms[-1]
-            if result.gradient_norms
-            else 0,
+            "final_gradient_norm": (
+                result.gradient_norms[-1] if result.gradient_norms else 0
+            ),
             "gradient_reduction_factor": (
                 result.gradient_norms[0] / max(result.gradient_norms[-1], 1e-10)
                 if len(result.gradient_norms) > 1

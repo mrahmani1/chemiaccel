@@ -5,7 +5,6 @@ This example demonstrates how to use the QML uncertainty quantification framewor
 to analyze and visualize the reliability of quantum machine learning predictions.
 """
 
-
 import numpy as np
 
 # ChemiAccel imports

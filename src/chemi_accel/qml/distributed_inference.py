@@ -885,9 +885,9 @@ class DistributedQMLInferenceEngine:
                 io_time=0.0,
                 memory_usage_mb=0.0,  # Would be measured
                 cpu_utilization=0.0,
-                throughput_molecules_per_sec=len(geometries) / execution_time
-                if execution_time > 0
-                else 0,
+                throughput_molecules_per_sec=(
+                    len(geometries) / execution_time if execution_time > 0 else 0
+                ),
             )
 
             # Update internal metrics
@@ -969,18 +969,22 @@ class DistributedQMLInferenceEngine:
                 batch_data = {
                     "batch_id": batch.batch_id,
                     "geometries": batch.geometries,
-                    "worker_id": list(batch.worker_assignments.keys())[0]
-                    if batch.worker_assignments
-                    else None,
+                    "worker_id": (
+                        list(batch.worker_assignments.keys())[0]
+                        if batch.worker_assignments
+                        else None
+                    ),
                 }
 
                 model_info = {
-                    "model_path": str(self.base_model.model_path)
-                    if self.base_model.model_path
-                    else None,
-                    "device": "cuda"
-                    if "cuda" in str(batch.worker_assignments)
-                    else "cpu",
+                    "model_path": (
+                        str(self.base_model.model_path)
+                        if self.base_model.model_path
+                        else None
+                    ),
+                    "device": (
+                        "cuda" if "cuda" in str(batch.worker_assignments) else "cpu"
+                    ),
                 }
 
                 future = process_batch_delayed(batch_data, properties, model_info)
@@ -1043,9 +1047,11 @@ class DistributedQMLInferenceEngine:
 
             # Create workers
             model_info = {
-                "model_path": str(self.base_model.model_path)
-                if self.base_model.model_path
-                else None,
+                "model_path": (
+                    str(self.base_model.model_path)
+                    if self.base_model.model_path
+                    else None
+                ),
                 "use_gpu": self.config.devices_per_worker > 0,
             }
 
@@ -1272,12 +1278,16 @@ class DistributedQMLInferenceEngine:
             "total_batches": self._total_batches,
             "average_execution_time": avg_execution_time,
             "total_execution_time": total_execution_time,
-            "throughput": self._total_predictions / total_execution_time
-            if total_execution_time > 0
-            else 0,
-            "average_batch_size": self._total_predictions / self._total_batches
-            if self._total_batches > 0
-            else 0,
+            "throughput": (
+                self._total_predictions / total_execution_time
+                if total_execution_time > 0
+                else 0
+            ),
+            "average_batch_size": (
+                self._total_predictions / self._total_batches
+                if self._total_batches > 0
+                else 0
+            ),
             "worker_count": len(self.workers),
             "backend": self.config.backend.value,
             "scaling_strategy": self.config.scaling_strategy.value,

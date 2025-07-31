@@ -442,15 +442,17 @@ class MolecularModel:
 
                 # Extract relevant properties
                 properties = {
-                    "molecular_weight": results["molecular_weight"].mean()
-                    if "molecular_weight" in results.columns
-                    else 0.0,
-                    "logp": results["logp"].mean()
-                    if "logp" in results.columns
-                    else 0.0,
-                    "tpsa": results["tpsa"].mean()
-                    if "tpsa" in results.columns
-                    else 0.0,
+                    "molecular_weight": (
+                        results["molecular_weight"].mean()
+                        if "molecular_weight" in results.columns
+                        else 0.0
+                    ),
+                    "logp": (
+                        results["logp"].mean() if "logp" in results.columns else 0.0
+                    ),
+                    "tpsa": (
+                        results["tpsa"].mean() if "tpsa" in results.columns else 0.0
+                    ),
                     "n_molecules": len(self.molecules),
                 }
 
@@ -803,9 +805,11 @@ class DataTransferEngine:
         # Generate CG properties
         properties = {
             "n_cg_particles": len(cg_positions),
-            "coarse_graining_ratio": len(source_data.positions) / len(cg_positions)
-            if len(cg_positions) > 0
-            else 1,
+            "coarse_graining_ratio": (
+                len(source_data.positions) / len(cg_positions)
+                if len(cg_positions) > 0
+                else 1
+            ),
         }
 
         # Generate simple velocities

@@ -195,16 +195,16 @@ class MultiObjectiveBenchmark:
                     "cpu_time": cpu_time,
                     "gpu_time": gpu_time,
                     "speedup": cpu_time / gpu_time if gpu_time > 0 else 1.0,
-                    "max_distance_cpu": np.max(
-                        distances_cpu[np.isfinite(distances_cpu)]
-                    )
-                    if np.any(np.isfinite(distances_cpu))
-                    else 0,
-                    "max_distance_gpu": np.max(
-                        distances_gpu[np.isfinite(distances_gpu)]
-                    )
-                    if np.any(np.isfinite(distances_gpu))
-                    else 0,
+                    "max_distance_cpu": (
+                        np.max(distances_cpu[np.isfinite(distances_cpu)])
+                        if np.any(np.isfinite(distances_cpu))
+                        else 0
+                    ),
+                    "max_distance_gpu": (
+                        np.max(distances_gpu[np.isfinite(distances_gpu)])
+                        if np.any(np.isfinite(distances_gpu))
+                        else 0
+                    ),
                 }
             )
 

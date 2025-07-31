@@ -5,7 +5,6 @@ This module tests the JAX backend molecular representations and
 processing utilities with synthetic data.
 """
 
-
 import numpy as np
 import pytest
 

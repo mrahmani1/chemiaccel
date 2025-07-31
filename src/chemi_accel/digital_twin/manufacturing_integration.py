@@ -387,12 +387,12 @@ class FluidDynamicsSimulator(ProcessSimulationInterface):
                 "orientation_factor": velocity_uniformity,
             },
             morphology={
-                "flow_pattern": "uniform"
-                if velocity_uniformity > 0.8
-                else "non_uniform",
-                "temperature_distribution": "uniform"
-                if temperature_uniformity > 0.8
-                else "non_uniform",
+                "flow_pattern": (
+                    "uniform" if velocity_uniformity > 0.8 else "non_uniform"
+                ),
+                "temperature_distribution": (
+                    "uniform" if temperature_uniformity > 0.8 else "non_uniform"
+                ),
             },
             processing_time=self.process_conditions.cycle_time or 60.0,
             energy_consumption=self._calculate_energy_consumption(),
@@ -595,17 +595,17 @@ class HeatTransferSimulator(ProcessSimulationInterface):
         output = ProcessOutput(
             part_quality=thermal_quality,
             dimensional_accuracy=temperature_uniformity,
-            surface_finish=0.8
-            if cooling_rate < 10.0
-            else 0.6,  # Slower cooling = better surface
+            surface_finish=(
+                0.8 if cooling_rate < 10.0 else 0.6
+            ),  # Slower cooling = better surface
             mechanical_properties={
                 "thermal_stress": temp_std * 1e6,  # Simplified thermal stress
                 "crystallinity": self._estimate_crystallinity(cooling_rate),
             },
             morphology={
-                "cooling_pattern": "uniform"
-                if temperature_uniformity > 0.8
-                else "non_uniform",
+                "cooling_pattern": (
+                    "uniform" if temperature_uniformity > 0.8 else "non_uniform"
+                ),
                 "thermal_gradient": temp_std,
             },
             processing_time=self.process_conditions.cycle_time or 60.0,
@@ -934,7 +934,7 @@ class ManufacturingDigitalTwin:
                 [r["output"].part_quality for r in self.process_history]
             ),
             "available_simulators": list(self.process_simulators.keys()),
-            "current_conditions": self.process_conditions.to_dict()
-            if self.process_conditions
-            else None,
+            "current_conditions": (
+                self.process_conditions.to_dict() if self.process_conditions else None
+            ),
         }

@@ -265,7 +265,7 @@ class ParameterExplorer(ABC):
     def _calculate_parameter_importance(self) -> Dict[str, float]:
         """Calculate importance of each parameter."""
         if len(self.sampled_parameters) < 10:
-            return {param: 1.0 for param in self.parameter_space.parameter_names}
+            return dict.fromkeys(self.parameter_space.parameter_names, 1.0)
 
         # Simple variance-based importance
         param_importance = {}

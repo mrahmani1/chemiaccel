@@ -98,7 +98,9 @@ class AIContextualPrediction:
 class KGUpdateSuggestion:
     """Suggestion for updating the knowledge graph based on AI predictions."""
 
-    update_type: str  # "add_entity", "add_relationship", "update_property", "add_evidence"
+    update_type: (
+        str  # "add_entity", "add_relationship", "update_property", "add_evidence"
+    )
     entities: List[Dict[str, Any]] = field(default_factory=list)
     relationships: List[Dict[str, Any]] = field(default_factory=list)
     properties: Dict[str, Any] = field(default_factory=dict)

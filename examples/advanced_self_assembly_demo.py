@@ -1367,9 +1367,11 @@ class AdvancedSelfAssemblyDemo:
         # Create workflow diagram-style plot
         stages = ["Design", "Implementation", "Simulation", "Validation"]
         values = [
-            design_result.best_objective_value
-            if hasattr(design_result, "best_objective_value")
-            else 1.0,
+            (
+                design_result.best_objective_value
+                if hasattr(design_result, "best_objective_value")
+                else 1.0
+            ),
             1.0,  # Implementation always succeeds
             simulation_results["performance_metrics"]["total_time"] / 10,  # Normalized
             0.8,  # Validation score (simplified)

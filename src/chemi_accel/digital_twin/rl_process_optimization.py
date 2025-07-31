@@ -160,12 +160,16 @@ class ProcessState:
             state_vector.extend(
                 [
                     np.mean(self.quality_trend[-5:]),  # Recent quality average
-                    np.std(self.quality_trend[-5:])
-                    if len(self.quality_trend) > 1
-                    else 0.0,
-                    self.quality_trend[-1] - self.quality_trend[-2]
-                    if len(self.quality_trend) > 1
-                    else 0.0,
+                    (
+                        np.std(self.quality_trend[-5:])
+                        if len(self.quality_trend) > 1
+                        else 0.0
+                    ),
+                    (
+                        self.quality_trend[-1] - self.quality_trend[-2]
+                        if len(self.quality_trend) > 1
+                        else 0.0
+                    ),
                 ]
             )
         else:
@@ -175,9 +179,11 @@ class ProcessState:
             state_vector.extend(
                 [
                     np.mean(self.energy_consumption_trend[-5:]),
-                    np.std(self.energy_consumption_trend[-5:])
-                    if len(self.energy_consumption_trend) > 1
-                    else 0.0,
+                    (
+                        np.std(self.energy_consumption_trend[-5:])
+                        if len(self.energy_consumption_trend) > 1
+                        else 0.0
+                    ),
                 ]
             )
         else:
@@ -1082,15 +1088,17 @@ class ProcessEnvironment:
             "total_steps": len(self.episode_rewards),
             "total_reward": sum(self.episode_rewards),
             "average_reward": np.mean(self.episode_rewards),
-            "final_quality": self.current_state.part_quality
-            if self.current_state
-            else 0.0,
+            "final_quality": (
+                self.current_state.part_quality if self.current_state else 0.0
+            ),
             "quality_improvement": (
                 self.current_state.part_quality - self.episode_states[0].part_quality
                 if self.current_state and self.episode_states
                 else 0.0
             ),
-            "reward_trend": self.episode_rewards[-10:]
-            if len(self.episode_rewards) >= 10
-            else self.episode_rewards,
+            "reward_trend": (
+                self.episode_rewards[-10:]
+                if len(self.episode_rewards) >= 10
+                else self.episode_rewards
+            ),
         }

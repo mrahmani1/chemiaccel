@@ -597,9 +597,9 @@ class PerformanceTestSuite:
             "scaling_efficiency": scaling_efficiency,
             "average_efficiency": avg_efficiency,
             "max_throughput": max(throughputs) if throughputs else 0.0,
-            "memory_scaling_factor": memory_usage[-1] / memory_usage[0]
-            if len(memory_usage) >= 2
-            else 1.0,
+            "memory_scaling_factor": (
+                memory_usage[-1] / memory_usage[0] if len(memory_usage) >= 2 else 1.0
+            ),
         }
 
     def test_100_million_dataset(self) -> Dict[str, Any]:
@@ -773,9 +773,11 @@ class PerformanceTestSuite:
             summary["overall"] = {
                 "average_throughput_mol_per_sec": avg_throughput,
                 "peak_memory_gb": max_memory,
-                "estimated_100m_time_hours": 100_000_000 / avg_throughput / 3600
-                if avg_throughput > 0
-                else float("inf"),
+                "estimated_100m_time_hours": (
+                    100_000_000 / avg_throughput / 3600
+                    if avg_throughput > 0
+                    else float("inf")
+                ),
             }
 
         return summary

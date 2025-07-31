@@ -592,20 +592,22 @@ class RegressionTestSuite:
         return {
             "total_tests": total_tests,
             "regression_count": len(regressions),
-            "regression_rate": len(regressions) / total_tests
-            if total_tests > 0
-            else 0.0,
+            "regression_rate": (
+                len(regressions) / total_tests if total_tests > 0 else 0.0
+            ),
             "severity_counts": severity_counts,
             "average_time_change_percent": avg_time_change,
             "average_throughput_change_percent": avg_throughput_change,
-            "worst_regression": max(regressions, key=lambda x: x.time_change_percent)
-            if regressions
-            else None,
-            "best_improvement": min(
-                self.regression_results, key=lambda x: x.time_change_percent
-            )
-            if self.regression_results
-            else None,
+            "worst_regression": (
+                max(regressions, key=lambda x: x.time_change_percent)
+                if regressions
+                else None
+            ),
+            "best_improvement": (
+                min(self.regression_results, key=lambda x: x.time_change_percent)
+                if self.regression_results
+                else None
+            ),
         }
 
 

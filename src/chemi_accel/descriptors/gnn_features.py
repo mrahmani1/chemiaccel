@@ -1421,17 +1421,19 @@ class AdvancedGraphFeatures:
 
         # Compute scaffold properties
         properties = {
-            "scaffold_density": float(
-                np.sum(scaffold_adj) / (len(scaffold) * (len(scaffold) - 1))
-            )
-            if len(scaffold) > 1
-            else 0.0,
+            "scaffold_density": (
+                float(np.sum(scaffold_adj) / (len(scaffold) * (len(scaffold) - 1)))
+                if len(scaffold) > 1
+                else 0.0
+            ),
             "scaffold_atoms": len(scaffold),
             "scaffold_bonds": int(np.sum(scaffold_adj) // 2),  # Undirected graph
             "average_degree": float(np.mean(np.sum(scaffold_adj, axis=1))),
-            "max_degree": float(np.max(np.sum(scaffold_adj, axis=1)))
-            if len(scaffold) > 0
-            else 0.0,
+            "max_degree": (
+                float(np.max(np.sum(scaffold_adj, axis=1)))
+                if len(scaffold) > 0
+                else 0.0
+            ),
         }
 
         return properties
@@ -1682,12 +1684,12 @@ def benchmark_graph_features_performance(
         "chemi_accel_time": chemi_accel_time,
         "traditional_time": traditional_time,
         "speedup": speedup,
-        "chemi_accel_features_per_second": len(molecules) / chemi_accel_time
-        if chemi_accel_time > 0
-        else 0,
-        "traditional_features_per_second": len(molecules) / traditional_time
-        if traditional_time > 0
-        else 0,
+        "chemi_accel_features_per_second": (
+            len(molecules) / chemi_accel_time if chemi_accel_time > 0 else 0
+        ),
+        "traditional_features_per_second": (
+            len(molecules) / traditional_time if traditional_time > 0 else 0
+        ),
         "backend_used": chemi_accel_features.actual_backend,
     }
 

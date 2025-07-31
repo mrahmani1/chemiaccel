@@ -245,13 +245,17 @@ class GenomicsDataIngester(BaseDataIngester):
                 file_path=file_path,
                 data=data,
                 metadata={
-                    "samples": len(data.columns) - 3
-                    if "CHR" in data.columns
-                    else len(data.columns),
+                    "samples": (
+                        len(data.columns) - 3
+                        if "CHR" in data.columns
+                        else len(data.columns)
+                    ),
                     "variants": len(data),
-                    "file_size": Path(file_path).stat().st_size
-                    if Path(file_path).exists()
-                    else 0,
+                    "file_size": (
+                        Path(file_path).stat().st_size
+                        if Path(file_path).exists()
+                        else 0
+                    ),
                 },
             )
 
@@ -326,9 +330,11 @@ class ProteomicsDataIngester(BaseDataIngester):
                 metadata={
                     "samples": len(data.columns),
                     "proteins": len(data),
-                    "file_size": Path(file_path).stat().st_size
-                    if Path(file_path).exists()
-                    else 0,
+                    "file_size": (
+                        Path(file_path).stat().st_size
+                        if Path(file_path).exists()
+                        else 0
+                    ),
                 },
             )
 
@@ -379,9 +385,11 @@ class MetabolomicsDataIngester(BaseDataIngester):
                 metadata={
                     "samples": len(data.columns),
                     "metabolites": len(data),
-                    "file_size": Path(file_path).stat().st_size
-                    if Path(file_path).exists()
-                    else 0,
+                    "file_size": (
+                        Path(file_path).stat().st_size
+                        if Path(file_path).exists()
+                        else 0
+                    ),
                 },
             )
 
@@ -884,7 +892,7 @@ class MultiOmicsIntegrator:
                             datasets_used=[dataset.dataset_id],
                             integration_method=IntegrationMethod.EARLY_FUSION,
                             integrated_features=dataset.data,
-                            feature_importance={f: 1.0 for f in dataset.data.index},
+                            feature_importance=dict.fromkeys(dataset.data.index, 1.0),
                             integration_quality_score=1.0,
                             processing_time=0.0,
                         )

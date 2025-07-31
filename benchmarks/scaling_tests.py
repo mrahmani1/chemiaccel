@@ -414,9 +414,11 @@ class ScalingTestRunner:
             memory_usage=memory_usage,
             scaling_efficiency=scaling_efficiency,
             theoretical_speedup=1.0,  # Batch size doesn't theoretically improve speed
-            actual_speedup=max(throughputs) / min(throughputs)
-            if throughputs and min(throughputs) > 0
-            else 1.0,
+            actual_speedup=(
+                max(throughputs) / min(throughputs)
+                if throughputs and min(throughputs) > 0
+                else 1.0
+            ),
             metadata={
                 "batch_sizes": batch_sizes,
                 "optimal_batch_size": optimal_batch_size,

@@ -937,12 +937,12 @@ class GelPointDetector:
 
         analysis = {
             "gel_points": gel_points,
-            "average_gel_time": np.mean([gp["time"] for gp in gel_points])
-            if gel_points
-            else None,
-            "average_gel_conversion": np.mean([gp["conversion"] for gp in gel_points])
-            if gel_points
-            else None,
+            "average_gel_time": (
+                np.mean([gp["time"] for gp in gel_points]) if gel_points else None
+            ),
+            "average_gel_conversion": (
+                np.mean([gp["conversion"] for gp in gel_points]) if gel_points else None
+            ),
         }
 
         return analysis

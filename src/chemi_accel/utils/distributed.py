@@ -155,9 +155,9 @@ def benchmark_scaling_efficiency(
             results[node_count] = {
                 "total_time": metrics.total_time,
                 "efficiency": efficiency,
-                "throughput": len(test_data) / metrics.total_time
-                if metrics.total_time > 0
-                else 0,
+                "throughput": (
+                    len(test_data) / metrics.total_time if metrics.total_time > 0 else 0
+                ),
                 "memory_usage": metrics.memory_usage_mb,
             }
 

@@ -706,9 +706,9 @@ class DecisionLogger:
                 },
                 "filters": {
                     "experiment_ids": experiment_ids,
-                    "decision_types": [dt.value for dt in decision_types]
-                    if decision_types
-                    else None,
+                    "decision_types": (
+                        [dt.value for dt in decision_types] if decision_types else None
+                    ),
                 },
             },
             "summary_statistics": {

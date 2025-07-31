@@ -797,9 +797,9 @@ class GPUGraphBackend(GraphDatabaseBackend):
                 {
                     "vertex": int(row["vertex"]),
                     "distance": float(row["distance"]),
-                    "predecessor": int(row["predecessor"])
-                    if "predecessor" in row
-                    else None,
+                    "predecessor": (
+                        int(row["predecessor"]) if "predecessor" in row else None
+                    ),
                 }
             )
 
@@ -902,9 +902,11 @@ class GPUGraphBackend(GraphDatabaseBackend):
                 "vertices": vertices,
                 "vertex_count": vertex_count,
                 "edge_count": edge_count,
-                "density": edge_count / (vertex_count * (vertex_count - 1))
-                if vertex_count > 1
-                else 0,
+                "density": (
+                    edge_count / (vertex_count * (vertex_count - 1))
+                    if vertex_count > 1
+                    else 0
+                ),
             }
         ]
 

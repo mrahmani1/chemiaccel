@@ -521,9 +521,11 @@ class ReactionNetwork:
             "degree_distribution": degrees,
             "species_type_distribution": species_types,
             "reaction_type_distribution": reaction_types,
-            "network_density": (2 * num_reactions) / (num_species * (num_species - 1))
-            if num_species > 1
-            else 0,
+            "network_density": (
+                (2 * num_reactions) / (num_species * (num_species - 1))
+                if num_species > 1
+                else 0
+            ),
         }
 
     def export_to_graphml(self, filepath: str) -> None:

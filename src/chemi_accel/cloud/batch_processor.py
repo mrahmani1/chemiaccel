@@ -196,11 +196,11 @@ class AWSBatchProvider(CloudBatchProvider):
                         {"name": k, "value": v}
                         for k, v in job_config.environment_variables.items()
                     ],
-                    "resourceRequirements": [
-                        {"type": "GPU", "value": str(job_definition.get("gpus", 1))}
-                    ]
-                    if job_definition.get("gpus", 0) > 0
-                    else [],
+                    "resourceRequirements": (
+                        [{"type": "GPU", "value": str(job_definition.get("gpus", 1))}]
+                        if job_definition.get("gpus", 0) > 0
+                        else []
+                    ),
                 },
                 retryStrategy={"attempts": job_definition.get("retry_attempts", 1)},
                 timeout={"attemptDurationSeconds": job_config.timeout_minutes * 60},
@@ -281,15 +281,21 @@ class GCPBatchProvider(CloudBatchProvider):
             job_id=job_id,
             status=status_mapping.get(job.status.state, "UNKNOWN"),
             created_at=job.create_time.isoformat() if job.create_time else None,
-            started_at=job.status.run_duration.start_time.isoformat()
-            if job.status.run_duration
-            else None,
-            stopped_at=job.status.run_duration.end_time.isoformat()
-            if job.status.run_duration
-            else None,
-            reason=job.status.status_events[-1].description
-            if job.status.status_events
-            else None,
+            started_at=(
+                job.status.run_duration.start_time.isoformat()
+                if job.status.run_duration
+                else None
+            ),
+            stopped_at=(
+                job.status.run_duration.end_time.isoformat()
+                if job.status.run_duration
+                else None
+            ),
+            reason=(
+                job.status.status_events[-1].description
+                if job.status.status_events
+                else None
+            ),
         )
 
     def cancel_job(self, job_id: str) -> bool:
@@ -444,15 +450,19 @@ class AzureBatchProvider(CloudBatchProvider):
             job_id=job_id,
             status=status_mapping.get(str(job.state).lower(), "UNKNOWN"),
             created_at=job.creation_time.isoformat() if job.creation_time else None,
-            started_at=job.execution_info.start_time.isoformat()
-            if job.execution_info and job.execution_info.start_time
-            else None,
-            stopped_at=job.execution_info.end_time.isoformat()
-            if job.execution_info and job.execution_info.end_time
-            else None,
-            reason=job.execution_info.termination_reason
-            if job.execution_info
-            else None,
+            started_at=(
+                job.execution_info.start_time.isoformat()
+                if job.execution_info and job.execution_info.start_time
+                else None
+            ),
+            stopped_at=(
+                job.execution_info.end_time.isoformat()
+                if job.execution_info and job.execution_info.end_time
+                else None
+            ),
+            reason=(
+                job.execution_info.termination_reason if job.execution_info else None
+            ),
         )
 
     def cancel_job(self, job_id: str) -> bool:
@@ -884,9 +894,11 @@ class CloudBatchProcessor:
         job_config.environment_variables.update(
             {
                 "CHEMI_ACCEL_ARRAY_SIZE": str(array_size),
-                "CHEMI_ACCEL_ARRAY_INDEX": "${AWS_BATCH_JOB_ARRAY_INDEX}"
-                if self.provider_name == "aws"
-                else "${BATCH_TASK_INDEX}",
+                "CHEMI_ACCEL_ARRAY_INDEX": (
+                    "${AWS_BATCH_JOB_ARRAY_INDEX}"
+                    if self.provider_name == "aws"
+                    else "${BATCH_TASK_INDEX}"
+                ),
                 "CHEMI_ACCEL_INPUT_URI": job_config.input_data_uri,
                 "CHEMI_ACCEL_OUTPUT_URI": job_config.output_data_uri,
                 "DESCRIPTOR_CONFIG": json.dumps(descriptor_config or {}),
@@ -1100,12 +1112,16 @@ class CloudBatchProcessor:
             "array_size": len(task_statuses),
             "task_statuses": task_statuses,
             "created_at": job.create_time.isoformat() if job.create_time else None,
-            "started_at": job.status.run_duration.start_time.isoformat()
-            if job.status.run_duration
-            else None,
-            "stopped_at": job.status.run_duration.end_time.isoformat()
-            if job.status.run_duration
-            else None,
+            "started_at": (
+                job.status.run_duration.start_time.isoformat()
+                if job.status.run_duration
+                else None
+            ),
+            "stopped_at": (
+                job.status.run_duration.end_time.isoformat()
+                if job.status.run_duration
+                else None
+            ),
         }
 
     def _get_azure_array_status(self, job_id: str) -> Dict[str, Any]:
@@ -1124,12 +1140,16 @@ class CloudBatchProcessor:
             "array_size": len(task_statuses),
             "task_statuses": task_statuses,
             "created_at": job.creation_time.isoformat() if job.creation_time else None,
-            "started_at": job.execution_info.start_time.isoformat()
-            if job.execution_info and job.execution_info.start_time
-            else None,
-            "stopped_at": job.execution_info.end_time.isoformat()
-            if job.execution_info and job.execution_info.end_time
-            else None,
+            "started_at": (
+                job.execution_info.start_time.isoformat()
+                if job.execution_info and job.execution_info.start_time
+                else None
+            ),
+            "stopped_at": (
+                job.execution_info.end_time.isoformat()
+                if job.execution_info and job.execution_info.end_time
+                else None
+            ),
         }
 
     def setup_monitoring_dashboard(self) -> Dict[str, str]:

@@ -284,12 +284,16 @@ class ReferenceValidationFramework:
                         results["failures"].append(
                             {
                                 "smiles": smiles,
-                                "our_value": our_val.tolist()
-                                if hasattr(our_val, "tolist")
-                                else str(our_val),
-                                "reference_value": ref_val.tolist()
-                                if hasattr(ref_val, "tolist")
-                                else str(ref_val),
+                                "our_value": (
+                                    our_val.tolist()
+                                    if hasattr(our_val, "tolist")
+                                    else str(our_val)
+                                ),
+                                "reference_value": (
+                                    ref_val.tolist()
+                                    if hasattr(ref_val, "tolist")
+                                    else str(ref_val)
+                                ),
                                 "error": "Array values differ beyond tolerance",
                             }
                         )
@@ -306,9 +310,11 @@ class ReferenceValidationFramework:
                                 "our_value": our_val,
                                 "reference_value": ref_val,
                                 "absolute_error": abs(our_val - ref_val),
-                                "relative_error": abs(our_val - ref_val) / abs(ref_val)
-                                if ref_val != 0
-                                else float("inf"),
+                                "relative_error": (
+                                    abs(our_val - ref_val) / abs(ref_val)
+                                    if ref_val != 0
+                                    else float("inf")
+                                ),
                             }
                         )
 
@@ -317,12 +323,12 @@ class ReferenceValidationFramework:
             "chemi_accel_time": chemi_accel_time,
             "reference_time": reference_time,
             "speedup": reference_time / chemi_accel_time if chemi_accel_time > 0 else 0,
-            "molecules_per_second_chemi_accel": len(test_molecules) / chemi_accel_time
-            if chemi_accel_time > 0
-            else 0,
-            "molecules_per_second_reference": len(test_molecules) / reference_time
-            if reference_time > 0
-            else 0,
+            "molecules_per_second_chemi_accel": (
+                len(test_molecules) / chemi_accel_time if chemi_accel_time > 0 else 0
+            ),
+            "molecules_per_second_reference": (
+                len(test_molecules) / reference_time if reference_time > 0 else 0
+            ),
         }
 
         return results

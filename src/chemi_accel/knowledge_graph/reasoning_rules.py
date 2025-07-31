@@ -549,9 +549,9 @@ class InferenceEngine:
                 "applications": rule.application_count,
                 "success_rate": rule.success_count / max(rule.application_count, 1),
                 "average_confidence": rule.average_confidence,
-                "last_applied": rule.last_applied.isoformat()
-                if rule.last_applied
-                else None,
+                "last_applied": (
+                    rule.last_applied.isoformat() if rule.last_applied else None
+                ),
             }
 
         stats["rule_performance"] = rule_performance

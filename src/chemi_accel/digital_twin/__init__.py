@@ -1,9 +1,9 @@
 """
-Digital Twin Module for Multi-Scale Material Modeling
+Digital Twin Module for Multi-Scale Material Modeling and Multi-Product Processes
 
 This module provides a unified framework for linking and orchestrating models
 across different length and time scales (atomistic, mesoscopic, continuum)
-to create real-time material digital twins.
+to create real-time material digital twins and multi-product process digital twins.
 
 Main components:
 - Multi-Scale Integration Framework: Links atomistic, mesoscopic, and continuum models
@@ -11,6 +11,9 @@ Main components:
 - Real-time Simulation Engine: GPU-accelerated multi-scale simulations
 - Inverse Material Design: Digital twin-guided optimization
 - Self-Calibration: Experimental data integration and model refinement
+- Multi-Product Process Digital Twin: Adaptive framework for multi-product chemical processes (Req 38.1-38.4)
+- Rapid Changeover Optimization: GPU-accelerated optimization for product changeover (Req 38.2)
+- Real-time Plant Data Calibration: Continuous sensor data calibration and validation (Req 38.3)
 """
 
 # Fault Scenario Simulation and Corrective Actions
@@ -67,6 +70,25 @@ from .manufacturing_integration import (
     ProcessType,
 )
 
+# Multi-Product Process Digital Twin (Requirements 38.1-38.4)
+from .multi_product_digital_twin import (
+    ChangeoverPlan,
+    ChangeoverStrategy,
+    FlexibilityAssessment,
+    FlexibilityMetric,
+    MultiProductDigitalTwin,
+    PlantDataSnapshot,
+    ProcessConfiguration,
+    ProcessMode,
+    ProductFamily,
+    ProductSpecification,
+    ProductType,
+    create_multi_product_digital_twin,
+    create_product_family,
+    create_product_specification,
+    run_multi_product_digital_twin_demo,
+)
+
 # Multi-Scale Framework Core
 from .multiscale_framework import (
     LengthScale,
@@ -98,6 +120,23 @@ from .physics_informed_ai import (
     SurrogateModelTrainer,
 )
 
+# Real-time Plant Data Calibration and Validation (Requirement 38.3)
+from .plant_data_calibration import (
+    CalibrationEvent,
+    CalibrationTrigger,
+    DataQualityLevel,
+    DataQualityMetrics,
+    DataSourceType,
+    PlantDataCalibrationEngine,
+    PlantDataIngestionConfig,
+    PlantDataValidator,
+    SensorConfiguration,
+    ValidationMethod,
+    create_plant_data_calibration_engine,
+    create_sensor_configuration,
+    run_plant_data_calibration_demo,
+)
+
 # Process Engineering Interfaces
 from .process_engineering_interfaces import (
     ANSYSFluentInterface,
@@ -108,6 +147,22 @@ from .process_engineering_interfaces import (
     ProcessCouplingManager,
     ProcessEngineeringInterfaceFactory,
     SimulationConfig,
+)
+
+# Rapid Product Changeover Optimization (Requirement 38.2)
+from .rapid_changeover_optimization import (
+    ChangeoverOptimizationConfig,
+    ChangeoverSchedule,
+    ChangeoverTask,
+    OptimizationObjective,
+    RapidChangeoverOptimizer,
+    ResourceConstraint,
+    ResourceType,
+    SchedulingAlgorithm,
+    create_changeover_task,
+    create_rapid_changeover_optimizer,
+    create_resource_constraint,
+    run_rapid_changeover_optimization_demo,
 )
 
 # Real-time Data Streaming
@@ -341,6 +396,49 @@ __all__ = [
     "create_temperature_fault",
     "create_contamination_fault",
     "create_pressure_fault",
+    # Multi-Product Process Digital Twin (Requirements 38.1-38.4)
+    "MultiProductDigitalTwin",
+    "ProductSpecification",
+    "ProductFamily",
+    "ProductType",
+    "ProcessConfiguration",
+    "ProcessMode",
+    "ChangeoverPlan",
+    "ChangeoverStrategy",
+    "PlantDataSnapshot",
+    "FlexibilityAssessment",
+    "FlexibilityMetric",
+    "create_multi_product_digital_twin",
+    "create_product_specification",
+    "create_product_family",
+    "run_multi_product_digital_twin_demo",
+    # Rapid Product Changeover Optimization (Requirement 38.2)
+    "RapidChangeoverOptimizer",
+    "ChangeoverOptimizationConfig",
+    "ChangeoverSchedule",
+    "ChangeoverTask",
+    "ResourceConstraint",
+    "ResourceType",
+    "OptimizationObjective",
+    "SchedulingAlgorithm",
+    "create_rapid_changeover_optimizer",
+    "create_changeover_task",
+    "create_resource_constraint",
+    "run_rapid_changeover_optimization_demo",
+    # Real-time Plant Data Calibration and Validation (Requirement 38.3)
+    "PlantDataCalibrationEngine",
+    "PlantDataValidator",
+    "SensorConfiguration",
+    "DataQualityMetrics",
+    "DataQualityLevel",
+    "CalibrationEvent",
+    "CalibrationTrigger",
+    "DataSourceType",
+    "ValidationMethod",
+    "PlantDataIngestionConfig",
+    "create_plant_data_calibration_engine",
+    "create_sensor_configuration",
+    "run_plant_data_calibration_demo",
 ]
 
 # Version information

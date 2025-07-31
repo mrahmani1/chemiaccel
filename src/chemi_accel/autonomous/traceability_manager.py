@@ -424,9 +424,11 @@ class TraceabilityManager:
                 recent_decision_id = similar_exp.decision_chain[-1]
 
                 await self.decision_logger.log_influence_relationship(
-                    source_decision_id=experiment.decision_chain[-1]
-                    if experiment.decision_chain
-                    else "",
+                    source_decision_id=(
+                        experiment.decision_chain[-1]
+                        if experiment.decision_chain
+                        else ""
+                    ),
                     target_decision_id=recent_decision_id,
                     influence_type=InfluenceType.FEEDBACK_LOOP,
                     influence_strength=similarity,
@@ -552,12 +554,12 @@ class TraceabilityManager:
         """Calculate diversity metrics for molecule selection."""
         # Simplified diversity calculation
         return {
-            "selection_diversity": len(set(selected)) / len(selected)
-            if selected
-            else 0.0,
-            "coverage_ratio": len(selected) / len(candidate_pool)
-            if candidate_pool
-            else 0.0,
+            "selection_diversity": (
+                len(set(selected)) / len(selected) if selected else 0.0
+            ),
+            "coverage_ratio": (
+                len(selected) / len(candidate_pool) if candidate_pool else 0.0
+            ),
             "uniqueness_score": 1.0,  # Placeholder
         }
 

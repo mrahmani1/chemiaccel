@@ -383,12 +383,12 @@ class NMRDataParser(DataParser):
             return [
                 {
                     "spectrum_type": "generic_nmr",
-                    "chemical_shifts": df.iloc[:, 0].tolist()
-                    if len(df.columns) > 0
-                    else [],
-                    "intensities": df.iloc[:, 1].tolist()
-                    if len(df.columns) > 1
-                    else [],
+                    "chemical_shifts": (
+                        df.iloc[:, 0].tolist() if len(df.columns) > 0 else []
+                    ),
+                    "intensities": (
+                        df.iloc[:, 1].tolist() if len(df.columns) > 1 else []
+                    ),
                     "data_points": len(df),
                     "metadata": {"columns": len(df.columns), "rows": len(df)},
                 }
@@ -482,12 +482,14 @@ class LCMSDataParser(DataParser):
                 {
                     "data_type": "lcms_chromatogram",
                     "chromatogram": chromatogram_data,
-                    "total_ion_current": df["intensity"].sum()
-                    if "intensity" in df.columns
-                    else 0,
-                    "retention_time_range": [df["time"].min(), df["time"].max()]
-                    if "time" in df.columns
-                    else [],
+                    "total_ion_current": (
+                        df["intensity"].sum() if "intensity" in df.columns else 0
+                    ),
+                    "retention_time_range": (
+                        [df["time"].min(), df["time"].max()]
+                        if "time" in df.columns
+                        else []
+                    ),
                     "metadata": {"columns": list(df.columns), "data_points": len(df)},
                 }
             ]

@@ -457,9 +457,11 @@ class FaultDetector:
                     affected_parameters=["temperature"],
                     fault_magnitude=min(1.0, relative_deviation * 2.0),
                     onset_time=0.0,
-                    root_cause=FaultCause.EQUIPMENT_WEAR
-                    if deviation > 30.0
-                    else FaultCause.EXTERNAL_CONDITIONS,
+                    root_cause=(
+                        FaultCause.EQUIPMENT_WEAR
+                        if deviation > 30.0
+                        else FaultCause.EXTERNAL_CONDITIONS
+                    ),
                 )
             elif current_temp > baseline_temp + 30.0:
                 severity = (
@@ -593,9 +595,9 @@ class FaultDetector:
                         severity=severity,
                         description=f"Sensor quality degradation: {sensor_id} quality = {reading.quality.value}",
                         affected_parameters=[sensor_id],
-                        fault_magnitude=0.8
-                        if reading.quality == DataQuality.INVALID
-                        else 0.4,
+                        fault_magnitude=(
+                            0.8 if reading.quality == DataQuality.INVALID else 0.4
+                        ),
                         onset_time=0.0,
                         root_cause=FaultCause.EQUIPMENT_WEAR,
                     )
@@ -1815,9 +1817,9 @@ def create_temperature_fault(
         affected_parameters=["temperature"],
         fault_magnitude=magnitude,
         onset_time=0.0,
-        root_cause=FaultCause.EQUIPMENT_WEAR
-        if is_drop
-        else FaultCause.EQUIPMENT_MALFUNCTION,
+        root_cause=(
+            FaultCause.EQUIPMENT_WEAR if is_drop else FaultCause.EQUIPMENT_MALFUNCTION
+        ),
     )
 
 

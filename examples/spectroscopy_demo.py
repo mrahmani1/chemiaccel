@@ -705,9 +705,11 @@ class SpectroscopyDemo:
             results["structure_proposal"] = {
                 "analysis_time": analysis_time,
                 "candidates_generated": len(inverse_result.candidate_structures),
-                "best_match_score": inverse_result.best_match.confidence_score
-                if inverse_result.best_match
-                else 0,
+                "best_match_score": (
+                    inverse_result.best_match.confidence_score
+                    if inverse_result.best_match
+                    else 0
+                ),
                 "top_candidates": [
                     (c.smiles, c.confidence_score)
                     for c in inverse_result.get_top_candidates(3)
@@ -912,9 +914,11 @@ class SpectroscopyDemo:
                 results["dft_surrogate"] = {
                     "calculation_time": dft_time,
                     "total_energy": dft_calc.total_energy,
-                    "dipole_moment": np.linalg.norm(dft_calc.dipole_moment)
-                    if dft_calc.dipole_moment
-                    else None,
+                    "dipole_moment": (
+                        np.linalg.norm(dft_calc.dipole_moment)
+                        if dft_calc.dipole_moment
+                        else None
+                    ),
                     "method": "DFT_surrogate",
                 }
 

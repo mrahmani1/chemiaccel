@@ -501,9 +501,9 @@ class PipelineExecutor:
                 {
                     "job_id": job.job_id,
                     "model_id": job.model_id,
-                    "started_at": job.started_at.isoformat()
-                    if job.started_at
-                    else None,
+                    "started_at": (
+                        job.started_at.isoformat() if job.started_at else None
+                    ),
                     "status": job.status.value,
                 }
                 for job in self.running_jobs.values()
@@ -513,9 +513,9 @@ class PipelineExecutor:
                     "job_id": job.job_id,
                     "model_id": job.model_id,
                     "status": job.status.value,
-                    "completed_at": job.completed_at.isoformat()
-                    if job.completed_at
-                    else None,
+                    "completed_at": (
+                        job.completed_at.isoformat() if job.completed_at else None
+                    ),
                     "metrics": job.metrics,
                 }
                 for job in self.completed_jobs[-10:]  # Last 10 jobs
@@ -608,9 +608,9 @@ class RetrainingPipelineManager:
             interval_hours=interval_hours,
             metadata={
                 "model_id": model_id,
-                "training_config": training_config.__dict__
-                if training_config
-                else None,
+                "training_config": (
+                    training_config.__dict__ if training_config else None
+                ),
             },
         )
 
@@ -635,9 +635,9 @@ class RetrainingPipelineManager:
             trigger_conditions=conditions,
             metadata={
                 "model_id": model_id,
-                "training_config": training_config.__dict__
-                if training_config
-                else None,
+                "training_config": (
+                    training_config.__dict__ if training_config else None
+                ),
             },
         )
 
@@ -761,9 +761,11 @@ class RetrainingPipelineManager:
             model_info["current_job"] = {
                 "job_id": current_job.job_id,
                 "status": current_job.status.value,
-                "started_at": current_job.started_at.isoformat()
-                if current_job.started_at
-                else None,
+                "started_at": (
+                    current_job.started_at.isoformat()
+                    if current_job.started_at
+                    else None
+                ),
             }
 
         return model_info

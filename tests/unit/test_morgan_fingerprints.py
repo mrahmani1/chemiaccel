@@ -5,7 +5,6 @@ Tests both CPU (RDKit) and GPU implementations of Morgan fingerprints,
 including validation against reference implementations and performance benchmarks.
 """
 
-
 import numpy as np
 import pytest
 

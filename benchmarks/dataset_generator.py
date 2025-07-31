@@ -226,15 +226,15 @@ class BenchmarkDatasetGenerator:
         # Simple structural modifications
         modifications = [
             lambda s: s.replace("C", "CC", 1) if "C" in s else s,  # Add methyl
-            lambda s: s.replace("c1ccccc1", "c1ccc(C)cc1")
-            if "c1ccccc1" in s
-            else s,  # Add methyl to benzene
-            lambda s: s.replace("O", "N")
-            if s.count("O") == 1
-            else s,  # Replace O with N
-            lambda s: s.replace("C(=O)", "C(=S)")
-            if "C(=O)" in s
-            else s,  # Replace C=O with C=S
+            lambda s: (
+                s.replace("c1ccccc1", "c1ccc(C)cc1") if "c1ccccc1" in s else s
+            ),  # Add methyl to benzene
+            lambda s: (
+                s.replace("O", "N") if s.count("O") == 1 else s
+            ),  # Replace O with N
+            lambda s: (
+                s.replace("C(=O)", "C(=S)") if "C(=O)" in s else s
+            ),  # Replace C=O with C=S
             lambda s: s + "C" if len(s) < 50 else s,  # Add carbon
             lambda s: s.replace("CC", "CCC", 1) if "CC" in s else s,  # Extend chain
         ]

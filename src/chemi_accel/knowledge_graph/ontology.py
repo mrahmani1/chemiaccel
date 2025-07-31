@@ -192,9 +192,9 @@ class ChemicalEntity:
         updated_at: Last update timestamp
     """
 
+    entity_type: EntityType
+    name: str
     entity_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    entity_type: EntityType = field()
-    name: str = field()
     description: Optional[str] = field(default=None)
     identifiers: Dict[str, str] = field(default_factory=dict)
     properties: Dict[str, Any] = field(default_factory=dict)
@@ -265,9 +265,9 @@ class ChemicalProperty:
     or complex objects with associated metadata.
     """
 
+    property_type: PropertyType
+    value: Any
     property_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    property_type: PropertyType = field()
-    value: Any = field()
     unit: Optional[str] = field(default=None)
     confidence: Optional[float] = field(default=None)
     source: Optional[str] = field(default=None)
@@ -301,10 +301,10 @@ class ChemicalRelationship:
     have associated properties and confidence scores.
     """
 
+    relationship_type: RelationshipType
+    source_entity_id: str
+    target_entity_id: str
     relationship_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    relationship_type: RelationshipType = field()
-    source_entity_id: str = field()
-    target_entity_id: str = field()
     properties: Dict[str, Any] = field(default_factory=dict)
     confidence: Optional[float] = field(default=None)
     source: Optional[str] = field(default=None)

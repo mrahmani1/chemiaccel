@@ -230,27 +230,35 @@ def demo_basic_solvation_analysis():
                     "molecule_name": molecule.backend_data.get("name", "Unknown"),
                     "mol_id": molecule.mol_id,
                     "smiles": molecule.smiles,
-                    "solvation_free_energy": thermo_analysis.solvation_free_energy
-                    if thermo_analysis
-                    else 0.0,
-                    "solvation_enthalpy": thermo_analysis.solvation_enthalpy
-                    if thermo_analysis
-                    else 0.0,
-                    "solvation_entropy": thermo_analysis.solvation_entropy
-                    if thermo_analysis
-                    else 0.0,
-                    "electrostatic_contrib": thermo_analysis.electrostatic_contribution
-                    if thermo_analysis
-                    else 0.0,
-                    "vdw_contrib": thermo_analysis.van_der_waals_contribution
-                    if thermo_analysis
-                    else 0.0,
-                    "cavity_energy": thermo_analysis.cavity_formation_energy
-                    if thermo_analysis
-                    else 0.0,
-                    "displaced_waters": thermo_analysis.displaced_waters
-                    if thermo_analysis
-                    else 0,
+                    "solvation_free_energy": (
+                        thermo_analysis.solvation_free_energy
+                        if thermo_analysis
+                        else 0.0
+                    ),
+                    "solvation_enthalpy": (
+                        thermo_analysis.solvation_enthalpy if thermo_analysis else 0.0
+                    ),
+                    "solvation_entropy": (
+                        thermo_analysis.solvation_entropy if thermo_analysis else 0.0
+                    ),
+                    "electrostatic_contrib": (
+                        thermo_analysis.electrostatic_contribution
+                        if thermo_analysis
+                        else 0.0
+                    ),
+                    "vdw_contrib": (
+                        thermo_analysis.van_der_waals_contribution
+                        if thermo_analysis
+                        else 0.0
+                    ),
+                    "cavity_energy": (
+                        thermo_analysis.cavity_formation_energy
+                        if thermo_analysis
+                        else 0.0
+                    ),
+                    "displaced_waters": (
+                        thermo_analysis.displaced_waters if thermo_analysis else 0
+                    ),
                     "calculation_time": solvation_results.get("calculation_time", 0.0),
                     "backend": solvation_results.get("backend", "unknown"),
                 }
@@ -519,11 +527,11 @@ def demo_spatial_thermodynamic_maps(engine):
                     "mol_id": molecule.mol_id,
                     "has_spatial_maps": len(spatial_maps) > 0,
                     "map_types": list(spatial_maps.keys()) if spatial_maps else [],
-                    "grid_points": np.prod(
-                        spatial_maps.get("enthalpy_map", np.array([])).shape
-                    )
-                    if spatial_maps
-                    else 0,
+                    "grid_points": (
+                        np.prod(spatial_maps.get("enthalpy_map", np.array([])).shape)
+                        if spatial_maps
+                        else 0
+                    ),
                 }
 
                 spatial_results.append(spatial_result)

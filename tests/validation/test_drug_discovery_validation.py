@@ -5,7 +5,6 @@ This module provides comprehensive validation of drug discovery descriptor calcu
 against known drug-like compounds and established medicinal chemistry benchmarks.
 """
 
-
 import numpy as np
 import pandas as pd
 import pytest

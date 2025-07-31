@@ -565,9 +565,11 @@ class ReactionInformaticsBenchmark:
                     "processing_time": traditional_time,
                     "predictions_generated": traditional_predictions,
                     "throughput": len(test_molecules) / traditional_time,
-                    "predictions_per_second": traditional_predictions / traditional_time
-                    if traditional_time > 0
-                    else 0,
+                    "predictions_per_second": (
+                        traditional_predictions / traditional_time
+                        if traditional_time > 0
+                        else 0
+                    ),
                 }
             )
 

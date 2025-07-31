@@ -558,9 +558,11 @@ class BenchmarkSuite:
             "significant_improvements": len(
                 [c for c in self.comparisons if c.is_significant_improvement]
             ),
-            "execution_time_seconds": self.end_time - self.start_time
-            if self.end_time and self.start_time
-            else 0,
+            "execution_time_seconds": (
+                self.end_time - self.start_time
+                if self.end_time and self.start_time
+                else 0
+            ),
             "by_implementation": {},
         }
 

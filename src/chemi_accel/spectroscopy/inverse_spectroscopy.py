@@ -771,9 +771,9 @@ class InverseSpectroscopyEngine:
             computation_time=computation_time,
             convergence_metrics={
                 "candidates_generated": len(all_candidates),
-                "best_score": best_candidate.confidence_score
-                if best_candidate
-                else 0.0,
+                "best_score": (
+                    best_candidate.confidence_score if best_candidate else 0.0
+                ),
             },
         )
 
