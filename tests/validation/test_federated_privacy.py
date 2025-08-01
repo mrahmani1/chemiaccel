@@ -1,43 +1,84 @@
 """
-Privacy Preservation Validation Tests for ChemiAccel Federated Learning - Task 21.1
+Comprehensive Security and Privacy Testing for Federated Learning.
 
-This module provides comprehensive validation tests for the privacy-preserving
-mechanisms in ChemiAccel's federated learning infrastructure, ensuring that
-molecular structures and sensitive data remain protected during collaborative
-computation.
-
-Test Categories:
-- Differential privacy validation
-- Encryption and decryption correctness
-- Data anonymization effectiveness
-- Gradient privacy preservation
-- Privacy budget tracking
-- Secure aggregation protocols
-- Information leakage detection
+This module provides advanced testing infrastructure for federated learning security,
+including differential privacy, secure aggregation, membership inference attacks,
+and gradient leakage protection.
 """
 
-import time
+import base64
+import hashlib
+import json
+import os
+import secrets
+import tempfile
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+from unittest.mock import MagicMock, Mock, patch
 
+import cryptography
 import numpy as np
-import pandas as pd
 import pytest
+from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
-# ChemiAccel federated learning imports
-from src.chemi_accel.federated.core import (
-    DataAnonymizer,
-    FederatedCalculator,
-    FederatedConfig,
-    PrivacyAuditor,
-    PrivacyConfig,
-    PrivacyPreservingNoise,
-    SecureEncryption,
-)
-from src.chemi_accel.federated.gradients import (
-    GradientComputationConfig,
-    PrivacyPreservingGradientComputer,
-    SecureGradientAggregator,
-)
-from src.chemi_accel.federated.orchestrators import create_federated_coordinator
+try:
+    import torch
+    import torch.nn as nn
+
+    TORCH_AVAILABLE = True
+except ImportError:
+    TORCH_AVAILABLE = False
+
+try:
+    from opacus import PrivacyEngine
+
+    OPACUS_AVAILABLE = True
+except ImportError:
+    OPACUS_AVAILABLE = False
+
+
+@dataclass
+class SecurityTestResult:
+    """Result of security and privacy testing."""
+
+    test_category: str
+    security_level: str
+    attack_type: Optional[str] = None
+    passed: bool = False
+    error_message: Optional[str] = None
+    privacy_metrics: Dict[str, float] = field(default_factory=dict)
+    security_metrics: Dict[str, float] = field(default_factory=dict)
+    attack_success_rate: Optional[float] = None
+    defense_effectiveness: Optional[float] = None
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+
+class FederatedSecurityTestFramework:
+    """Advanced security and privacy testing framework for federated learning."""
+
+    def __init__(self, output_dir: Optional[str] = None):
+        """Initialize federated security testing framework.
+
+        Args:
+            output_dir: Directory to save test results
+        """
+        self.output_dir = (
+            Path(output_dir) if output_dir else Path("federated_security_results")
+        )
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.results: List[SecurityTestResult] = []
+
+        # Security test configurations
+        self.privacy_budgets = [0.1, 1.0, 5.0, 10.0]  # Epsilon values
+        self.noise_multipliers = [0.5, 1.0, 1.5, 2.0]
+        self.clipping_bounds = [0.1, 0.5, 1.0, 2.0]
+
+        # Mock federated participants
+        self.num_participants = 10
+        self.malicious_participants = [7, 8]  # Simulated malicious clients
 
 
 class TestDifferentialPrivacy:
