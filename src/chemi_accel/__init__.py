@@ -13,6 +13,28 @@ from .core.backend import BackendType, get_available_backends
 # Core API exports
 from .core.calculator import Calculator
 
+# Mixture module components
+try:
+    from .mixture import (
+        ComponentData,
+        DynamicProcessIntegrator,
+        FormulationProcess,
+        InteractionModeler,
+        MixtureCalculator,
+        MixtureData,
+        MixtureInverseDesigner,
+        MixtureVisualizer,
+        MolecularInteraction,
+        OptimalComposition,
+        PhaseBehaviorPredictor,
+        PhaseEquilibrium,
+        PropertyLandscape,
+    )
+
+    _MIXTURE_AVAILABLE = True
+except ImportError:
+    _MIXTURE_AVAILABLE = False
+
 # Exception classes
 from .core.exceptions import (
     BackendUnavailableError,
@@ -524,6 +546,32 @@ __all__ = [
     "DescriptorCalculationError",
     "DistributedComputingError",
 ]
+
+# Add mixture exports if available
+if _MIXTURE_AVAILABLE:
+    __all__.extend(
+        [
+            # Core mixture classes
+            "MixtureCalculator",
+            "MixtureData",
+            "ComponentData",
+            # Phase behavior
+            "PhaseBehaviorPredictor",
+            "PhaseEquilibrium",
+            # Interactions
+            "InteractionModeler",
+            "MolecularInteraction",
+            # Inverse design
+            "MixtureInverseDesigner",
+            "OptimalComposition",
+            # Dynamic processes
+            "DynamicProcessIntegrator",
+            "FormulationProcess",
+            # Visualization
+            "MixtureVisualizer",
+            "PropertyLandscape",
+        ]
+    )
 
 # Add sustainability exports if available
 if _SUSTAINABILITY_AVAILABLE:

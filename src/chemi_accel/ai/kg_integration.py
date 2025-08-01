@@ -34,6 +34,34 @@ try:
 
     KG_AVAILABLE = True
 except ImportError:
+    # Define stub classes for when KG is not available
+    class GraphQueryResult:
+        pass
+
+    class ChemicalOntology:
+        pass
+
+    class EntityType:
+        pass
+
+    class GraphDatabaseBackend:
+        pass
+
+    class GraphQuery:
+        pass
+
+    class ICKGSchema:
+        pass
+
+    class QueryLanguage:
+        pass
+
+    class RelationshipType:
+        pass
+
+    class SemanticQueryEngine:
+        pass
+
     KG_AVAILABLE = False
     logging.warning(
         "Knowledge Graph modules not available. AI-KG integration will be limited."

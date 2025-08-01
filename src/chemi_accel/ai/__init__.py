@@ -14,6 +14,7 @@ This module provides advanced AI capabilities for molecular discovery including:
 - Multi-Objective Experimental Optimization with Pareto Front Navigation
 - Autonomous Lab Protocol Generation and Machine-Executable Translation
 - Equipment Communication and Automated Experimental Execution
+- Autonomous Scientific Law & Causal Relationship Discovery
 """
 
 from .acquisition_functions import (
@@ -108,6 +109,20 @@ from .inverse_design import (
     create_drug_like_constraints,
     create_fragment_like_constraints,
     create_lead_like_constraints,
+)
+from .law_discovery import (
+    AdaptiveLearningEngine,
+    AutomatedExperimentSuggester,
+    AutonomousLawDiscovery,
+    CausalInferenceEngine,
+    CausalRelationship,
+    Hypothesis,
+    HypothesisGenerator,
+    KnowledgeGraphIntegrator,
+    LawDiscoveryError,
+    PatternRecognitionEngine,
+    ScientificLaw,
+    SymbolicRegressionEngine,
 )
 from .multi_objective_optimization import (
     CrowdingDistance,
@@ -279,4 +294,17 @@ __all__ = [
     "AutonomousLabError",
     "EquipmentCommunicationError",
     "ProtocolGenerationError",
+    # Autonomous Scientific Law Discovery
+    "AutonomousLawDiscovery",
+    "CausalInferenceEngine",
+    "SymbolicRegressionEngine",
+    "PatternRecognitionEngine",
+    "HypothesisGenerator",
+    "AutomatedExperimentSuggester",
+    "AdaptiveLearningEngine",
+    "KnowledgeGraphIntegrator",
+    "ScientificLaw",
+    "CausalRelationship",
+    "Hypothesis",
+    "LawDiscoveryError",
 ]
